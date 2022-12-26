@@ -1,0 +1,20 @@
+*********************************************************************************
+[Velluscinum] Using version 0.1-beta
+For more information
+	Look the User Manual at https://github.com/nilsonmori/velluscinum
+*********************************************************************************
+
+How to create a keyPair?
+java -jar jason-bigchaindb-driver.jar createKeys [FILENAME]
+example:
+    java -jar jason-bigchaindb-driver.jar createKeys bob	-- define a name to the file of pair of Key (bob.private.key and bob.public.key)
+
+How to CREATE an Asset?
+java -jar jason-bigchaindb-driver.jar newAsset [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [ASSET]
+example:
+	java -jar jason-bigchaindb-driver.jar newAsset "http://testchain.chon.group:9984" bob.private.key bob.public.key asset.json
+
+How to TRANSFER an Asset?
+java -jar jason-bigchaindb-driver.jar newTransfer [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [ASSET-ID] [METADATA] [DEST-PUBLIC-KEY-FILE]
+example:
+	java -jar jason-bigchaindb-driver.jar newTransfer "http://testchain.chon.group:9984" bob.private.key bob.public.key "618b478c4e7941361b64a040e9bff271f6b543fe1896cd008c7369ee70489d2d" metadata.json alice.public.key
