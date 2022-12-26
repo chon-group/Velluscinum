@@ -1,0 +1,15 @@
+/* Jason Project */
+
+MAS cozinheiroEcomilao {
+
+    infrastructure: Centralised
+
+    environment: Env
+
+    agents:
+        cozinheiro;
+        comilao;
+        banco;
+
+}
+

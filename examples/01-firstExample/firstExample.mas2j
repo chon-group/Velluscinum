@@ -1,0 +1,8 @@
+/* Jason Project */
+MAS firstExample{
+    infrastructure: Centralised
+    environment: Env
+    agents:
+        agent001;
+}
+

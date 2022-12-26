@@ -421,7 +421,7 @@ public class JasonBigchaindbDriver {
     }
 
     public EdDSAPublicKey importPublicKeyFromFile(String filePath) {
-        //System.out.print(DRIVERNAME+" Load PublicKey... ");
+        System.out.print(DRIVERNAME+" Load PublicKey... ");
         EdDSAPublicKey publicKey = null;
         PublicKeyAttributes publicKeyAttributes = null;
         FileInputStream is = null;
@@ -451,14 +451,14 @@ public class JasonBigchaindbDriver {
             GroupElement groupElement = new GroupElement(curve1, publicKeyAttributes.getS());
             EdDSAPublicKeySpec pubKeySpec = new EdDSAPublicKeySpec(groupElement, keySpecs);
             publicKey = new EdDSAPublicKey(pubKeySpec);
-            //System.out.println(KeyPairUtils.encodePublicKeyInBase58(publicKey));
+            System.out.println(KeyPairUtils.encodePublicKeyInBase58(publicKey));
         }
 
         return publicKey;
     }
 
     public EdDSAPrivateKey importPrivateKeyFromFile(String filePath) {
-        //System.out.print(DRIVERNAME+" Load PrivateKey... ");
+        System.out.print(DRIVERNAME+" Load PrivateKey... ");
         EdDSAPrivateKey privateKey = null;
         byte[] privateKeyReadFromFile = null;
         FileInputStream is = null;
@@ -482,7 +482,7 @@ public class JasonBigchaindbDriver {
             byte[] privateKeyEncoded = Base64.getDecoder().decode(privateKeyReadFromFile);
             KeyPair keyPair = KeyPairUtils.decodeKeyPair(privateKeyEncoded);
             privateKey = (EdDSAPrivateKey) keyPair.getPrivate();
-            //System.out.println(privateKeyEncoded);
+            System.out.println(privateKeyEncoded);
         }
 
         return privateKey;
