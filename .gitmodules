@@ -1,0 +1,3 @@
+[submodule "java-crypto-conditions"]
+	path = java-crypto-conditions
+	url = https://github.com/bigchaindb/java-crypto-conditions
