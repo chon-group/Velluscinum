@@ -104,6 +104,8 @@ public class BigchainDbTransactionBuilder {
 
         ITransactionAttributes addInput(String fullfillment, FulFill fullFill, EdDSAPublicKey publicKey);
 
+        ITransactionAttributes addInputs(String fulfillment, FulFill[] fullFills, EdDSAPublicKey publicKey);
+
         ITransactionAttributes addInput(Details fullfillment, FulFill fullFill, EdDSAPublicKey... publicKey);
 
         /**
@@ -285,6 +287,14 @@ public class BigchainDbTransactionBuilder {
         }
 
         @Override
+        public ITransactionAttributes addInputs(String fulfillment, FulFill[] fullFills, EdDSAPublicKey publicKey) {
+            for (int i=0; i<fullFills.length; i++){
+                addInput(fulfillment, fullFills[i],publicKey);
+            }
+            return this;
+        }
+
+        @Override
         public ITransactionAttributes addInput(String fullfillment, FulFill fullFill, EdDSAPublicKey... publicKeys) {
             for (EdDSAPublicKey publicKey : publicKeys) {
                 Input input = new Input();
@@ -403,28 +413,40 @@ public class BigchainDbTransactionBuilder {
             if (Operations.TRANSFER.name().equals(this.transaction.getOperation())) {
                 // it's a transfer operation: make sure to update the hash pre-image with
                 // the fulfilling transaction IDs and output indexes
-                StringBuilder preimage = new StringBuilder(transactionJObject.toString());
-                for (Input in : this.transaction.getInputs()) {
+                Integer totalInputs = this.transaction.getInputs().size();
+                Signature edDsaSigner = new EdDSAEngine(MessageDigest.getInstance("SHA-512"));
+                edDsaSigner.initSign(privateKey);
+                for (int i=0; i<totalInputs; i++){
+                    StringBuilder preimage = new StringBuilder(transactionJObject.toString());
+                    Input in = this.transaction.getInputs().get(i);
                     if (in.getFulFills() != null) {
                         FulFill fulfill = in.getFulFills();
                         String txBlock = fulfill.getTransactionId() + String.valueOf(fulfill.getOutputIndex());
                         preimage.append(txBlock);
                     }
+                    sha3Hash = DriverUtils.getSha3HashRaw(preimage.toString().getBytes());
+
+                    // signing the transaction
+                    edDsaSigner.update(sha3Hash);
+                    byte[] signature = edDsaSigner.sign();
+                    Ed25519Sha256Fulfillment fulfillment = new Ed25519Sha256Fulfillment(this.publicKey, signature);
+                    this.transaction.getInputs().get(i)
+                            .setFullFillment(Base64.encodeBase64URLSafeString(fulfillment.getEncoded()));
                 }
-                sha3Hash = DriverUtils.getSha3HashRaw(preimage.toString().getBytes());
+
             } else {
                 // otherwise, just get the message digest
                 sha3Hash = DriverUtils.getSha3HashRaw(transactionJObject.toString().getBytes());
-            }
 
-            // signing the transaction
-            Signature edDsaSigner = new EdDSAEngine(MessageDigest.getInstance("SHA-512"));
-            edDsaSigner.initSign(privateKey);
-            edDsaSigner.update(sha3Hash);
-            byte[] signature = edDsaSigner.sign();
-            Ed25519Sha256Fulfillment fulfillment = new Ed25519Sha256Fulfillment(this.publicKey, signature);
-            this.transaction.getInputs().get(0)
-                    .setFullFillment(Base64.encodeBase64URLSafeString(fulfillment.getEncoded()));
+                // signing the transaction
+                Signature edDsaSigner = new EdDSAEngine(MessageDigest.getInstance("SHA-512"));
+                edDsaSigner.initSign(privateKey);
+                edDsaSigner.update(sha3Hash);
+                byte[] signature = edDsaSigner.sign();
+                Ed25519Sha256Fulfillment fulfillment = new Ed25519Sha256Fulfillment(this.publicKey, signature);
+                this.transaction.getInputs().get(0)
+                        .setFullFillment(Base64.encodeBase64URLSafeString(fulfillment.getEncoded()));
+            }
             this.transaction.setSigned(true);
 
             String id = DriverUtils.getSha3HashHex(
