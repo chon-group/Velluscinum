@@ -17,7 +17,6 @@ gradle-app.setting
 # IntelliJ specific files
 .idea
 *.iml
-out
 
 
 # Maven 
