@@ -1,5 +1,7 @@
 package group.chon.velluscinum;
 
+import com.bigchaindb.builders.BigchainDbConfigBuilder;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -41,4 +43,5 @@ public class Info {
     public String getDefaultServer() {
         return defaultServer;
     }
+
 }

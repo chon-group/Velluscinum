@@ -1,10 +1,14 @@
 package group.chon.velluscinum;
 
+import com.bigchaindb.exceptions.TransactionNotFoundException;
+import group.chon.velluscinum.model.WalletContent;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import org.json.JSONObject;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.security.KeyPair;
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -124,16 +128,35 @@ public class Main {
         vellus.setConfig(driver.getDefaultServer());
 
         //bank to client
-       vellus.transferToken(bankPrivateKey,bankPublicKey,fungibleToken,clientPublicKey,1);
-       vellus.transferToken(bankPrivateKey,bankPublicKey,fungibleToken,clientPublicKey,2);
-       vellus.transferToken(bankPrivateKey,bankPublicKey,fungibleToken,clientPublicKey,3);
-       vellus.transferToken(bankPrivateKey,bankPublicKey,fungibleToken,clientPublicKey,4);
+        vellus.transferToken(bankPrivateKey,bankPublicKey,fungibleToken,clientPublicKey,1);
+        vellus.transferToken(bankPrivateKey,bankPublicKey,fungibleToken,clientPublicKey,2);
+        vellus.transferToken(bankPrivateKey,bankPublicKey,fungibleToken,clientPublicKey,3);
+        vellus.transferToken(bankPrivateKey,bankPublicKey,fungibleToken,clientPublicKey,4);
 
-       //client to bank
-       vellus.transferToken(clientPrivateKey,clientPublicKey,fungibleToken,bankPublicKey,5);
-       vellus.transferToken(clientPrivateKey,clientPublicKey,fungibleToken,bankPublicKey,5);
+        //client to bank
+        vellus.transferToken(clientPrivateKey,clientPublicKey,fungibleToken,bankPublicKey,5);
+        vellus.transferToken(clientPrivateKey,clientPublicKey,fungibleToken,bankPublicKey,5);
 
 
         return null;
+    }
+    private static ArrayList<WalletContent> test4() throws TransactionNotFoundException, IOException {
+
+        Info driver = new Info();
+        KeyManagement keyManagement = new KeyManagement();
+        Wallet wallet = new Wallet();
+
+        EdDSAPrivateKey bobPrivateKey = keyManagement.importPrivateKeyFromString(driver.getAlicePrivateKey());
+        EdDSAPublicKey bobPublicKey = keyManagement.importPublicKeyFromString(driver.getAlicePublickey());
+
+        wallet.setConfig(driver.getDefaultServer());
+        ArrayList<WalletContent> walletContents= wallet.getMyTokens(bobPrivateKey,bobPublicKey);
+
+        for(int i =0; i<walletContents.size(); i++){
+            System.out.println(walletContents.get(i).getToken()+
+                    " "+walletContents.get(i).getAmount()+
+                    " "+walletContents.get(i).getTransaction());
+        }
+        return walletContents;
     }
 }

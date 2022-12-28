@@ -9,18 +9,32 @@ import com.bigchaindb.util.KeyPairUtils;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class Vellus{
     Info driver = new Info();
-
+    KeyManagement keyManagement = new KeyManagement();
+    JasonBigchaindbDriver jasonBigchaindbDriver = new JasonBigchaindbDriver();
     public void setConfig(String serverURL) {
-        BigchainDbConfigBuilder
-                .baseUrl(serverURL).setup();
+        jasonBigchaindbDriver.setConfig(serverURL);
     }
-
+    public Outputs getOpenOutputs(EdDSAPublicKey bobPublicKey){
+        try {
+            return com.bigchaindb.api.OutputsApi.getUnspentOutputs(
+                    keyManagement.getAddressFromPublicKey(bobPublicKey));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public Transaction getTransaction(String strTransaction){
+        try {
+            return com.bigchaindb.api.TransactionsApi.getTransactionById(strTransaction);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (TransactionNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public String createFungibleToken(EdDSAPrivateKey privateKey,
                             EdDSAPublicKey publicKey,
                             String tokenName,
@@ -128,12 +142,13 @@ public class Vellus{
         }
     }
 
+
     private String mergeFungibleToken(
             EdDSAPrivateKey bobPrivateKey,
             EdDSAPublicKey bobPublicKey,
             String assetID,
             ArrayList<String> listOfTransactions,
-            ArrayList<Integer> listOfOutputIndexs,
+            ArrayList<Integer> listOfOutputIndexes,
             ArrayList<Long> listOfAmounts){
 
         ServerResponse.setLock(true);
@@ -144,7 +159,7 @@ public class Vellus{
         for(int i=0; i<totalInputs; i++){
             spendsFrom[i] = new FulFill();
             spendsFrom[i].setTransactionId(listOfTransactions.get(i));
-            spendsFrom[i].setOutputIndex(listOfOutputIndexs.get(i));
+            spendsFrom[i].setOutputIndex(listOfOutputIndexes.get(i));
             totalAmount = totalAmount+listOfAmounts.get(i);
         }
 
@@ -168,7 +183,7 @@ public class Vellus{
         }
     }
 
-    private String getLastTransaction(
+    public String getLastTransaction(
             EdDSAPrivateKey bobPrivateKey,
             EdDSAPublicKey bobPublicKey,
             String strTokenID) throws IOException, TransactionNotFoundException {
@@ -210,6 +225,52 @@ public class Vellus{
         }else{
             return null;
         }
+    }
+
+
+    public void mergeMultiplesTokens(
+            EdDSAPrivateKey bobPrivateKey,
+            EdDSAPublicKey bobPublicKey,
+            ArrayList<String> listOfTokens
+    ){
+        Outputs listOfOutputs = getOpenOutputs(bobPublicKey);
+        ArrayList<String> listOpenTransactionsFromTokenID = new ArrayList<String>();
+        ArrayList<Integer> listOutputIndexFromTokenID = new ArrayList<Integer>();
+        ArrayList<Long> listAmountFromTokenID = new ArrayList<Long>();
+
+        Output output = null;
+        String strTransaction = null;
+        Transaction transaction = null;
+        Integer outputINDEX = null;
+
+        for (int j=0; j<listOfTokens.size();j++){
+            for (int i = 0; i<listOfOutputs.getOutput().size(); i++){
+                output = listOfOutputs.getOutput().get(i);
+                strTransaction = output.getTransactionId();
+                transaction  = getTransaction(strTransaction);
+                if(listOfTokens.get(j).equals(transaction.getAsset().getId())){
+                    listOpenTransactionsFromTokenID.add(strTransaction);
+                    outputINDEX = output.getOutputIndex();
+                    listOutputIndexFromTokenID.add(outputINDEX);
+                    listAmountFromTokenID.add(Long.parseLong(transaction.getOutputs().get(outputINDEX).getAmount()));
+                }
+            }
+
+            if(listOpenTransactionsFromTokenID.size()>1){
+                mergeFungibleToken(
+                        bobPrivateKey,
+                        bobPublicKey,
+                        transaction.getAsset().getId(),
+                        listOpenTransactionsFromTokenID,
+                        listOutputIndexFromTokenID,
+                        listAmountFromTokenID);
+            }
+
+            listOpenTransactionsFromTokenID.clear();
+            listOutputIndexFromTokenID.clear();
+            listAmountFromTokenID.clear();
+        }
+
     }
 
 }

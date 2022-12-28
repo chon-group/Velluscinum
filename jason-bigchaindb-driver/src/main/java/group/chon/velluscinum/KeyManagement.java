@@ -176,5 +176,7 @@ public class KeyManagement {
         f.delete();
     }
 
-
+    public String getAddressFromPublicKey(EdDSAPublicKey bobPublicKey){
+        return KeyPairUtils.encodePublicKeyInBase58(bobPublicKey);
+    }
 }
