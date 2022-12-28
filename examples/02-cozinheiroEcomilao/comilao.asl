@@ -1,6 +1,6 @@
 // Agent comilao in project cozinheiroEcomilao.mas2j
 /* Crenças Iniciais */
-myPublicKey("rO0ABXNyACpncm91cC5jaG9uLnZlbGx1c2NpbnVtLlB1YmxpY0tleUF0dHJpYnV0ZXP72Aas3Pd5eQIABUkAAWJbAAFJdAACW0JbAAFRcQB+AAFbAAFkcQB+AAFbAAFzcQB+AAF4cAAAAQB1cgACW0Ks8xf4BghU4AIAAHhwAAAAILCgDkonG+7EeOQvrQYYQy+n1/s9mQBNKwvfwU+AJIMrdXEAfgADAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdXEAfgADAAAAIKN4WRPKTet1q9hBQU0KcACY6Hl3eUDHjHP+byvubANSdXEAfgADAAAAIBD3bmCMS4SmtfAaueAZIOjBGArf81dl/vmphQJWjdJH").
+myPublicKey("MCowBQYDK2VwAyEAe0sFt37hYO80TcEnNZnJy97nL9mceg+pmUH8ZH2Gwuc=").
 estoqueComida(0).
 energia(0).
 
@@ -14,7 +14,7 @@ energia(0).
 		.send(banco,askOne,bancoPublicKey(BancoP),Replay);
 		-+Replay;
 		?bancoPublicKey(BancoP);
-		gerarCarteira("http://testchain.chon.group:9984/","MC4CAQAwBQYDK2VwBCIEILHSx7FB808KpH4hQAykEZ93Ok6DAKDFNTGlh0tOVO7M",PublK,BancoP);
+		gerarCarteira("http://testchain.chon.group:9984/","MC4CAQAwBQYDK2VwBCIEIAmuZdNpUSKWRrIwEok4WAiCCPmBBMFtFekHv55GkfQl",PublK,BancoP);
 		-Replay;
 		?protocolo(NrProtocolo);
 		?myWallet(NrCarteira);
@@ -81,5 +81,6 @@ energia(0).
 	.drop_desire(curtir);
 	.drop_desire(pedirComida);
 	.print("Ababou a festa :(");
-	.wait(2000).
+	.wait(5000);
+	.stopMAS.
 

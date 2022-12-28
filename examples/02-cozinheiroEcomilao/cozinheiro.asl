@@ -1,7 +1,7 @@
 // Agent cozinheiro in project cozinheiroEcomilao.mas2j
 
 /* Crenças Iniciais */
-myPublicKey("rO0ABXNyACpncm91cC5jaG9uLnZlbGx1c2NpbnVtLlB1YmxpY0tleUF0dHJpYnV0ZXP72Aas3Pd5eQIABUkAAWJbAAFJdAACW0JbAAFRcQB+AAFbAAFkcQB+AAFbAAFzcQB+AAF4cAAAAQB1cgACW0Ks8xf4BghU4AIAAHhwAAAAILCgDkonG+7EeOQvrQYYQy+n1/s9mQBNKwvfwU+AJIMrdXEAfgADAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdXEAfgADAAAAIKN4WRPKTet1q9hBQU0KcACY6Hl3eUDHjHP+byvubANSdXEAfgADAAAAIM+9A0FOYC5qO0ZbPhoc+uebhu+S0frrPCOtFUv8zo11").
+myPublicKey("MCowBQYDK2VwAyEAwoyIo/X+ka04yOS8hfRxyb+PuuodHVGFoI1BDFw2ekA=").
 ultimoPedido(0).
 
 /* Objetivos Iniciais */
@@ -13,7 +13,7 @@ ultimoPedido(0).
 		.send(banco,askOne,bancoPublicKey(BancoP),Replay);
 		-+Replay;
 		?bancoPublicKey(BancoP);
-		gerarCarteira("http://testchain.chon.group:9984/","MC4CAQAwBQYDK2VwBCIEIF9O4UoI3Ku3VQE2i7uWtmoRHkecEDgRXsuL1W/PsY51",PublK,BancoP);
+		gerarCarteira("http://testchain.chon.group:9984/","MC4CAQAwBQYDK2VwBCIEIF24sBVvj3ocOJsAYcpbtavUXzUzEWBxkz9hsJ94jCT+",PublK,BancoP);
 		-Replay;
 		?protocolo(NrProtocolo);
 		?myWallet(NrCarteira);
