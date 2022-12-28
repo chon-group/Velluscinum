@@ -21,7 +21,7 @@ public class Vellus{
     public Outputs getOpenOutputs(EdDSAPublicKey bobPublicKey){
         try {
             return com.bigchaindb.api.OutputsApi.getUnspentOutputs(
-                    keyManagement.getAddressFromPublicKey(bobPublicKey));
+                    keyManagement.getAddressWallet(bobPublicKey));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

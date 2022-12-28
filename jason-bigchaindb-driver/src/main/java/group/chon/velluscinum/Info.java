@@ -9,10 +9,10 @@ public class Info {
     final private String DRIVERNAME = "[Velluscinum]";
     final private String MANUAL = "/manual.txt";
     final private String defaultServer = "http://testchain.chon.group:9984/";
-    final private String bobPrivateKey = "MC4CAQAwBQYDK2VwBCIEIJKHX4YV2Mp6GeMcsU6TENzTEtpxlmiC+1CTViNofoRV";
-    final private String bobPublicKey  = "rO0ABXNyACpncm91cC5jaG9uLnZlbGx1c2NpbnVtLlB1YmxpY0tleUF0dHJpYnV0ZXP72Aas3Pd5eQIABUkAAWJbAAFJdAACW0JbAAFRcQB+AAFbAAFkcQB+AAFbAAFzcQB+AAF4cAAAAQB1cgACW0Ks8xf4BghU4AIAAHhwAAAAILCgDkonG+7EeOQvrQYYQy+n1/s9mQBNKwvfwU+AJIMrdXEAfgADAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdXEAfgADAAAAIKN4WRPKTet1q9hBQU0KcACY6Hl3eUDHjHP+byvubANSdXEAfgADAAAAIJOzWQkoABDFaOUm8Ya9rhRr/hxgbBkC0Mx6XzFaKmMx";
-    final private String alicePrivateKey = "MC4CAQAwBQYDK2VwBCIEIF9O4UoI3Ku3VQE2i7uWtmoRHkecEDgRXsuL1W/PsY51";
-    final private String alicePublickey = "rO0ABXNyACpncm91cC5jaG9uLnZlbGx1c2NpbnVtLlB1YmxpY0tleUF0dHJpYnV0ZXP72Aas3Pd5eQIABUkAAWJbAAFJdAACW0JbAAFRcQB+AAFbAAFkcQB+AAFbAAFzcQB+AAF4cAAAAQB1cgACW0Ks8xf4BghU4AIAAHhwAAAAILCgDkonG+7EeOQvrQYYQy+n1/s9mQBNKwvfwU+AJIMrdXEAfgADAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdXEAfgADAAAAIKN4WRPKTet1q9hBQU0KcACY6Hl3eUDHjHP+byvubANSdXEAfgADAAAAIM+9A0FOYC5qO0ZbPhoc+uebhu+S0frrPCOtFUv8zo11";
+    final private String bobPrivateKey = "MC4CAQAwBQYDK2VwBCIEINrKHkh7bJlpSeGJyutdxrsa6qqtHVIbm6YXyQymTYK8";
+    final private String bobPublicKey  = "MCowBQYDK2VwAyEAjFVzFInLZCIpo94Ii5f74dtr/FcKQs8M0m9Z2JOAMVU=";
+    final private String alicePrivateKey = "MC4CAQAwBQYDK2VwBCIEIANd+6AE0IetQ1vaQC88DhYuEs9miXjvv2LkXSxR4j3Z";
+    final private String alicePublickey = "MCowBQYDK2VwAyEAEuN5rvkEHUqJcFr9bzh8qzbMellY9oHY32SkUoL0cL8=";
 
     public String getDRIVERNAME() {
         return DRIVERNAME;

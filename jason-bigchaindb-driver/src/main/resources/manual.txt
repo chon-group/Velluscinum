@@ -7,7 +7,7 @@ For more information
 How to create a keyPair?
 java -jar jason-bigchaindb-driver.jar createKeys [FILENAME]
 example:
-    java -jar jason-bigchaindb-driver.jar createKeys bob	-- define a name to the file of pair of Key (bob.private.key and bob.public.key)
+java -jar jason-bigchaindb-driver.jar createKeys bob
 
 How to CREATE an Asset?
 java -jar jason-bigchaindb-driver.jar newAsset [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [ASSET]

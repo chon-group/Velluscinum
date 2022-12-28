@@ -2,8 +2,7 @@ package group.chon.velluscinum;
 
 import com.bigchaindb.exceptions.TransactionNotFoundException;
 import group.chon.velluscinum.model.WalletContent;
-import net.i2p.crypto.eddsa.EdDSAPrivateKey;
-import net.i2p.crypto.eddsa.EdDSAPublicKey;
+import net.i2p.crypto.eddsa.*;
 import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,21 +29,18 @@ public class Main {
             System.exit(0);
         }
     }
+
     private static void createKeys(String[] args){
         String output = null;
         KeyManagement keyManagement = new KeyManagement();
         KeyPair bobKeyPair 	= keyManagement.newKey();
         EdDSAPrivateKey bobPrivateKey = (EdDSAPrivateKey) bobKeyPair.getPrivate();
         EdDSAPublicKey bobPublicKey  = (EdDSAPublicKey)  bobKeyPair.getPublic();
-        try{
-            output = args[1]+".";
-        }catch(Exception ex){
-            output = "";
-        }
-        keyManagement.exportPrivateKey(bobPrivateKey, output+"private.key");
-        keyManagement.exportPublicKey(bobPublicKey, output+"public.key");
+        keyManagement.exportPrivateKeyToFile(bobPrivateKey, args[1]+".private");
+        keyManagement.exportPublicKeyToFile(bobPublicKey, args[1]+".public");
         System.exit(0);
     }
+
     private static void newAsset(String[] args) throws Exception {
         JasonBigchaindbDriver bigchaindb4Jason = new JasonBigchaindbDriver();
         KeyManagement keyManagement = new KeyManagement();
@@ -57,6 +53,7 @@ public class Main {
         bigchaindb4Jason.newAsset(jSONAsset, privateKey, publicKey);
         System.exit(0);
     }
+
     private static void newTransfer(String[] args){
         JasonBigchaindbDriver bigchaindb4Jason = new JasonBigchaindbDriver();
         KeyManagement keyManagement = new KeyManagement();
@@ -72,13 +69,10 @@ public class Main {
         System.exit(0);
     }
 
-    private static String test0(){
+    private static String test0() {
         //Creating an Asset
-        JasonBigchaindbDriver bigchaindb4Jason = new JasonBigchaindbDriver();
         Info driver = new Info();
-        String server = driver.getDefaultServer();
-        String privateKey = driver.getBobPrivateKey();
-        String publicKey  = driver.getBobPublicKey();
+        JasonBigchaindbDriver bigchaindb4Jason = new JasonBigchaindbDriver();
         String asset = "{\n"
                 + "\"asset\":[{\n"
                 + "	\"Description\": \"My first Asset in BigChainDB\"\n"
@@ -86,8 +80,14 @@ public class Main {
                 + "	\"Hello\": \"World\"\n"
                 + "  }]\n"
                 + "}";
-        return bigchaindb4Jason.newAsset(server,privateKey,publicKey,asset);
+        return bigchaindb4Jason.newAsset(
+                driver.getDefaultServer(),
+                driver.getBobPrivateKey(),
+                driver.getBobPublicKey(),
+                asset
+                );
     }
+
     private static String test1(){
         String assetID = test0();
         //Transferring an Asset
@@ -105,25 +105,27 @@ public class Main {
 
         return bigchaindb4Jason.newTransfer(server,ownerPrivateKey,ownerPublicKey,assetID,newMetadata,recipientPublicKey);
     }
+
     private static String test2() throws Exception {
         //Creating a fungible token
         Info driver = new Info();
         KeyManagement keyManagement = new KeyManagement();
-        EdDSAPublicKey bankPublicKey = keyManagement.importPublicKeyFromString(driver.getBobPublicKey());
-        EdDSAPrivateKey bankPrivateKey = keyManagement.importPrivateKeyFromString(driver.getBobPrivateKey());
+        EdDSAPublicKey bankPublicKey = keyManagement.importPublicKeyFromBase64(driver.getBobPublicKey());
+        EdDSAPrivateKey bankPrivateKey = keyManagement.importPrivateKeyFromBase64(driver.getBobPrivateKey());
         Vellus vellus = new Vellus();
         vellus.setConfig(driver.getDefaultServer());
         String idMoeda = vellus.createFungibleToken(bankPrivateKey,bankPublicKey,"ChonCoin", 9000000000000000000L);
         return  idMoeda;
     }
+
     private static String test3() throws Exception {
         String fungibleToken =  test2();
         Info driver = new Info();
         KeyManagement keyManagement = new KeyManagement();
-        EdDSAPublicKey bankPublicKey = keyManagement.importPublicKeyFromString(driver.getBobPublicKey());
-        EdDSAPrivateKey bankPrivateKey = keyManagement.importPrivateKeyFromString(driver.getBobPrivateKey());
-        EdDSAPrivateKey  clientPrivateKey = keyManagement.importPrivateKeyFromString(driver.getAlicePrivateKey());
-        EdDSAPublicKey  clientPublicKey = keyManagement.importPublicKeyFromString(driver.getAlicePublickey());
+        EdDSAPublicKey bankPublicKey = keyManagement.importPublicKeyFromBase64(driver.getBobPublicKey());
+        EdDSAPrivateKey bankPrivateKey = keyManagement.importPrivateKeyFromBase64(driver.getBobPrivateKey());
+        EdDSAPrivateKey  clientPrivateKey = keyManagement.importPrivateKeyFromBase64(driver.getAlicePrivateKey());
+        EdDSAPublicKey  clientPublicKey = keyManagement.importPublicKeyFromBase64(driver.getAlicePublickey());
         Vellus vellus = new Vellus();
         vellus.setConfig(driver.getDefaultServer());
 
@@ -140,14 +142,15 @@ public class Main {
 
         return null;
     }
+
     private static ArrayList<WalletContent> test4() throws TransactionNotFoundException, IOException {
 
         Info driver = new Info();
         KeyManagement keyManagement = new KeyManagement();
         Wallet wallet = new Wallet();
 
-        EdDSAPrivateKey bobPrivateKey = keyManagement.importPrivateKeyFromString(driver.getAlicePrivateKey());
-        EdDSAPublicKey bobPublicKey = keyManagement.importPublicKeyFromString(driver.getAlicePublickey());
+        EdDSAPrivateKey bobPrivateKey = keyManagement.importPrivateKeyFromBase64(driver.getBobPrivateKey());
+        EdDSAPublicKey bobPublicKey = keyManagement.importPublicKeyFromBase64(driver.getBobPublicKey());
 
         wallet.setConfig(driver.getDefaultServer());
         ArrayList<WalletContent> walletContents= wallet.getMyTokens(bobPrivateKey,bobPublicKey);

@@ -102,9 +102,9 @@ public class JasonBigchaindbDriver {
         String transectionID = null;
         try {
             setConfig(strURL);
-            EdDSAPrivateKey senderPrivateKey = keyManagement.importPrivateKeyFromString(strSenderPrivateKey);
-            EdDSAPublicKey  senderPublicKey  = keyManagement.importPublicKeyFromString(strSenderPublicKey);
-            EdDSAPublicKey  recipientPublicKey  = keyManagement.importPublicKeyFromString(strRecipientPublicKey);
+            EdDSAPrivateKey senderPrivateKey = keyManagement.importPrivateKeyFromBase64(strSenderPrivateKey);
+            EdDSAPublicKey  senderPublicKey  = keyManagement.importPublicKeyFromBase64(strSenderPublicKey);
+            EdDSAPublicKey  recipientPublicKey  = keyManagement.importPublicKeyFromBase64(strRecipientPublicKey);
             JSONObject newMetadata = new JSONObject(strNewMetadata);
             transectionID = newTransfer(senderPrivateKey, senderPublicKey, strAssetId, newMetadata, recipientPublicKey);
         }catch(Exception e) {
@@ -112,8 +112,6 @@ public class JasonBigchaindbDriver {
             transectionID = null;
         }
         return transectionID;
-
-
     }
 
     public String newTransfer(EdDSAPrivateKey bobPrivateKey, EdDSAPublicKey bobPublicKey, String assetId, JSONObject newMetadata, EdDSAPublicKey alicePublicKey) {
@@ -175,15 +173,15 @@ public class JasonBigchaindbDriver {
     public String newAsset(String strURL, String strPrivateKey, String strPublicKey, String strAsset){
         setConfig(strURL);
         JSONObject asset = new JSONObject(strAsset);
-        EdDSAPublicKey publicKey = keyManagement.importPublicKeyFromString(strPublicKey);
-        EdDSAPrivateKey privateKey = keyManagement.importPrivateKeyFromString(strPrivateKey);
+        EdDSAPublicKey edDSAPublicKey = keyManagement.importPublicKeyFromBase64(strPublicKey);
+        EdDSAPrivateKey edDSAPrivateKey = keyManagement.importPrivateKeyFromBase64(strPrivateKey);
         String strAssetID = null;
         try {
-            strAssetID = newAsset(asset, privateKey, publicKey);
+            return newAsset(asset, edDSAPrivateKey, edDSAPublicKey);
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-        return strAssetID;
     }
 
     public String newAsset(JSONObject asset, EdDSAPrivateKey privateKey, EdDSAPublicKey publicKey) throws Exception{
