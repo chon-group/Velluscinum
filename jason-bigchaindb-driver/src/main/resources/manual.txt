@@ -7,14 +7,14 @@ For more information
 How to create a keyPair?
 java -jar jason-bigchaindb-driver.jar createKeys [FILENAME]
 example:
-java -jar jason-bigchaindb-driver.jar createKeys bob
+    java -jar jason-bigchaindb-driver.jar createKeys bob
 
-How to CREATE an Asset?
-java -jar jason-bigchaindb-driver.jar newAsset [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [ASSET]
+How to CREATE a Non-Fungible-Token?
+java -jar jason-bigchaindb-driver.jar newNFT [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [NFT-FILE]
 example:
-	java -jar jason-bigchaindb-driver.jar newAsset "http://testchain.chon.group:9984" bob.private.key bob.public.key asset.json
+	java -jar jason-bigchaindb-driver.jar newNFT "http://testchain.chon.group:9984" bob.private.key bob.public.key nft.json
 
-How to TRANSFER an Asset?
-java -jar jason-bigchaindb-driver.jar newTransfer [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [ASSET-ID] [METADATA] [DEST-PUBLIC-KEY-FILE]
+How to TRANSFER an Non-Fungible-Token?
+java -jar jason-bigchaindb-driver.jar transferNFT [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [ASSET-ID] [METADATA] [DEST-PUBLIC-KEY-FILE]
 example:
-	java -jar jason-bigchaindb-driver.jar newTransfer "http://testchain.chon.group:9984" bob.private.key bob.public.key "618b478c4e7941361b64a040e9bff271f6b543fe1896cd008c7369ee70489d2d" metadata.json alice.public.key
+	java -jar jason-bigchaindb-driver.jar transferNFT "http://testchain.chon.group:9984" bob.private.key bob.public.key "618b478c4e7941361b64a040e9bff271f6b543fe1896cd008c7369ee70489d2d" metadata.json alice.public.key

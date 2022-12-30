@@ -1,6 +1,5 @@
 package group.chon.velluscinum;
 
-import com.bigchaindb.builders.BigchainDbConfigBuilder;
 import com.bigchaindb.builders.BigchainDbTransactionBuilder;
 import com.bigchaindb.constants.Operations;
 import com.bigchaindb.exceptions.TransactionNotFoundException;
@@ -12,11 +11,11 @@ import java.io.IOException;
 import java.util.*;
 
 public class Vellus{
-    Info driver = new Info();
+    final private String DRIVERNAME = "[Velluscinum]";
     KeyManagement keyManagement = new KeyManagement();
-    JasonBigchaindbDriver jasonBigchaindbDriver = new JasonBigchaindbDriver();
+    BigchainDBDriver bigchainDBDriver = new BigchainDBDriver();
     public void setConfig(String serverURL) {
-        jasonBigchaindbDriver.setConfig(serverURL);
+        bigchainDBDriver.setConfig(serverURL);
     }
     public Outputs getOpenOutputs(EdDSAPublicKey bobPublicKey){
         try {
@@ -59,7 +58,7 @@ public class Vellus{
                     .operation(Operations.CREATE)
                     .buildAndSign(publicKey, privateKey)
                     .sendTransaction(ServerResponse.handleServerResponse());
-            System.out.print(driver.getDRIVERNAME()+" Creating Token....... "+ transaction.getId()+" ");
+            System.out.print(DRIVERNAME+" Creating Token....... "+ transaction.getId()+" ");
             ServerResponse.waitDone();
             ServerResponse.setLock(false);
             return transaction.getId();
@@ -125,7 +124,7 @@ public class Vellus{
                             .buildAndSign(bobPublicKey, bobPrivateKey)
                             .sendTransaction(ServerResponse.handleServerResponse());
                 }
-                System.out.print(driver.getDRIVERNAME()+" Transferring Token... "+transferTransaction.getId()+" ");
+                System.out.print(DRIVERNAME+" Transferring Token... "+transferTransaction.getId()+" ");
                 ServerResponse.waitDone();
                 ServerResponse.setLock(false);
                 return transferTransaction.getId();
@@ -173,7 +172,7 @@ public class Vellus{
                     .operation(Operations.TRANSFER)
                     .buildAndSign(bobPublicKey, bobPrivateKey)
                     .sendTransaction(ServerResponse.handleServerResponse());
-            System.out.print(driver.getDRIVERNAME()+" Merging Tokens....... "+transferTransaction.getId()+" ");
+            System.out.print(DRIVERNAME+" Merging Tokens....... "+transferTransaction.getId()+" ");
             ServerResponse.waitDone();
             ServerResponse.setLock(false);
             return transferTransaction.getId();

@@ -2,38 +2,45 @@
 import jason.asSyntax.*;
 import jason.environment.*;
 import group.chon.velluscinum.*;
+import group.chon.velluscinum.model.*;
 public class Env extends Environment {
-	JasonBigchaindbDriver bigchaindb4Jason = new JasonBigchaindbDriver();
+	NonFungibleToken nonFungibleToken = new NonFungibleToken();
+	BigchainDBDriver bigchaindb4Jason = new BigchainDBDriver();
+	TransfAdditionalInfo transfAdditionalInfo = new TransfAdditionalInfo();
+	
     	public boolean executeAction(String agName, Structure action) {    
 		if(action.toString().substring(0,12).equals("createAsset(")){
-			String server = action.getTerm(0).toString().replace("\"", "");
-			String privKey = action.getTerm(1).toString().replace("\"", "");
-			String publicKey  = action.getTerm(2).toString().replace("\"", "");				
-			String asset = "{\n"
-					+ "\"asset\":[{\n"
-					+ "	\"Description\": \"My first Asset in BigChainDB\"\n"
-					+ "}],\n"
-					+ "  \"metadata\":[{\n"
-					+ "	\"Hello\": \"World\"\n"
-					+ "  }]\n"
-					+ "}";
-			String assetID = bigchaindb4Jason.newAsset(server,privKey,publicKey,asset);
-			addPercept(agName, Literal.parseLiteral("assetID(\""+assetID+"\")"));
+			String assetID = bigchaindb4Jason.registerNFT(
+								action.getTerm(0).toString().replace("\"",""),
+								action.getTerm(1).toString().replace("\"",""),
+								action.getTerm(2).toString().replace("\"",""),
+								nonFungibleToken.toString()
+								);
+			addPercept(agName, 
+						Literal.parseLiteral("assetID(\""+assetID+"\")")
+						);
 		}
-		else if(action.toString().substring(0,14).equals("transferAsset(")){
-			String server = action.getTerm(0).toString().replace("\"", "");
-			String privateKey = action.getTerm(1).toString().replace("\"", "");
-			String publicKey  = action.getTerm(2).toString().replace("\"", "");
-			String assetID  = action.getTerm(3).toString().replace("\"", "");
-			String aliceKey  = action.getTerm(4).toString().replace("\"", "");
-			String metadata = "{\n"
-				+ "  \"metadata\":[{\n"
-				+ "	\"New Owner\": \"Alice\"\n"
-				+ "  }]\n"
-				+ "}";
-			String transferID = bigchaindb4Jason.newTransfer(server,privateKey,publicKey,assetID,metadata,aliceKey);
-			addPercept(agName, Literal.parseLiteral("transferID(\""+transferID+"\")"));
+		else if(action.toString().substring(0,14).equals("transferAsset(")){		
+			String transferID =  bigchaindb4Jason.transferNFT(
+						action.getTerm(0).toString().replace("\"", ""),
+						action.getTerm(1).toString().replace("\"", ""),
+						action.getTerm(2).toString().replace("\"", ""),
+						action.getTerm(3).toString().replace("\"", ""),
+						transfAdditionalInfo.toString(),
+						action.getTerm(4).toString().replace("\"", ""));					
+			addPercept(agName,
+						Literal.parseLiteral("transferID(\""+transferID+"\")")
+						);
+		}else if((action.toString().substring(0,9).equals("buildNFT("))){
+			nonFungibleToken.newNFT(
+				action.getTerm(0).toString().replace("\"", ""),
+				action.getTerm(1).toString().replace("\"", ""));				
+		}else if((action.toString().substring(0,13).equals("dataTransfer("))){
+			transfAdditionalInfo.newTransfInfo(
+				action.getTerm(0).toString().replace("\"", ""),
+				action.getTerm(1).toString().replace("\"", ""));				
 		}
+
         return true;
     }
 }

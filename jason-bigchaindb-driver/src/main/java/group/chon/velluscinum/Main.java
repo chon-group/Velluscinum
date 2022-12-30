@@ -1,11 +1,16 @@
 package group.chon.velluscinum;
 
 import com.bigchaindb.exceptions.TransactionNotFoundException;
+import group.chon.velluscinum.model.NonFungibleToken;
+import group.chon.velluscinum.model.TransfAdditionalInfo;
 import group.chon.velluscinum.model.WalletContent;
+import group.chon.velluscinum.test.Info;
 import net.i2p.crypto.eddsa.*;
 import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.KeyPair;
 import java.util.ArrayList;
 
@@ -15,11 +20,12 @@ public class Main {
         try {
             op = args[0];
             if(op.equals("createKeys")) {createKeys(args);}
-            else if(op.equals("newAsset")) {newAsset(args);}
-            else if(op.equals("newTransfer")) {newTransfer(args);}
+            else if(op.equals("newNFT")) {newNFT(args);}
+            else if(op.equals("transferNFT")) {transferNFT(args);}
         } catch (Exception ex) {
-            Info driver = new Info();
-            BufferedReader buffered = new BufferedReader(driver.getMANUAL());
+            InputStream inputStream = Main.class.getResourceAsStream("/manual.txt");
+            InputStreamReader inputStreamReaderMANUAL = new InputStreamReader(inputStream);
+            BufferedReader buffered = new BufferedReader(inputStreamReaderMANUAL);
             String line = buffered.readLine();
             while(line != null){
                 System.out.println(line);
@@ -36,74 +42,73 @@ public class Main {
         KeyPair bobKeyPair 	= keyManagement.newKey();
         EdDSAPrivateKey bobPrivateKey = (EdDSAPrivateKey) bobKeyPair.getPrivate();
         EdDSAPublicKey bobPublicKey  = (EdDSAPublicKey)  bobKeyPair.getPublic();
-        keyManagement.exportPrivateKeyToFile(bobPrivateKey, args[1]+".private");
-        keyManagement.exportPublicKeyToFile(bobPublicKey, args[1]+".public");
+        keyManagement.exportPrivateKeyToFile(bobPrivateKey, args[1]+".private.key");
+        keyManagement.exportPublicKeyToFile(bobPublicKey, args[1]+".public.key");
         System.exit(0);
     }
 
-    private static void newAsset(String[] args) throws Exception {
-        JasonBigchaindbDriver bigchaindb4Jason = new JasonBigchaindbDriver();
+    private static void newNFT(String[] args) throws Exception {
+        BigchainDBDriver bigchainDBDriver = new BigchainDBDriver();
         KeyManagement keyManagement = new KeyManagement();
-        //[SERVER] [PRIVATEKEY-FILE] [PUBLICKEY-FILE] [ASSET]
-        String			 serverURL	= args[1];
-        bigchaindb4Jason.setConfig(serverURL);
-        EdDSAPrivateKey  privateKey = keyManagement.importPrivateKeyFromFile(args[2]);
-        EdDSAPublicKey   publicKey  = keyManagement.importPublicKeyFromFile(args[3]);
-        JSONObject jSONAsset	= bigchaindb4Jason.importAssetFromFile(args[4]);
-        bigchaindb4Jason.newAsset(jSONAsset, privateKey, publicKey);
+        NonFungibleToken nonFungibleToken = new NonFungibleToken();
+        //[SERVER] [PRIVATEKEY-FILE] [PUBLICKEY-FILE] [NFT-FILE]
+        bigchainDBDriver.registerNFT(
+                args[1],
+                keyManagement.exportPrivateKeyToBase64(keyManagement.importPrivateKeyFromFile(args[2])),
+                keyManagement.exportPublicKeyToBase64(keyManagement.importPublicKeyFromFile(args[3])),
+                nonFungibleToken.importFromFile(args[4]).toString());
         System.exit(0);
     }
 
-    private static void newTransfer(String[] args){
-        JasonBigchaindbDriver bigchaindb4Jason = new JasonBigchaindbDriver();
+    private static void transferNFT(String[] args){
+        BigchainDBDriver bigchainDBDriver = new BigchainDBDriver();
+        TransfAdditionalInfo transfAdditionalInfo = new TransfAdditionalInfo();
         KeyManagement keyManagement = new KeyManagement();
         //[SERVER] [PRIVATEKEY-FILE] [PUBLICKEY-FILE] [ASSET-ID] [METADATA] [PUBLIC_DEST_KEY-FILE]
-        String			 serverURL	= args[1];
-        bigchaindb4Jason.setConfig(serverURL);
-        EdDSAPrivateKey  privateKey = keyManagement.importPrivateKeyFromFile(args[2]);
-        EdDSAPublicKey   publicKey  = keyManagement.importPublicKeyFromFile(args[3]);
-        String 			 assetID = args[4];
-        JSONObject		 jSONAsset	= bigchaindb4Jason.importAssetFromFile(args[5]);
-        EdDSAPublicKey   destinatorPublicKey  = keyManagement.importPublicKeyFromFile(args[6]);
-        bigchaindb4Jason.newTransfer(privateKey, publicKey, assetID, jSONAsset, destinatorPublicKey);
+        bigchainDBDriver.transferNFT(
+                args[1],
+                keyManagement.exportPrivateKeyToBase64(keyManagement.importPrivateKeyFromFile(args[2])),
+                keyManagement.exportPublicKeyToBase64(keyManagement.importPublicKeyFromFile(args[3])),
+                args[4],
+                transfAdditionalInfo.importFromFile(args[5]).toString(),
+                keyManagement.exportPublicKeyToBase64(keyManagement.importPublicKeyFromFile(args[6])));
         System.exit(0);
     }
 
     private static String test0() {
         //Creating an Asset
-        Info driver = new Info();
-        JasonBigchaindbDriver bigchaindb4Jason = new JasonBigchaindbDriver();
-        String asset = "{\n"
-                + "\"asset\":[{\n"
-                + "	\"Description\": \"My first Asset in BigChainDB\"\n"
-                + "}], \"metadata\":[{\n"
-                + "	\"Hello\": \"World\"\n"
-                + "  }]\n"
-                + "}";
-        return bigchaindb4Jason.newAsset(
-                driver.getDefaultServer(),
-                driver.getBobPrivateKey(),
-                driver.getBobPublicKey(),
-                asset
+        Info test = new Info();
+        NonFungibleToken nonFungibleToken = new NonFungibleToken();
+        nonFungibleToken.newNFT("Description","My first NFT in BigChainDB");
+        nonFungibleToken.addImmutableInformation("Another Info", "This is Immutable");
+        nonFungibleToken.addAdditionalInformation("CurrentOwner","Bob");
+
+        BigchainDBDriver bigchaindb4Jason = new BigchainDBDriver();
+
+        return bigchaindb4Jason.registerNFT(
+                test.getDefaultServer(),
+                test.getBobPrivateKey(),
+                test.getBobPublicKey(),
+                nonFungibleToken.toString()
                 );
     }
 
     private static String test1(){
         String assetID = test0();
         //Transferring an Asset
-        JasonBigchaindbDriver bigchaindb4Jason = new JasonBigchaindbDriver();
-        Info driver = new Info();
-        String server = driver.getDefaultServer();
-        String ownerPrivateKey = driver.getBobPrivateKey();
-        String ownerPublicKey  = driver.getBobPublicKey();
-        String recipientPublicKey = driver.getAlicePublickey();
-        String newMetadata = "{\n"
-                + "  \"metadata\":[{\n"
-                + "	\"New Owner\": \"Alice\"\n"
-                + "  }]\n"
-                + "}";
+        TransfAdditionalInfo transfAdditionalInfo = new TransfAdditionalInfo();
+        transfAdditionalInfo.newTransfInfo("New Owner", "Alice");
 
-        return bigchaindb4Jason.newTransfer(server,ownerPrivateKey,ownerPublicKey,assetID,newMetadata,recipientPublicKey);
+        BigchainDBDriver bigchaindb4Jason = new BigchainDBDriver();
+        Info test = new Info();
+
+        return bigchaindb4Jason.transferNFT(
+                test.getDefaultServer(),
+                test.getBobPrivateKey(),
+                test.getBobPublicKey(),
+                assetID,
+                transfAdditionalInfo.toString(),
+                test.getAlicePublickey());
     }
 
     private static String test2() throws Exception {
@@ -114,7 +119,7 @@ public class Main {
         EdDSAPrivateKey bankPrivateKey = keyManagement.importPrivateKeyFromBase64(driver.getBobPrivateKey());
         Vellus vellus = new Vellus();
         vellus.setConfig(driver.getDefaultServer());
-        String idMoeda = vellus.createFungibleToken(bankPrivateKey,bankPublicKey,"ChonCoin", 9000000000000000000L);
+        String idMoeda = vellus.createFungibleToken(bankPrivateKey,bankPublicKey,"FungibleToken", 100L);
         return  idMoeda;
     }
 

@@ -1,6 +1,7 @@
 package group.chon.velluscinum;
 
 import com.bigchaindb.util.KeyPairUtils;
+import group.chon.velluscinum.test.Info;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import net.i2p.crypto.eddsa.KeyPairGenerator;
@@ -13,9 +14,9 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 public class KeyManagement {
-    Info driver = new Info();
+    final private String DRIVERNAME = "[BigChainDBDriver]";
     public KeyPair newKey() {
-        System.out.print(driver.getDRIVERNAME()+" Key Generated.... ");
+        System.out.print(DRIVERNAME+" Key Generated.... ");
         KeyPairGenerator edDsaKpg = new KeyPairGenerator();
         KeyPair keyPair = edDsaKpg.generateKeyPair();
         System.out.println(KeyPairUtils.encodePublicKeyInBase58((EdDSAPublicKey) keyPair.getPublic()));
