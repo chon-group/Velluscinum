@@ -7,10 +7,10 @@ import java.io.InputStreamReader;
 
 public class Info {
     final private String defaultServer = "http://testchain.chon.group:9984/";
-    final private String bobPrivateKey = "MC4CAQAwBQYDK2VwBCIEINrKHkh7bJlpSeGJyutdxrsa6qqtHVIbm6YXyQymTYK8";
-    final private String bobPublicKey  = "MCowBQYDK2VwAyEAjFVzFInLZCIpo94Ii5f74dtr/FcKQs8M0m9Z2JOAMVU=";
-    final private String alicePrivateKey = "MC4CAQAwBQYDK2VwBCIEIANd+6AE0IetQ1vaQC88DhYuEs9miXjvv2LkXSxR4j3Z";
-    final private String alicePublickey = "MCowBQYDK2VwAyEAEuN5rvkEHUqJcFr9bzh8qzbMellY9oHY32SkUoL0cL8=";
+    final private String bobPrivateKey = "A4BAzNZdGBqkGHQP7gWovcYaGP3UELL6f4THhuHSQHCK";
+    final private String bobPublicKey  = "arDLZkDEmZi5wWtebvZrC5KgSs2tX8ULLeBSFp8dTJR";
+    final private String alicePrivateKey = "7ZmTjitG3mhsgY6qon2HLozdX9S6kEuvBbFKdfgJahGj";
+    final private String alicePublickey = "FNJPJdtuPQYsqHG6tuUjKjqv7SW84U4ipiyyLV2j6MEW";
 
     public String getAlicePrivateKey() {
         return alicePrivateKey;

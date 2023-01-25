@@ -111,11 +111,11 @@ public class BigchainDBDriver {
         try {
             setConfig(strURL);
             return newTransfer(
-                    keyManagement.importPrivateKeyFromBase64(strSenderPrivateKey),
-                    keyManagement.importPublicKeyFromBase64(strSenderPublicKey),
+                    keyManagement.stringToEdDSAPrivateKey(strSenderPrivateKey,"base58"),
+                    keyManagement.stringToEdDSAPublicKey(strSenderPublicKey,"base58"),
                     strAssetId,
                     new JSONObject(strNewMetadata),
-                    keyManagement.importPublicKeyFromBase64(strRecipientPublicKey));
+                    keyManagement.stringToEdDSAPublicKey(strRecipientPublicKey,"base58"));
         }catch(Exception e) {
             e.printStackTrace();
             return null;
@@ -178,11 +178,11 @@ public class BigchainDBDriver {
         }
     }
 
-    public String registerNFT(String strURL, String strPrivateKey, String strPublicKey, String strNFT){
+    public String registerNFT(String strURL, String strPrivateKey58, String strPublicKey58, String strNFT){
         setConfig(strURL);
         JSONObject asset = new JSONObject(strNFT);
-        EdDSAPublicKey edDSAPublicKey = keyManagement.importPublicKeyFromBase64(strPublicKey);
-        EdDSAPrivateKey edDSAPrivateKey = keyManagement.importPrivateKeyFromBase64(strPrivateKey);
+        EdDSAPublicKey edDSAPublicKey = keyManagement.stringToEdDSAPublicKey(strPublicKey58,"base58");
+        EdDSAPrivateKey edDSAPrivateKey = keyManagement.stringToEdDSAPrivateKey(strPrivateKey58,"base58");
         try {
             return newAsset(asset, edDSAPrivateKey, edDSAPublicKey);
         } catch (Exception e) {

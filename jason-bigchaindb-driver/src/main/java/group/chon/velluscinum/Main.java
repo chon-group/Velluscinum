@@ -1,6 +1,8 @@
 package group.chon.velluscinum;
 
 import com.bigchaindb.exceptions.TransactionNotFoundException;
+import com.bigchaindb.util.Base58;
+import com.bigchaindb.util.KeyPairUtils;
 import group.chon.velluscinum.model.NonFungibleToken;
 import group.chon.velluscinum.model.TransfAdditionalInfo;
 import group.chon.velluscinum.model.WalletContent;
@@ -13,6 +15,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.KeyPair;
 import java.util.ArrayList;
+import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -32,6 +35,7 @@ public class Main {
                 line = buffered.readLine();
             }
             buffered.close();
+            test4();
             System.exit(0);
         }
     }
@@ -42,8 +46,8 @@ public class Main {
         KeyPair bobKeyPair 	= keyManagement.newKey();
         EdDSAPrivateKey bobPrivateKey = (EdDSAPrivateKey) bobKeyPair.getPrivate();
         EdDSAPublicKey bobPublicKey  = (EdDSAPublicKey)  bobKeyPair.getPublic();
-        keyManagement.exportPrivateKeyToFile(bobPrivateKey, args[1]+".private.key");
-        keyManagement.exportPublicKeyToFile(bobPublicKey, args[1]+".public.key");
+        keyManagement.keyToFile(bobPrivateKey,"base58",args[1]+".private.key");
+        keyManagement.keyToFile(bobPublicKey,"base58",args[1]+".public.key");
         System.exit(0);
     }
 
@@ -51,11 +55,12 @@ public class Main {
         BigchainDBDriver bigchainDBDriver = new BigchainDBDriver();
         KeyManagement keyManagement = new KeyManagement();
         NonFungibleToken nonFungibleToken = new NonFungibleToken();
+        String strPrivateKey = keyManagement.importKeyFromFile(args[2]);
         //[SERVER] [PRIVATEKEY-FILE] [PUBLICKEY-FILE] [NFT-FILE]
         bigchainDBDriver.registerNFT(
                 args[1],
-                keyManagement.exportPrivateKeyToBase64(keyManagement.importPrivateKeyFromFile(args[2])),
-                keyManagement.exportPublicKeyToBase64(keyManagement.importPublicKeyFromFile(args[3])),
+                keyManagement.importKeyFromFile(args[2]),
+                keyManagement.importKeyFromFile(args[3]),
                 nonFungibleToken.importFromFile(args[4]).toString());
         System.exit(0);
     }
@@ -67,11 +72,11 @@ public class Main {
         //[SERVER] [PRIVATEKEY-FILE] [PUBLICKEY-FILE] [ASSET-ID] [METADATA] [PUBLIC_DEST_KEY-FILE]
         bigchainDBDriver.transferNFT(
                 args[1],
-                keyManagement.exportPrivateKeyToBase64(keyManagement.importPrivateKeyFromFile(args[2])),
-                keyManagement.exportPublicKeyToBase64(keyManagement.importPublicKeyFromFile(args[3])),
+                keyManagement.importKeyFromFile(args[2]),
+                keyManagement.importKeyFromFile(args[3]),
                 args[4],
                 transfAdditionalInfo.importFromFile(args[5]).toString(),
-                keyManagement.exportPublicKeyToBase64(keyManagement.importPublicKeyFromFile(args[6])));
+                keyManagement.importKeyFromFile(args[6]));
         System.exit(0);
     }
 
@@ -84,6 +89,7 @@ public class Main {
         nonFungibleToken.addAdditionalInformation("CurrentOwner","Bob");
 
         BigchainDBDriver bigchaindb4Jason = new BigchainDBDriver();
+        KeyManagement keyManagement = new KeyManagement();
 
         return bigchaindb4Jason.registerNFT(
                 test.getDefaultServer(),
@@ -115,8 +121,8 @@ public class Main {
         //Creating a fungible token
         Info driver = new Info();
         KeyManagement keyManagement = new KeyManagement();
-        EdDSAPublicKey bankPublicKey = keyManagement.importPublicKeyFromBase64(driver.getBobPublicKey());
-        EdDSAPrivateKey bankPrivateKey = keyManagement.importPrivateKeyFromBase64(driver.getBobPrivateKey());
+        EdDSAPublicKey bankPublicKey = keyManagement.stringToEdDSAPublicKey(driver.getBobPublicKey(), "base58");
+        EdDSAPrivateKey bankPrivateKey = keyManagement.stringToEdDSAPrivateKey(driver.getBobPrivateKey(), "base58");
         Vellus vellus = new Vellus();
         vellus.setConfig(driver.getDefaultServer());
         String idMoeda = vellus.createFungibleToken(bankPrivateKey,bankPublicKey,"FungibleToken", 100L);
@@ -127,10 +133,10 @@ public class Main {
         String fungibleToken =  test2();
         Info driver = new Info();
         KeyManagement keyManagement = new KeyManagement();
-        EdDSAPublicKey bankPublicKey = keyManagement.importPublicKeyFromBase64(driver.getBobPublicKey());
-        EdDSAPrivateKey bankPrivateKey = keyManagement.importPrivateKeyFromBase64(driver.getBobPrivateKey());
-        EdDSAPrivateKey  clientPrivateKey = keyManagement.importPrivateKeyFromBase64(driver.getAlicePrivateKey());
-        EdDSAPublicKey  clientPublicKey = keyManagement.importPublicKeyFromBase64(driver.getAlicePublickey());
+        EdDSAPublicKey bankPublicKey = keyManagement.stringToEdDSAPublicKey(driver.getBobPublicKey(),"base58");
+        EdDSAPrivateKey bankPrivateKey = keyManagement.stringToEdDSAPrivateKey(driver.getBobPrivateKey(),"base58");
+        EdDSAPrivateKey  clientPrivateKey = keyManagement.stringToEdDSAPrivateKey(driver.getAlicePrivateKey(),"base58");
+        EdDSAPublicKey  clientPublicKey = keyManagement.stringToEdDSAPublicKey(driver.getAlicePublickey(),"base58");
         Vellus vellus = new Vellus();
         vellus.setConfig(driver.getDefaultServer());
 
@@ -154,8 +160,8 @@ public class Main {
         KeyManagement keyManagement = new KeyManagement();
         Wallet wallet = new Wallet();
 
-        EdDSAPrivateKey bobPrivateKey = keyManagement.importPrivateKeyFromBase64(driver.getBobPrivateKey());
-        EdDSAPublicKey bobPublicKey = keyManagement.importPublicKeyFromBase64(driver.getBobPublicKey());
+        EdDSAPrivateKey bobPrivateKey = keyManagement.stringToEdDSAPrivateKey(driver.getBobPrivateKey(),"base58");
+        EdDSAPublicKey bobPublicKey = keyManagement.stringToEdDSAPublicKey(driver.getBobPublicKey(),"base58");
 
         wallet.setConfig(driver.getDefaultServer());
         ArrayList<WalletContent> walletContents= wallet.getMyTokens(bobPrivateKey,bobPublicKey);
