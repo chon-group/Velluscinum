@@ -4,5 +4,6 @@ MAS firstExample{
     environment: Env
     agents:
         bob;
+
 }
 

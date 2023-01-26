@@ -32,6 +32,13 @@ public class KeyManagement {
         return keyPairGenerator.generateKeyPair();
     }
 
+    public String[] newKeyPair(String base){
+        KeyPair bobKeyPair 	= newKey();
+        String[] strPair = {keyToString((EdDSAPrivateKey) bobKeyPair.getPrivate(),base),
+                            keyToString((EdDSAPublicKey)  bobKeyPair.getPublic(),base)};
+        return strPair;
+    }
+
     public String keyToString(EdDSAPublicKey edDSAPublicKey, String outBase){
         if(outBase.equals(BASE58)){
             return Base58.encode(Arrays.copyOfRange(edDSAPublicKey.getEncoded(), 12, 44));

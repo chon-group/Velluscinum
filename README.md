@@ -24,72 +24,169 @@ __Abaixo são descritos os principais métodos:__
 #### Exemplo Simples
 * Agent agent001 in project [firstExample.mas2j](https://github.com/nilsonmori/velluscinum/tree/master/examples/01-firstExample)
 ```sh
+// Agent bob in project firstExample.mas2j
+
 /* Initial beliefs and rules */
-bigchainServer("http://testchain.chon.group:9984/").
-myprivateKey("MC4CAQAwBQYDK2VwBCIEINrKHkh7bJlpSeGJyutdxrsa6qqtHVIbm6YXyQymTYK8").
-mypublicKey("MCowBQYDK2VwAyEAjFVzFInLZCIpo94Ii5f74dtr/FcKQs8M0m9Z2JOAMVU=").
-alicePublicKey("MCowBQYDK2VwAyEAEuN5rvkEHUqJcFr9bzh8qzbMellY9oHY32SkUoL0cL8=").
+bigchainDB("http://testchain.chon.group:9984/").
+aliceKey("FNJPJdtuPQYsqHG6tuUjKjqv7SW84U4ipiyyLV2j6MEW").
 
 /* Initial goals */
 !start.
 
 /* Plans */
 +!start <-
-	.print("Creating an Asset in BigChainDB.");
-	.wait(1000);
-	?bigchainServer(URL);
-	?myprivateKey(PrivKey);
-	?mypublicKey(PublKey);
-	createAsset(URL,PrivKey,PublKey);
-	.wait(5000);
-	?assetID(AssetID)[source(percept)];
-	.print("Asset registered on Blockchain!");
-	.print(URL,"api/v1/transactions/",AssetID);
-	?alicePublicKey(AliceKey);
-	transferAsset(URL,PrivKey,PublKey,AssetID,AliceKey);
-	.wait(5000);
+	createWallet("base58");
+	!deployNFT;
+	!tranferNFT.
+
++!deployNFT: bigchainDB(Server) & privateKey(MyPriv) & publicKey(MyPub) <-
+	buildNFT("name","Meninas",
+			 "author","Diego Rodríguez de Silva y Velázquez",
+			 "place","Madrid",
+			 "year","1656");
+			 
+	metadataNFT("location","Madrid",
+                "value_eur","25000000€",
+                "value_btc","2200",
+				"owner","Agent Bob");
+
+
+	createAsset(Server,MyPriv,MyPub);
+	
+	?assetID(NFT)[source(percept)];
+	.print("NFT registered: ",Server,"api/v1/transactions/",NFT).
+	
+
++!tranferNFT: assetID(NFT) & aliceKey(AK) 
+				& bigchainDB(Server) & privateKey(MyPriv) 
+				& publicKey(MyPub)<-
+				
+	metadataTransfer("value_eur","30000000€",
+                 "value_btc","2100",
+				 "location","Rio de Janeiro",
+				 "owner","Agent Alice");
+	
+
+	transferAsset(Server,MyPriv,MyPub,NFT,AK);
 	?transferID(TransferID);
-	.print("Alice is the Asset Owner!");
-	.print(URL,"api/v1/transactions/",TransferID).
+	.print("NFT transferred: ",Server,"api/v1/transactions/",TransferID).
+	
 	
 ```
 
 * Environment code for project [firstExample.mas2j](https://github.com/nilsonmori/velluscinum/tree/master/examples/01-firstExample)
 ```sh
+
+// Environment code for project firstExample.mas2j
+
 import jason.asSyntax.*;
 import jason.environment.*;
 import group.chon.velluscinum.*;
+
 public class Env extends Environment {
-	JasonBigchaindbDriver bigchaindb4Jason = new JasonBigchaindbDriver();
-	public boolean executeAction(String agName, Structure action) {    
-		String server = action.getTerm(0).toString().replace("\"", "");
-		String privateKey = action.getTerm(1).toString().replace("\"", "");
-		String publicKey  = action.getTerm(2).toString().replace("\"", "");
-		if(action.toString().substring(0,12).equals("createAsset(")){
-			String asset = "{\n"
-				+ "\"asset\":[{\n"
-				+ "	\"Description\": \"My first Asset in BigChainDB\"\n"
-				+ "}],\n"
-				+ "  \"metadata\":[{\n"
-				+ "	\"Hello\": \"World\"\n"
-				+ "  }]\n"
-				+ "}";
-			String assetID = bigchaindb4Jason.newAsset(server,privateKey,publicKey,asset);
-			addPercept(agName, Literal.parseLiteral("assetID(\""+assetID+"\")"));
-		} else if(action.toString().substring(0,14).equals("transferAsset(")){
-			String assetID  = action.getTerm(3).toString().replace("\"", "");
-			String aliceKey  = action.getTerm(4).toString().replace("\"", "");
-			String metadata = "{\n"
-				+ "  \"metadata\":[{\n"
-				+ "	\"New Owner\": \"Alice\"\n"
-				+ "  }]\n"
-				+ "}";
-			String transferID = bigchaindb4Jason.newTransfer(server,privateKey,publicKey,assetID,metadata,aliceKey);
-			addPercept(agName, Literal.parseLiteral("transferID(\""+transferID+"\")"));
+	private NonFungibleToken 		nonFungibleToken 		= new NonFungibleToken();
+	private BigchainDBDriver 		bigchaindb4Jason 		= new BigchainDBDriver();
+	private TransfAdditionalInfo 	transfAdditionalInfo 	= new TransfAdditionalInfo();
+	private KeyManagement 			keyManagement 			= new KeyManagement();
+	
+    public boolean executeAction(String agName, Structure action) {
+		String[] args = getActionTermArray(action);
+
+		if(action.toString().substring(0,11).equals("createAsset")){
+			addPercept(agName, 
+						Literal.parseLiteral(
+							"assetID(\""+createAsset(args)+"\")")
+						);
 		}
-	return true;
+		else if(action.toString().substring(0,13).equals("transferAsset")){		
+			addPercept(agName,
+						Literal.parseLiteral(
+							"transferID(\""+transferNFT(args)+"\")")
+						);
+		}
+		else if((action.toString().substring(0,8).equals("buildNFT"))){
+			buildNFT(args);				
+		}
+		else if((action.toString().substring(0,11).equals("metadataNFT"))){
+			metadataNFT(args);				
+		}
+		else if((action.toString().substring(0,16).equals("metadataTransfer"))){
+			metadataTransfer(args);		
+		}else if((action.toString().substring(0,12).equals("createWallet"))){
+			String[] keyPair = createWallet(args);
+			addPercept(agName,
+						Literal.parseLiteral(
+							"privateKey(\""+keyPair[0]+"\")")
+						);
+			addPercept(agName,
+						Literal.parseLiteral(
+							"publicKey(\""+keyPair[1]+"\")")
+						);
+		}
+        return true;
+    }
+	
+	private String createAsset(String[] args){
+		return bigchaindb4Jason.registerNFT(
+					args[0],
+					args[1],
+					args[2],
+					this.nonFungibleToken.toString()
+					);
+			
+	}
+	
+	private String transferNFT(String[] args){
+		return bigchaindb4Jason.transferNFT(
+					args[0],
+					args[1],
+					args[2],
+					args[3],
+					transfAdditionalInfo.toString(),
+					args[4]);
+	}
+	
+	private void buildNFT(String[] args){
+		this.nonFungibleToken.newNFT(args[0],args[1]);
+		if(args.length>2){
+			for(int i=2; i<args.length; i+=2){
+				this.nonFungibleToken.addImmutableInformation(args[i],args[i+1]);
+			}
+		}
+	}
+	
+	private void metadataNFT(String[] args){
+		for(int i=0; i<args.length; i+=2){
+			this.nonFungibleToken.addAdditionalInformation(args[i],args[i+1]);	
+		}
+		
+	}
+	
+	private void metadataTransfer(String[] args){
+		this.transfAdditionalInfo.newTransfInfo(args[0],args[1]);
+		if(args.length>2){
+			for(int i=2; i<args.length; i+=2){
+				this.transfAdditionalInfo.addAdditionalInformation(args[i],args[i+1]);
+			}
+		}
+		
+	}
+	
+	private String[] getActionTermArray(Structure action){
+		Integer terms = action.getArity();
+		String[] termArray = new String[terms];
+		for(int i=0; i<terms; i++){
+			termArray[i] = action.getTerm(i).toString().replace("\"", "");
+		}
+		return termArray;
+	}
+	
+	private String[] createWallet(String[] args){
+		return keyManagement.newKeyPair(args[0]);
+	}
+	
 }
-}
+
 ```
 
 ### Outros Exemplos

@@ -1,21 +1,14 @@
 package group.chon.velluscinum;
 
 import com.bigchaindb.exceptions.TransactionNotFoundException;
-import com.bigchaindb.util.Base58;
-import com.bigchaindb.util.KeyPairUtils;
-import group.chon.velluscinum.model.NonFungibleToken;
-import group.chon.velluscinum.model.TransfAdditionalInfo;
-import group.chon.velluscinum.model.WalletContent;
-import group.chon.velluscinum.test.Info;
 import net.i2p.crypto.eddsa.*;
-import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.KeyPair;
 import java.util.ArrayList;
-import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -35,7 +28,6 @@ public class Main {
                 line = buffered.readLine();
             }
             buffered.close();
-            test4();
             System.exit(0);
         }
     }
@@ -82,7 +74,7 @@ public class Main {
 
     private static String test0() {
         //Creating an Asset
-        Info test = new Info();
+        Test test = new Test();
         NonFungibleToken nonFungibleToken = new NonFungibleToken();
         nonFungibleToken.newNFT("Description","My first NFT in BigChainDB");
         nonFungibleToken.addImmutableInformation("Another Info", "This is Immutable");
@@ -106,7 +98,7 @@ public class Main {
         transfAdditionalInfo.newTransfInfo("New Owner", "Alice");
 
         BigchainDBDriver bigchaindb4Jason = new BigchainDBDriver();
-        Info test = new Info();
+        Test test = new Test();
 
         return bigchaindb4Jason.transferNFT(
                 test.getDefaultServer(),
@@ -119,7 +111,7 @@ public class Main {
 
     private static String test2() throws Exception {
         //Creating a fungible token
-        Info driver = new Info();
+        Test driver = new Test();
         KeyManagement keyManagement = new KeyManagement();
         EdDSAPublicKey bankPublicKey = keyManagement.stringToEdDSAPublicKey(driver.getBobPublicKey(), "base58");
         EdDSAPrivateKey bankPrivateKey = keyManagement.stringToEdDSAPrivateKey(driver.getBobPrivateKey(), "base58");
@@ -131,7 +123,7 @@ public class Main {
 
     private static String test3() throws Exception {
         String fungibleToken =  test2();
-        Info driver = new Info();
+        Test driver = new Test();
         KeyManagement keyManagement = new KeyManagement();
         EdDSAPublicKey bankPublicKey = keyManagement.stringToEdDSAPublicKey(driver.getBobPublicKey(),"base58");
         EdDSAPrivateKey bankPrivateKey = keyManagement.stringToEdDSAPrivateKey(driver.getBobPrivateKey(),"base58");
@@ -156,7 +148,7 @@ public class Main {
 
     private static ArrayList<WalletContent> test4() throws TransactionNotFoundException, IOException {
 
-        Info driver = new Info();
+        Test driver = new Test();
         KeyManagement keyManagement = new KeyManagement();
         Wallet wallet = new Wallet();
 

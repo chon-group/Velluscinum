@@ -7,7 +7,6 @@ import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import java.util.ArrayList;
 import java.util.Collections;
-import group.chon.velluscinum.model.WalletContent;
 
 public class Wallet {
     KeyManagement keyManagement = new KeyManagement();

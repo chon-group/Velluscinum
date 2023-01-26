@@ -4,12 +4,11 @@ import com.bigchaindb.exceptions.TransactionNotFoundException;
 import com.bigchaindb.model.*;
 import com.bigchaindb.builders.*;
 import com.bigchaindb.constants.*;
-import java.io.FileInputStream;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
-import group.chon.velluscinum.model.TransfAdditionalInfo;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import org.json.JSONObject;

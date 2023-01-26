@@ -1,26 +1,50 @@
-// Agent agent001 in project firstExample.mas2j
+// Agent bob in project firstExample.mas2j
 
 /* Initial beliefs and rules */
-bigchain("http://testchain.chon.group:9984/").
-privateKey("MC4CAQAwBQYDK2VwBCIEINrKHkh7bJlpSeGJyutdxrsa6qqtHVIbm6YXyQymTYK8").
-publicKey("MCowBQYDK2VwAyEAjFVzFInLZCIpo94Ii5f74dtr/FcKQs8M0m9Z2JOAMVU=").
-
+bigchainDB("http://testchain.chon.group:9984/").
+aliceKey("FNJPJdtuPQYsqHG6tuUjKjqv7SW84U4ipiyyLV2j6MEW").
 
 /* Initial goals */
-!createAsset.
+!start.
 
 /* Plans */
-+!createAsset: bigchain(Server) & privateKey(MyPriv) 
-			& publicKey(MyPub)<-
-			
-	.print("Creating NFT in BigChainDB.");
-	buildNFT("Description","My first NFT in BigChainDB");
++!start <-
+	createWallet("base58");
+	!deployNFT;
+	!tranferNFT.
+
++!deployNFT: bigchainDB(Server) & privateKey(MyPriv) & publicKey(MyPub) <-
+	buildNFT("name","Meninas",
+			 "author","Diego Rodríguez de Silva y Velázquez",
+			 "place","Madrid",
+			 "year","1656");
+			 
+	metadataNFT("location","Madrid",
+                "value_eur","25000000€",
+                "value_btc","2200",
+				"owner","Agent Bob");
+
+
 	createAsset(Server,MyPriv,MyPub);
-	?assetID(NFT)[source(percept)];
-	.print("NFT registered: ",Server,"api/v1/transactions/",NFT);
 	
-	dataTransfer("New Owner", "Alice");
-	transferAsset(Server,MyPriv,MyPub,NFT,"MCowBQYDK2VwAyEAEuN5rvkEHUqJcFr9bzh8qzbMellY9oHY32SkUoL0cL8=");
+	?assetID(NFT)[source(percept)];
+	.print("NFT registered: ",Server,"api/v1/transactions/",NFT).
+	
+
++!tranferNFT: assetID(NFT) & aliceKey(AK) 
+				& bigchainDB(Server) & privateKey(MyPriv) 
+				& publicKey(MyPub)<-
+				
+	metadataTransfer("value_eur","30000000€",
+                 "value_btc","2100",
+				 "location","Rio de Janeiro",
+				 "owner","Agent Alice");
+	
+
+	transferAsset(Server,MyPriv,MyPub,NFT,AK);
 	?transferID(TransferID);
 	.print("NFT transferred: ",Server,"api/v1/transactions/",TransferID).
 	
+
+	
+
