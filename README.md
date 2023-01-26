@@ -41,14 +41,11 @@ aliceKey("FNJPJdtuPQYsqHG6tuUjKjqv7SW84U4ipiyyLV2j6MEW").
 
 +!deployNFT: bigchainDB(Server) & privateKey(MyPriv) & publicKey(MyPub) <-
 	buildNFT("name","Meninas",
-			 "author","Diego Rodríguez de Silva y Velázquez",
-			 "place","Madrid",
-			 "year","1656");
+		"author","Diego Rodríguez de Silva y Velázquez",
+		"place","Madrid", "year","1656");
 			 
-	metadataNFT("location","Madrid",
-                "value_eur","25000000€",
-                "value_btc","2200",
-				"owner","Agent Bob");
+	metadataNFT("location","Madrid", "value_eur","25000000€",
+                "value_btc","2200", "owner","Agent Bob");
 
 
 	createAsset(Server,MyPriv,MyPub);
@@ -57,16 +54,12 @@ aliceKey("FNJPJdtuPQYsqHG6tuUjKjqv7SW84U4ipiyyLV2j6MEW").
 	.print("NFT registered: ",Server,"api/v1/transactions/",NFT).
 	
 
-+!tranferNFT: assetID(NFT) & aliceKey(AK) 
-				& bigchainDB(Server) & privateKey(MyPriv) 
-				& publicKey(MyPub)<-
++!tranferNFT: assetID(NFT) & aliceKey(AK) & bigchainDB(Server) 
+	& privateKey(MyPriv) & publicKey(MyPub)<-
 				
-	metadataTransfer("value_eur","30000000€",
-                 "value_btc","2100",
-				 "location","Rio de Janeiro",
-				 "owner","Agent Alice");
+	metadataTransfer("value_eur","30000000€","value_btc","2100",
+		"location","Rio de Janeiro","owner","Agent Alice");
 	
-
 	transferAsset(Server,MyPriv,MyPub,NFT,AK);
 	?transferID(TransferID);
 	.print("NFT transferred: ",Server,"api/v1/transactions/",TransferID).
@@ -84,106 +77,76 @@ import jason.environment.*;
 import group.chon.velluscinum.*;
 
 public class Env extends Environment {
-	private NonFungibleToken 		nonFungibleToken 		= new NonFungibleToken();
-	private BigchainDBDriver 		bigchaindb4Jason 		= new BigchainDBDriver();
-	private TransfAdditionalInfo 	transfAdditionalInfo 	= new TransfAdditionalInfo();
-	private KeyManagement 			keyManagement 			= new KeyManagement();
+private NonFungibleToken 	nonFungibleToken 	= new NonFungibleToken();
+private BigchainDBDriver 	bigchaindb4Jason 	= new BigchainDBDriver();
+private TransfAdditionalInfo 	transfAdditionalInfo 	= new TransfAdditionalInfo();
+private KeyManagement		keyManagement 		= new KeyManagement();
 	
-    public boolean executeAction(String agName, Structure action) {
-		String[] args = getActionTermArray(action);
+public boolean executeAction(String agName, Structure action) {
+	String[] args = getActionTermArray(action);
 
-		if(action.toString().substring(0,11).equals("createAsset")){
-			addPercept(agName, 
-						Literal.parseLiteral(
-							"assetID(\""+createAsset(args)+"\")")
-						);
-		}
-		else if(action.toString().substring(0,13).equals("transferAsset")){		
-			addPercept(agName,
-						Literal.parseLiteral(
-							"transferID(\""+transferNFT(args)+"\")")
-						);
-		}
-		else if((action.toString().substring(0,8).equals("buildNFT"))){
-			buildNFT(args);				
-		}
-		else if((action.toString().substring(0,11).equals("metadataNFT"))){
-			metadataNFT(args);				
-		}
-		else if((action.toString().substring(0,16).equals("metadataTransfer"))){
-			metadataTransfer(args);		
-		}else if((action.toString().substring(0,12).equals("createWallet"))){
-			String[] keyPair = createWallet(args);
-			addPercept(agName,
-						Literal.parseLiteral(
-							"privateKey(\""+keyPair[0]+"\")")
-						);
-			addPercept(agName,
-						Literal.parseLiteral(
-							"publicKey(\""+keyPair[1]+"\")")
-						);
-		}
-        return true;
-    }
-	
-	private String createAsset(String[] args){
-		return bigchaindb4Jason.registerNFT(
-					args[0],
-					args[1],
-					args[2],
-					this.nonFungibleToken.toString()
-					);
-			
+	if(action.toString().substring(0,11).equals("createAsset")){
+		addPercept(agName,Literal.parseLiteral("assetID(\""+createAsset(args)+"\")"));
+	}else if(action.toString().substring(0,13).equals("transferAsset")){		
+		addPercept(agName,Literal.parseLiteral("transferID(\""+transferNFT(args)+"\")"));
+	}else if((action.toString().substring(0,8).equals("buildNFT"))){
+		buildNFT(args);				
+	}else if((action.toString().substring(0,11).equals("metadataNFT"))){
+		metadataNFT(args);				
+	}else if((action.toString().substring(0,16).equals("metadataTransfer"))){
+		metadataTransfer(args);		
+	}else if((action.toString().substring(0,12).equals("createWallet"))){
+		String[] keyPair = createWallet(args);
+		addPercept(agName,Literal.parseLiteral("privateKey(\""+keyPair[0]+"\")"));
+		addPercept(agName,Literal.parseLiteral("publicKey(\""+keyPair[1]+"\")"));
 	}
-	
-	private String transferNFT(String[] args){
-		return bigchaindb4Jason.transferNFT(
-					args[0],
-					args[1],
-					args[2],
-					args[3],
-					transfAdditionalInfo.toString(),
-					args[4]);
-	}
-	
-	private void buildNFT(String[] args){
-		this.nonFungibleToken.newNFT(args[0],args[1]);
-		if(args.length>2){
-			for(int i=2; i<args.length; i+=2){
-				this.nonFungibleToken.addImmutableInformation(args[i],args[i+1]);
-			}
+	return true;
+}
+
+private String createAsset(String[] args){
+	return bigchaindb4Jason.registerNFT(args[0],args[1],args[2],this.nonFungibleToken.toString());
+}
+
+private String transferNFT(String[] args){
+	return bigchaindb4Jason.transferNFT(args[0],args[1],args[2],args[3],transfAdditionalInfo.toString(),args[4]);
+}
+
+private void buildNFT(String[] args){
+	this.nonFungibleToken.newNFT(args[0],args[1]);
+	if(args.length>2){
+		for(int i=2; i<args.length; i+=2){
+			this.nonFungibleToken.addImmutableInformation(args[i],args[i+1]);
 		}
 	}
-	
-	private void metadataNFT(String[] args){
-		for(int i=0; i<args.length; i+=2){
-			this.nonFungibleToken.addAdditionalInformation(args[i],args[i+1]);	
+}
+
+private void metadataNFT(String[] args){
+	for(int i=0; i<args.length; i+=2){
+		this.nonFungibleToken.addAdditionalInformation(args[i],args[i+1]);	
+	}
+}
+
+private void metadataTransfer(String[] args){
+	this.transfAdditionalInfo.newTransfInfo(args[0],args[1]);
+	if(args.length>2){
+		for(int i=2; i<args.length; i+=2){
+			this.transfAdditionalInfo.addAdditionalInformation(args[i],args[i+1]);
 		}
-		
 	}
-	
-	private void metadataTransfer(String[] args){
-		this.transfAdditionalInfo.newTransfInfo(args[0],args[1]);
-		if(args.length>2){
-			for(int i=2; i<args.length; i+=2){
-				this.transfAdditionalInfo.addAdditionalInformation(args[i],args[i+1]);
-			}
-		}
-		
+}
+
+private String[] getActionTermArray(Structure action){
+	Integer terms = action.getArity();
+	String[] termArray = new String[terms];
+	for(int i=0; i<terms; i++){
+		termArray[i] = action.getTerm(i).toString().replace("\"", "");
 	}
-	
-	private String[] getActionTermArray(Structure action){
-		Integer terms = action.getArity();
-		String[] termArray = new String[terms];
-		for(int i=0; i<terms; i++){
-			termArray[i] = action.getTerm(i).toString().replace("\"", "");
-		}
-		return termArray;
-	}
-	
-	private String[] createWallet(String[] args){
-		return keyManagement.newKeyPair(args[0]);
-	}
+	return termArray;
+}
+
+private String[] createWallet(String[] args){
+	return keyManagement.newKeyPair(args[0]);
+}
 	
 }
 
