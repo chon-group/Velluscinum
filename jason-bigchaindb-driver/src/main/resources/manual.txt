@@ -5,7 +5,7 @@ For more information
 *********************************************************************************
 
 How to create a keyPair?
-java -jar jason-bigchaindb-driver.jar createKeys [FILENAME]
+java -jar jason-bigchaindb-driver.jar  [FILENAME]
 example:
     java -jar jason-bigchaindb-driver.jar createKeys bob
 

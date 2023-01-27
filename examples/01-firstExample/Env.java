@@ -7,7 +7,7 @@ import group.chon.velluscinum.*;
 public class Env extends Environment {
 	private NonFungibleToken 		nonFungibleToken 		= new NonFungibleToken();
 	private BigchainDBDriver 		bigchaindb4Jason 		= new BigchainDBDriver();
-	private TransfAdditionalInfo 	transfAdditionalInfo 	= new TransfAdditionalInfo();
+	private TransferAdditionalInfo 	transferAdditionalInfo 	= new TransferAdditionalInfo();
 	private KeyManagement 			keyManagement 			= new KeyManagement();
 	
     public boolean executeAction(String agName, Structure action) {
@@ -63,7 +63,7 @@ public class Env extends Environment {
 					args[1],
 					args[2],
 					args[3],
-					transfAdditionalInfo.toString(),
+					transferAdditionalInfo.toString(),
 					args[4]);
 	}
 	
@@ -84,10 +84,10 @@ public class Env extends Environment {
 	}
 	
 	private void metadataTransfer(String[] args){
-		this.transfAdditionalInfo.newTransfInfo(args[0],args[1]);
+		this.transferAdditionalInfo.newTransferInfo(args[0],args[1]);
 		if(args.length>2){
 			for(int i=2; i<args.length; i+=2){
-				this.transfAdditionalInfo.addAdditionalInformation(args[i],args[i+1]);
+				this.transferAdditionalInfo.addAdditionalInformation(args[i],args[i+1]);
 			}
 		}
 		

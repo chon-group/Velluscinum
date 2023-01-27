@@ -3,14 +3,30 @@ package group.chon.velluscinum;
 import com.bigchaindb.model.GenericCallback;
 import okhttp3.Response;
 
+/**
+ * BigChainDB Driver Communication Manager
+ *
+ * @author Nilson Mori
+ * @author BigChainDB
+ */
 public class ServerResponse {
     private static boolean boolWait = false;
     private static boolean lock	 = false;
 
+    /**
+     *  Checks whether it is waiting for a transaction preparation.
+     *
+     * @return A boolean value (true OR false).
+     */
     public static boolean isLock() {
         return lock;
     }
 
+    /**
+     *  Defines whether to wait for the transaction preparation.
+     *
+     * @param newLock A boolean value (true OR false).
+     */
     public static void setLock(boolean newLock) {
         if(newLock){
             while(isLock()){
@@ -22,14 +38,27 @@ public class ServerResponse {
         lock = newLock;
     }
 
+    /**
+     *  Checks whether it is waiting for the execution of a transaction on the BigChainDB Network.
+     *
+     * @return A boolean value (true OR false).
+     */
     public static boolean isBoolWait() {
         return boolWait;
     }
 
-    public static void setBoolWait(boolean newWait) {
-        boolWait = newWait;
+    /**
+     *  Defines whether to wait for a transaction to be carried out on the BigChainDB Network.
+     *
+     * @param wait A boolean value (true OR false)
+     */
+    public static void setBoolWait(boolean wait) {
+        boolWait = wait;
     }
 
+    /**
+     * Waits for the transaction to be written to the BigChainDB network.
+     */
     public static void waitDone(){
         while(isBoolWait()){
             try {
@@ -39,8 +68,12 @@ public class ServerResponse {
     }
 
 
+    /**
+     *  Defines the callback methods to verify response from BigchainDB Server.
+     *
+     * @return callback
+     */
     public static GenericCallback handleServerResponse() {
-        //define callback methods to verify response from BigchainDBServer
         GenericCallback callback = new GenericCallback() {
 
             @Override

@@ -2,30 +2,56 @@ package group.chon.velluscinum;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 
+/**
+ * BigChainDB NFT Manager for Jason Agents.
+ *
+ * @author Nilson Mori
+ */
 public class NonFungibleToken {
     private JSONObject asset;
     private JSONObject metadata;
 
-    public void newNFT(String strKey, String strValue){
+    /**
+     *  Generates an initial well-formatted non-fungible Token Object.
+     *
+     * @param key    Receives the key parameter from the key-value format.
+     *
+     * @param value  Receives the value parameter from the key-value format.
+     */
+    public void newNFT(String key, String value){
         this.asset = new JSONObject();
         this.metadata = new JSONObject();
-        addImmutableInformation(strKey,strValue);
+        addImmutableInformation(key,value);
     }
 
-
-    public void addImmutableInformation(String strKey, String strValue) {
-        this.asset.put(strKey,strValue);
+    /**
+     * Adds at the Non-Fungible Token Object a key-value Immutable Information.
+     *
+     * @param key Receives the key parameter from the key-value format.
+     *
+     * @param value Receives the value parameter from the key-value format.
+     *
+     */
+    public void addImmutableInformation(String key, String value) {
+        this.asset.put(key,value);
     }
 
-    public void addAdditionalInformation(String strKey, String strValue) {
-        this.metadata.put(strKey,strValue);
+    /**
+     * Adds at the Non-Fungible Token Object a key-value Additional (mutable) Information.
+     *
+     * @param key Receives the key parameter from the key-value format.
+     *
+     * @param value Receives the value parameter from the key-value format.
+     *
+     */
+    public void addAdditionalInformation(String key, String value) {
+        this.metadata.put(key,value);
     }
 
-    public JSONObject toJSONObject(){
+    private JSONObject toJSONObject(){
         JSONArray jsonArrayAsset = new JSONArray();
         jsonArrayAsset.put(this.asset);
 
@@ -38,14 +64,24 @@ public class NonFungibleToken {
         return out;
     }
 
+    /**
+     *  Converts the NFT Object in a well-formatted String JSON.
+     *
+     * @return the String NFT Object.
+     */
     public String toString(){
         return toJSONObject().toString();
     }
 
-
+    /**
+     *  Imports a NFT Object from a file.
+     *
+     * @param filePath Receives the file path.
+     *
+     * @return the NFT Object in JSON format.
+     */
     public JSONObject importFromFile(String filePath) {
         System.out.println(" Load NFT from file... "+filePath);
-
         byte[] assetReadFromFile = null;
         JSONObject assetJSON = null;
         FileInputStream is = null;

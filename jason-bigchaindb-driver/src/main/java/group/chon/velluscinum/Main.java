@@ -1,17 +1,53 @@
 package group.chon.velluscinum;
 
+import br.pro.turing.alfa.Test;
+import br.pro.turing.alfa.Vellus;
+import br.pro.turing.alfa.Wallet;
+import br.pro.turing.alfa.WalletContent;
 import com.bigchaindb.exceptions.TransactionNotFoundException;
 import net.i2p.crypto.eddsa.*;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.security.KeyPair;
 import java.util.ArrayList;
 
+/**
+ * BigChainDB Command-line interface (CLI).
+ *
+ * @author Nilson Mori
+ *
+ */
 public class Main {
-    public static void main(String[] args) throws Exception {
+    /**
+     * Main Method is used to allow command-line interface (CLI) execution<br>
+     *
+     * @param args  - Receive the following arguments sent through the command-line interface (CLI): <br>
+     *       <ul>
+     *         <li><b>createKeys</b> - <i>Used to create a keyPair</i>
+     *              <br>&emsp;java -jar jason-bigchaindb-driver.jar createKeys [FILENAME]
+     *                  <br>&emsp;&emsp; <i>example:</i>
+     *                      <br>&emsp;&emsp;&emsp; java -jar jason-bigchaindb-driver.jar createKeys bob
+     *                  <br>
+     *                  <br>
+     *         </li>
+     *         <li><b>newNFT</b> - <i>Used to CREATE a Non-Fungible-Token</i>
+     *              <br>&emsp; java -jar jason-bigchaindb-driver.jar newNFT [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [NFT-FILE]
+     *                  <br>&emsp;&emsp; <i>example:</i>
+     * 	                    <br>&emsp;&emsp;&emsp; java -jar jason-bigchaindb-driver.jar newNFT "<a href=http://testchain.chon.group target=_blank>http://testchain.chon.group:9984</a>" bob.private.key bob.public.key nft.json
+     * 	            <br>
+     * 	            <br>
+     *         </li>
+     *         <li><b>transferNFT</b> - <i>Used to TRANSFER a Non-Fungible-Token</i>
+     *              <br>&emsp; java -jar jason-bigchaindb-driver.jar transferNFT [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [ASSET-ID] [METADATA] [DEST-PUBLIC-KEY-FILE]
+     *                  <br>&emsp;&emsp; <i>example:</i>
+     * 	                    <br>&emsp;&emsp;&emsp; java -jar jason-bigchaindb-driver.jar transferNFT "<a href=http://testchain.chon.group target=_blank>http://testchain.chon.group:9984</a>" bob.private.key bob.public.key "618b478c4e7941361b64a040e9bff271f6b543fe1896cd008c7369ee70489d2d" metadata.json alice.public.key
+     * 	            <br>
+     * 	            <br>
+     *         </li>
+     *       </ul>
+     */
+    public static void main(String[] args){
         String op = null;
         try {
             op = args[0];
@@ -22,12 +58,25 @@ public class Main {
             InputStream inputStream = Main.class.getResourceAsStream("/manual.txt");
             InputStreamReader inputStreamReaderMANUAL = new InputStreamReader(inputStream);
             BufferedReader buffered = new BufferedReader(inputStreamReaderMANUAL);
-            String line = buffered.readLine();
+            String line = null;
+            try {
+                line = buffered.readLine();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             while(line != null){
                 System.out.println(line);
-                line = buffered.readLine();
+                try {
+                    line = buffered.readLine();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
-            buffered.close();
+            try {
+                buffered.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             System.exit(0);
         }
     }
@@ -35,11 +84,9 @@ public class Main {
     private static void createKeys(String[] args){
         String output = null;
         KeyManagement keyManagement = new KeyManagement();
-        KeyPair bobKeyPair 	= keyManagement.newKey();
-        EdDSAPrivateKey bobPrivateKey = (EdDSAPrivateKey) bobKeyPair.getPrivate();
-        EdDSAPublicKey bobPublicKey  = (EdDSAPublicKey)  bobKeyPair.getPublic();
-        keyManagement.keyToFile(bobPrivateKey,"base58",args[1]+".private.key");
-        keyManagement.keyToFile(bobPublicKey,"base58",args[1]+".public.key");
+        String[] strKeyPair = keyManagement.newKeyPair("base58");
+        keyManagement.keyToFile(strKeyPair[0],args[1]+".private.key");
+        keyManagement.keyToFile(strKeyPair[1],args[1]+".public.key");
         System.exit(0);
     }
 
@@ -59,7 +106,7 @@ public class Main {
 
     private static void transferNFT(String[] args){
         BigchainDBDriver bigchainDBDriver = new BigchainDBDriver();
-        TransfAdditionalInfo transfAdditionalInfo = new TransfAdditionalInfo();
+        TransferAdditionalInfo transferAdditionalInfo = new TransferAdditionalInfo();
         KeyManagement keyManagement = new KeyManagement();
         //[SERVER] [PRIVATEKEY-FILE] [PUBLICKEY-FILE] [ASSET-ID] [METADATA] [PUBLIC_DEST_KEY-FILE]
         bigchainDBDriver.transferNFT(
@@ -67,7 +114,7 @@ public class Main {
                 keyManagement.importKeyFromFile(args[2]),
                 keyManagement.importKeyFromFile(args[3]),
                 args[4],
-                transfAdditionalInfo.importFromFile(args[5]).toString(),
+                transferAdditionalInfo.importFromFile(args[5]).toString(),
                 keyManagement.importKeyFromFile(args[6]));
         System.exit(0);
     }
@@ -94,8 +141,8 @@ public class Main {
     private static String test1(){
         String assetID = test0();
         //Transferring an Asset
-        TransfAdditionalInfo transfAdditionalInfo = new TransfAdditionalInfo();
-        transfAdditionalInfo.newTransfInfo("New Owner", "Alice");
+        TransferAdditionalInfo transferAdditionalInfo = new TransferAdditionalInfo();
+        transferAdditionalInfo.newTransferInfo("New Owner", "Alice");
 
         BigchainDBDriver bigchaindb4Jason = new BigchainDBDriver();
         Test test = new Test();
@@ -105,7 +152,7 @@ public class Main {
                 test.getBobPrivateKey(),
                 test.getBobPublicKey(),
                 assetID,
-                transfAdditionalInfo.toString(),
+                transferAdditionalInfo.toString(),
                 test.getAlicePublickey());
     }
 
