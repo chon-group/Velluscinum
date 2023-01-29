@@ -9,17 +9,13 @@ Este trabalho apresenta uma integração entre agentes Jason BDI com o BigChainD
 
 ![alt text for screen readers](https://raw.githubusercontent.com/nilsonmori/velluscinum/master/paper/schema.png "Text to show on mouseover")
 
-Para possibilitar a interação direta dos agentes, através do ambiente simulado, foi necessária a implementação de uma biblioteca ( [jason-bigchaindb-driver.jar](https://raw.githubusercontent.com/nilsonmori/velluscinum/master/jason-bigchaindb-driver/out/artifacts/jason_bigchaindb_driver_jar/jason-bigchaindb-driver.jar) ), disponível em com métodos públicos a serem utilizados pelo desenvolvedor, durante a programação da função no ambiente simulado.
+Para possibilitar a interação direta dos agentes, através do ambiente simulado, foi necessária a implementação de uma biblioteca ( [jason-bigchaindb-driver.jar](https://raw.githubusercontent.com/nilsonmori/velluscinum/master/jason-bigchaindb-driver/out/jason-bigchaindb-driver.jar) ), disponível em com métodos públicos a serem utilizados pelo desenvolvedor, durante a programação da função no ambiente simulado.
 
 __Abaixo são descritos os principais métodos:__
-* _String __newAsset__(String uRL, String privKey, String pubKey, String asset)_
-   + este método recebe quatro parâmetros em String, realiza uma transação do tipo CREATE na blockchain e retorna o identificador do ativo (ASSETID).
-* _String __newTransfer__(String uRL, String privKey, String pubKey, String assetId, String metaData, String recipientPubKey)_
+* _String __registerNFT__(String url, String privateKey, String publicKey, String nonFungibleToken)_ 
+   + este método recebe quatro parâmetros em String, realiza uma transação do tipo CREATE no Servidor BigChainDB e retorna o identificador do ativo (ASSETID).
+* _String __transferNFT__(String url, String senderPrivateKey, String senderPublicKey, String nftID, String transferMetadata, String recipientPublicKey)_
    + este método recebe seis parâmetros em String, realiza uma transação do tipo TRANSFER na blockchain e retorna o identificador da transção (TRANSACTIONID). 
-* _String __getTransactionIDFromAsset__(String URL, String assetId, Integer numberOfTransaction)_ 
-   + este método recebe dois parâmetros, realiza uma busca pelas transações de um determinado ativo e retorna o identificador da transação.
-* _String __getFieldOfTransactionFromAssetID__(String URL, String assetId, String fieldInMetadata, Integer numberOfTransaction)_
-   + este método recebe quatro parâmetros de entrada, realiza uma busca pelas transações de um determinado ativo e retorna o valor de determinado campo do METADATA.
 
 #### Exemplo Simples
 * Agent agent001 in project [firstExample.mas2j](https://github.com/nilsonmori/velluscinum/tree/master/examples/01-firstExample)
@@ -47,12 +43,7 @@ aliceKey("FNJPJdtuPQYsqHG6tuUjKjqv7SW84U4ipiyyLV2j6MEW").
 	metadataNFT("location","Madrid", "value_eur","25000000€",
                 "value_btc","2200", "owner","Agent Bob");
 
-
-	createAsset(Server,MyPriv,MyPub);
-	
-	?assetID(NFT)[source(percept)];
-	.print("NFT registered: ",Server,"api/v1/transactions/",NFT).
-	
+	createAsset(Server,MyPriv,MyPub);		
 
 +!tranferNFT: assetID(NFT) & aliceKey(AK) & bigchainDB(Server) 
 	& privateKey(MyPriv) & publicKey(MyPub)<-
@@ -61,9 +52,6 @@ aliceKey("FNJPJdtuPQYsqHG6tuUjKjqv7SW84U4ipiyyLV2j6MEW").
 		"location","Rio de Janeiro","owner","Agent Alice");
 	
 	transferAsset(Server,MyPriv,MyPub,NFT,AK);
-	?transferID(TransferID);
-	.print("NFT transferred: ",Server,"api/v1/transactions/",TransferID).
-	
 	
 ```
 
@@ -79,7 +67,7 @@ import group.chon.velluscinum.*;
 public class Env extends Environment {
 private NonFungibleToken 	nonFungibleToken 	= new NonFungibleToken();
 private BigchainDBDriver 	bigchaindb4Jason 	= new BigchainDBDriver();
-private TransfAdditionalInfo 	transfAdditionalInfo 	= new TransfAdditionalInfo();
+private TransferAdditionalInfo 	transferAdditionalInfo 	= new TransferAdditionalInfo();
 private KeyManagement		keyManagement 		= new KeyManagement();
 	
 public boolean executeAction(String agName, Structure action) {
@@ -108,7 +96,7 @@ private String createAsset(String[] args){
 }
 
 private String transferNFT(String[] args){
-	return bigchaindb4Jason.transferNFT(args[0],args[1],args[2],args[3],transfAdditionalInfo.toString(),args[4]);
+	return bigchaindb4Jason.transferNFT(args[0],args[1],args[2],args[3],transferAdditionalInfo.toString(),args[4]);
 }
 
 private void buildNFT(String[] args){
@@ -127,10 +115,10 @@ private void metadataNFT(String[] args){
 }
 
 private void metadataTransfer(String[] args){
-	this.transfAdditionalInfo.newTransfInfo(args[0],args[1]);
+	this.transferAdditionalInfo.newTransfInfo(args[0],args[1]);
 	if(args.length>2){
 		for(int i=2; i<args.length; i+=2){
-			this.transfAdditionalInfo.addAdditionalInformation(args[i],args[i+1]);
+			this.transferAdditionalInfo.addAdditionalInformation(args[i],args[i+1]);
 		}
 	}
 }

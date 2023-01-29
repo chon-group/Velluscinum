@@ -1,20 +1,51 @@
 // Agent comilao in project cozinheiroEcomilao.mas2j
 /* Crenças Iniciais */
-myPublicKey("MCowBQYDK2VwAyEAe0sFt37hYO80TcEnNZnJy97nL9mceg+pmUH8ZH2Gwuc=").
+chainServer("http://testchain.chon.group:9984/").
 estoqueComida(0).
 energia(0).
 
 /* Objetivos Iniciais */
-!curtir.
+//!curtir.
 //!gerarCarteira.
+!createWallet.
+
++!createWallet <-
+	.print("Gerando carteira digital");
+	createWallet("base58");
+	.wait(2000);
+	!pedirEmprestimo.
 
 /* Planos */
++!pedirEmprestimo: publicKey(MyWallet) & privateKey(PrivK) & chainServer(Server)<-
+	.print("Criando Conta Bancária e solicitando crédito");
+	.my_name(Ag);
+
+	.send(banco,askOne,bankWallet(BW),Replay);
+	+Replay;
+	?bankWallet(BankWallet);
+
+	buildAsset("Agent Name",Ag,
+			"ContextNet Address","5362fe5e-aaf1-43e6-9643-7ab094836ff4",
+			"Public Wallet", MyWallet);
+	deployAsset(Server,PrivK,MyWallet);
+	?assetID(AccountID)[source(percept)];
+
+	buildTransfer("Description","Solicitação de Empréstimo");
+	deployTransfer(Server,PrivK,MyWallet,AccountID,BankWallet);
+	?transferID(ProtocolID);
+	.print("NFT transferred: ",Server,"api/v1/transactions/",ProtocolID);
+
+	.print("Solicitando Abertura de conta");
+	.send(banco,achieve,solicitacaoEmprestimo(ProtocolID,MyWallet,20));
+	.print("cozinheiro OK").
+
+
 +!gerarCarteira: myPublicKey(PublK) & not protocolo(P)  <-
 		.print("Gerando carteira digital");
 		.send(banco,askOne,bancoPublicKey(BancoP),Replay);
 		-+Replay;
 		?bancoPublicKey(BancoP);
-		gerarCarteira("http://testchain.chon.group:9984/","MC4CAQAwBQYDK2VwBCIEIAmuZdNpUSKWRrIwEok4WAiCCPmBBMFtFekHv55GkfQl",PublK,BancoP);
+		gerarCarteira("http://testchain.chon.group:9984/","5vNY4i324pxKD7rV9K3sztju96BZgTKn7CnGuxhiVMqn",PublK,BancoP);
 		-Replay;
 		?protocolo(NrProtocolo);
 		?myWallet(NrCarteira);

@@ -1,29 +1,43 @@
 // Agent banco in project cozinheiroEcomilao.mas2j
 /* Crenças Iniciais */
-bancoPublicKey("MCowBQYDK2VwAyEAgvaUUI4FSAb0pJhl+S/YAc2xA9uyT0wuxiy4DFt1X0g=").
-bancoPrivateKey("MC4CAQAwBQYDK2VwBCIEIBYuAe4TXGqKTTMtaIGiV+p4m6S3z8DJyg2r0YqoTI7A").
-bigchainDBServer("http://testchain.chon.group:9984/").
-
+bankWallet("Gq5mn9YzRCjPPrhL6JQpekbCc2Br637K23UQbYD6Y4Kq").
+bankPrivateKey("GfYViAZvdMPQi8bZAMJsUEqDr273EvEx99eGymyVFsc1").
+chainServer("http://testchain.chon.group:9984/").
 /* Objetivos Iniciais */
+!createCryptocurrency.
+
+
 
 /* Planos */
++!createCryptocurrency: chainServer(Server)  
+							& bankPrivateKey(PrK) 
+							& bankWallet(PuK) <-
+	.print("Criando Moeda Digital");
+	buildToken(Server,PrK,PuK,"MyCoin",200);
+	?bankCoin(ID);
+	.broadcast(tell,bankCoin(ID)).
 
 
-+!cadastrarContaBancaria(NrProtocolo,NrCarteira)[source(Cliente)]: bigchainDBServer(URL)<-
++!solicitacaoEmprestimo(NrProtocolo,NrCarteira,Valor)[source(Cliente)]: chainServer(URL)<-
 	.print("Prezado Agente ",Cliente,", seja bem-vindo ao BanChain! - Aguarde equanto validamos sua carteira.");
-	consultaUltimaTransacao(URL, NrCarteira);
-	.wait(5000);
-	!efetivaCadastro(NrProtocolo,NrCarteira,Cliente).
 
-+!efetivaCadastro(NrProtocolo,NrCarteira,Cliente):bigchainDBServer(URL) 
-& bancoPrivateKey(PrivateKey) & bancoPublicKey(PublicKey)
-& transacaoValida(Ativo,Transacao)& 
-Ativo==NrCarteira & Transacao==NrProtocolo <-
-	.print("Carteira ",NrCarteira," validada com sucesso!");
-	abrirConta(URL,PrivateKey,PublicKey,NrCarteira,10);
-	.print("Depósito inicial realizado na Carteira ", NrCarteira);
-	+conta(Cliente,NrCarteira);
-	.send(Cliente,tell,contaBancaria(ok)).		
+
+
+
+// 	consultaUltimaTransacao(URL, NrCarteira);
+// 	.wait(5000);
+// 	!efetivaCadastro(NrProtocolo,NrCarteira,Cliente).
+
+// +!efetivaCadastro(NrProtocolo,NrCarteira,Cliente):bigchainDBServer(URL) 
+// & bancoPrivateKey(PrivateKey) & bancoPublicKey(PublicKey)
+// & transacaoValida(Ativo,Transacao)& 
+// Ativo==NrCarteira & Transacao==NrProtocolo <-
+// 	.print("Carteira ",NrCarteira," validada com sucesso!");
+// 	abrirConta(URL,PrivateKey,PublicKey,NrCarteira,10);
+// 	.print("Depósito inicial realizado na Carteira ", NrCarteira);
+// 	+conta(Cliente,NrCarteira);
+// 	.send(Cliente,tell,contaBancaria(ok))
+	.		
 
 +!pix(Destino,Valor)[source(Origem)]: 
 		bigchainDBServer(URL) & conta(Cliente,NrCarteira) & Cliente=Origem<-

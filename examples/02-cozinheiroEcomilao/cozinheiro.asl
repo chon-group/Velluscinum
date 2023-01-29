@@ -1,26 +1,18 @@
 // Agent cozinheiro in project cozinheiroEcomilao.mas2j
-
 /* Crenças Iniciais */
-myPublicKey("MCowBQYDK2VwAyEAwoyIo/X+ka04yOS8hfRxyb+PuuodHVGFoI1BDFw2ekA=").
+chainServer("http://testchain.chon.group:9984/").
 ultimoPedido(0).
 
 /* Objetivos Iniciais */
-!gerarCarteira.
+//!gerarCarteira.
+!createWallet.
+
 
 /* Planos */
-+!gerarCarteira: myPublicKey(PublK) & not protocolo(P)  <-
-		.print("Gerando carteira digital");
-		.send(banco,askOne,bancoPublicKey(BancoP),Replay);
-		-+Replay;
-		?bancoPublicKey(BancoP);
-		gerarCarteira("http://testchain.chon.group:9984/","MC4CAQAwBQYDK2VwBCIEIF24sBVvj3ocOJsAYcpbtavUXzUzEWBxkz9hsJ94jCT+",PublK,BancoP);
-		-Replay;
-		?protocolo(NrProtocolo);
-		?myWallet(NrCarteira);
-		.print("Solicitando Abertura de conta");
-		.send(banco,achieve,cadastrarContaBancaria(NrProtocolo,NrCarteira));
-		.abolish(protocolo(_)[source(percept)]).
-		
++!createWallet <-
+	.print("Gerando carteira digital");
+	createWallet("base58").
+
 +contaBancaria(ok)[source(banco)] <-
 	!aguardarPedidos.
 		

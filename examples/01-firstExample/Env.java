@@ -1,5 +1,4 @@
 // Environment code for project firstExample.mas2j
-
 import jason.asSyntax.*;
 import jason.environment.*;
 import group.chon.velluscinum.*;
