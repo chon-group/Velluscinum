@@ -32,10 +32,9 @@ public class KeyManagement {
      *
      * */
     private KeyPair newKey() {
-        System.out.print(Main.DRIVERNAME+" Build Wallet... ");
         KeyPairGenerator keyPairGenerator = new KeyPairGenerator();
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
-        System.out.println(keyToString((EdDSAPublicKey) keyPair.getPublic(),"base58"));
+        System.out.println(Api.DRIVERNAME+" Build Wallet... "+keyToString((EdDSAPublicKey) keyPair.getPublic(),"base58"));
         return keyPair;
     }
 

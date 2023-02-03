@@ -4,8 +4,6 @@ MAS cozinheiroEcomilao {
 
     infrastructure: Centralised
 
-    environment: Env
-
     agents:
         cozinheiro;
         comilao;

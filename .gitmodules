@@ -1,3 +1,6 @@
 [submodule "java-crypto-conditions"]
 	path = java-crypto-conditions
 	url = https://github.com/bigchaindb/java-crypto-conditions
+[submodule "jason"]
+	path = jason
+	url = https://github.com/jason-lang/jason.git

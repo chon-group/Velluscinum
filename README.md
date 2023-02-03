@@ -5,23 +5,26 @@ _[@nilsonmori](https://github.com/nilsonmori/), [@souzavdj](https://github.com/s
 Este trabalho, apresenta um middleware para interação de Sistemas Multiagentes com a BigChainDB, um banco de dados distribuído com características blockchain [McConaghy et al. 2016]. Assim como em Lebioda et al. (2019), cada agente possuiu uma chave pública e uma chave privada, entretanto, neste trabalho cada agente consegue assinar sua própria transação, através de seu par de chave assimétrica. Tal como Alaeddini et al. (2021), este trabalho utiliza a blockchain como uma base aberta e confiável para alimentar as crenças dos agentes, entretanto uma prova de conceito foi implementada e testada. Por fim, diferente de Papi et al. (2022) não é necessário a criação de uma instituição virtual, além disso, cada agente consegue interagir diretamente com os ativos digitais, através do próprio ambiente endógeno do SMA.
 
 ### Metodologia
-Este trabalho apresenta uma integração entre agentes Jason BDI com o BigChainDB, possibilitando que um agente possa criar ou transferir um ativo digital diretamente por ações implementadas no ambiente simulado do Sistema Multiagente. A Figura abaixo apresenta a metodologia proposta.
+Uma integração entre agentes Jason BDI com o BigChainDB ocorre, de forma que, um agente possa criar ou transferir um ativo digital diretamente por ações internas.
+A Figura abaixo apresenta a metodologia proposta.
 
-![alt text for screen readers](https://raw.githubusercontent.com/nilsonmori/velluscinum/master/paper/schema.png "Text to show on mouseover")
+![alt text for screen readers](https://raw.githubusercontent.com/nilsonmori/velluscinum/master/paper/schema.png "shema.png")
 
-Para possibilitar a interação direta dos agentes, através do ambiente simulado, foi necessária a implementação de uma biblioteca ( [jason-bigchaindb-driver.jar](https://raw.githubusercontent.com/nilsonmori/velluscinum/master/jason-bigchaindb-driver/out/jason-bigchaindb-driver.jar) ), disponível em com métodos públicos a serem utilizados pelo desenvolvedor, durante a programação da função no ambiente simulado.
+Para possibilitar a interação direta dos agentes, através de ações internas é necessária a importação da biblioteca ( [velluscinum.jar](https://raw.githubusercontent.com/nilsonmori/velluscinum/master/velluscinum-project/out/velluscinum.jar) ), para o diretório /lib no projeto.
 
-__Abaixo são descritos os principais métodos:__
-* _String __registerNFT__(String url, String privateKey, String publicKey, String nonFungibleToken)_ 
-   + este método recebe quatro parâmetros em String, realiza uma transação do tipo CREATE no Servidor BigChainDB e retorna o identificador do ativo (ASSETID).
-* _String __transferNFT__(String url, String senderPrivateKey, String senderPublicKey, String nftID, String transferMetadata, String recipientPublicKey)_
-   + este método recebe seis parâmetros em String, realiza uma transação do tipo TRANSFER na blockchain e retorna o identificador da transção (TRANSACTIONID). 
+__Abaixo são descritas as ações internas__
+* ___.buildWallet__(wallet)_ -  Gera um par de chaves e adiciona uma crença __wallet(P,Q)__ na mente do agente, onde: ___wallet___ é a crença definida na chamada da ação interna; ___P___ é um literal contendo a chave privada do agente; ___Q___ é a chave pública do agente.
+* ___.deployNFT__(S,P,Q,"key:value","metadataKey:metadataValue",nft)_  - Gera um token não fungível e adiciona uma crença __nft(N)__ na mente do agente, onde: ___nft___ é a crença definida na chamada da ação interna; ___N___ é o identificador (ASSET-ID) do token gerado.
+* ___.transferNFT__(S,P,Q,N,R,"metadaKey:metadaValue",transaction)_ - Transfere o token não fungível (__N__) para outra carteira (__R__) e adiciona uma crença __transaction(T)__ na mente do agente, onde: ___transaction___ é a crença definida na chamada da ação interna; ___T___ é o identificador (TRANSFER_ID) da transação realizada.
+* ___.deployToken__(S,P,Q,"name:cryptocurrency",A,coin)_ - Cria __A__ unidades de um token fungível e adiciona uma crença __coin( C )__ na mente do agente, onde: ___coin___ é uma crença definida na chamada da ação interna; ___C___ é o identificador (ASSET-ID) do token gerado.
+* ___.transferToken__(S,P,Q,C,W,A,transaction)_ - Transfere __A__ unidades do token __C__ para a carteira __W__ e adiciona __transaction(T)__ na mente do agente, onde: ___transaction___ é a crença definida na chamada da ação interna; ___T___ é o identificador (TRANSFER_ID) da transação realizada.
+* ___.stampTransaction__(S,P,Q,T)_ - Carimba a transação (T);
+* ___.tokenBalance__(S,P,Q,C,balance)_ - Consulta o saldo do token __C__ na carteira __Q__.
 
 #### Exemplo Simples
 * Agent agent001 in project [firstExample.mas2j](https://github.com/nilsonmori/velluscinum/tree/master/examples/01-firstExample)
 ```sh
 // Agent bob in project firstExample.mas2j
-
 /* Initial beliefs and rules */
 bigchainDB("http://testchain.chon.group:9984/").
 aliceKey("FNJPJdtuPQYsqHG6tuUjKjqv7SW84U4ipiyyLV2j6MEW").
@@ -30,115 +33,21 @@ aliceKey("FNJPJdtuPQYsqHG6tuUjKjqv7SW84U4ipiyyLV2j6MEW").
 !start.
 
 /* Plans */
-+!start <-
-	createWallet("base58");
-	!deployNFT;
-	!tranferNFT.
-
-+!deployNFT: bigchainDB(Server) & privateKey(MyPriv) & publicKey(MyPub) <-
-	buildNFT("name","Meninas",
-		"author","Diego Rodríguez de Silva y Velázquez",
-		"place","Madrid", "year","1656");
-			 
-	metadataNFT("location","Madrid", "value_eur","25000000€",
-                "value_btc","2200", "owner","Agent Bob");
-
-	createAsset(Server,MyPriv,MyPub);		
-
-+!tranferNFT: assetID(NFT) & aliceKey(AK) & bigchainDB(Server) 
-	& privateKey(MyPriv) & publicKey(MyPub)<-
-				
-	metadataTransfer("value_eur","30000000€","value_btc","2100",
-		"location","Rio de Janeiro","owner","Agent Alice");
++!start: bigchainDB(Server) & aliceKey(AliceKey) <-
+	.buildWallet(myWallet);
 	
-	transferAsset(Server,MyPriv,MyPub,NFT,AK);
-	
+	?myWallet(MyPriv,MyPub);
+	.deployNFT(Server,MyPriv,MyPub,
+			"name:Meninas;author:Silva y Velázquez;place:Madrid;year:1656",
+			"location:Madrid;value_eur:25000000;owner:Bob Agent",
+			myNFT);	
+			
+	?myNFT(AssetID);
+	.transferNFT(Server,MyPriv,MyPub,AssetID,AliceKey,
+				"value_eur:30000000;owner:Alice;location:Rio de Janeiro",
+				transaction);
 ```
 
-* Environment code for project [firstExample.mas2j](https://github.com/nilsonmori/velluscinum/tree/master/examples/01-firstExample)
-```sh
-
-// Environment code for project firstExample.mas2j
-
-import jason.asSyntax.*;
-import jason.environment.*;
-import group.chon.velluscinum.*;
-
-public class Env extends Environment {
-private NonFungibleToken 	nonFungibleToken 	= new NonFungibleToken();
-private BigchainDBDriver 	bigchaindb4Jason 	= new BigchainDBDriver();
-private TransferAdditionalInfo 	transferAdditionalInfo 	= new TransferAdditionalInfo();
-private KeyManagement		keyManagement 		= new KeyManagement();
-	
-public boolean executeAction(String agName, Structure action) {
-	String[] args = getActionTermArray(action);
-
-	if(action.toString().substring(0,11).equals("createAsset")){
-		addPercept(agName,Literal.parseLiteral("assetID(\""+createAsset(args)+"\")"));
-	}else if(action.toString().substring(0,13).equals("transferAsset")){		
-		addPercept(agName,Literal.parseLiteral("transferID(\""+transferNFT(args)+"\")"));
-	}else if((action.toString().substring(0,8).equals("buildNFT"))){
-		buildNFT(args);				
-	}else if((action.toString().substring(0,11).equals("metadataNFT"))){
-		metadataNFT(args);				
-	}else if((action.toString().substring(0,16).equals("metadataTransfer"))){
-		metadataTransfer(args);		
-	}else if((action.toString().substring(0,12).equals("createWallet"))){
-		String[] keyPair = createWallet(args);
-		addPercept(agName,Literal.parseLiteral("privateKey(\""+keyPair[0]+"\")"));
-		addPercept(agName,Literal.parseLiteral("publicKey(\""+keyPair[1]+"\")"));
-	}
-	return true;
-}
-
-private String createAsset(String[] args){
-	return bigchaindb4Jason.registerNFT(args[0],args[1],args[2],this.nonFungibleToken.toString());
-}
-
-private String transferNFT(String[] args){
-	return bigchaindb4Jason.transferNFT(args[0],args[1],args[2],args[3],transferAdditionalInfo.toString(),args[4]);
-}
-
-private void buildNFT(String[] args){
-	this.nonFungibleToken.newNFT(args[0],args[1]);
-	if(args.length>2){
-		for(int i=2; i<args.length; i+=2){
-			this.nonFungibleToken.addImmutableInformation(args[i],args[i+1]);
-		}
-	}
-}
-
-private void metadataNFT(String[] args){
-	for(int i=0; i<args.length; i+=2){
-		this.nonFungibleToken.addAdditionalInformation(args[i],args[i+1]);	
-	}
-}
-
-private void metadataTransfer(String[] args){
-	this.transferAdditionalInfo.newTransfInfo(args[0],args[1]);
-	if(args.length>2){
-		for(int i=2; i<args.length; i+=2){
-			this.transferAdditionalInfo.addAdditionalInformation(args[i],args[i+1]);
-		}
-	}
-}
-
-private String[] getActionTermArray(Structure action){
-	Integer terms = action.getArity();
-	String[] termArray = new String[terms];
-	for(int i=0; i<terms; i++){
-		termArray[i] = action.getTerm(i).toString().replace("\"", "");
-	}
-	return termArray;
-}
-
-private String[] createWallet(String[] args){
-	return keyManagement.newKeyPair(args[0]);
-}
-	
-}
-
-```
 
 ### Outros Exemplos
 * [Cozinheiro e Comilão](https://github.com/nilsonmori/velluscinum/tree/master/examples/02-cozinheiroEcomilao)

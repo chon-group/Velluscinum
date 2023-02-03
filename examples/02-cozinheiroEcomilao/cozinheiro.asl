@@ -1,19 +1,17 @@
 // Agent cozinheiro in project cozinheiroEcomilao.mas2j
 /* Crenças Iniciais */
-chainServer("http://testchain.chon.group:9984/").
 ultimoPedido(0).
 
 /* Objetivos Iniciais */
-//!gerarCarteira.
 !createWallet.
 
 
 /* Planos */
 +!createWallet <-
 	.print("Gerando carteira digital");
-	createWallet("base58").
-
-+contaBancaria(ok)[source(banco)] <-
+	.buildWallet(myWallet);
+	?myWallet(Priv,Pub);
+	+cozinheiroWallet(Pub);
 	!aguardarPedidos.
 		
 +!aguardarPedidos: not preparandoPedido <-
@@ -25,14 +23,12 @@ ultimoPedido(0).
 	.wait(10000);
 	!aguardarPedidos.
 
-+!pedido(Product,Qtd,Pix)[source(Cliente)] <-
++!pedido(Product,Qtd,Pix)[source(Cliente)]: cryptocurrency(Coin) 
+			& chainServer(Server) & myWallet(MyPriv,MyPub) <-
 	.print("Recebi pedido... validando");
-	.send(banco,askOne,operacao(Pix,Cliente,cozinheiro,Qtd),Reply);
-	+Reply;
-	?operacao(Registro,Cliente,cozinheiro,Qtd);
+	.stampTransaction(Server,MyPriv,MyPub,Pix);
 	+preparandoPedido;
 	!prepararPedido(Product,Qtd,Pix,Registro,Cliente);
-	+atendido(Pix);
 	-preparandoPedido.
 
 +!prepararPedido(Product,Qtd,Pix,Validacao,Cliente): Pix=Validacao & not atendido(Pix)<-

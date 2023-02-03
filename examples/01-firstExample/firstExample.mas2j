@@ -1,7 +1,6 @@
 /* Jason Project */
 MAS firstExample{
-    infrastructure: Centralised
-    environment: Env
+    infrastructure: Local
     agents:
         bob;
 

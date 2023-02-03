@@ -1,43 +1,32 @@
 // Agent banco in project cozinheiroEcomilao.mas2j
 /* Crenças Iniciais */
-bankWallet("Gq5mn9YzRCjPPrhL6JQpekbCc2Br637K23UQbYD6Y4Kq").
-bankPrivateKey("GfYViAZvdMPQi8bZAMJsUEqDr273EvEx99eGymyVFsc1").
 chainServer("http://testchain.chon.group:9984/").
+
 /* Objetivos Iniciais */
-!createCryptocurrency.
+!createCoin.
 
-
++!createCoin: chainServer(Server) <-
+	.buildWallet(myWallet);
+	?myWallet(PrK,PuK);
+	.print("Criando Moeda Digital");
+	.deployToken(Server,PrK,PuK,"name:ChainCoin",200,chainCoin);
+	!publicaCoin.
+	
++!publicaCoin: chainCoin(Coin) & myWallet(Prk,PuB) & chainServer(Server) <-
+	.broadcast(tell,cryptocurrency(Coin));
+	.broadcast(tell,bankWallet(PuB));
+	.broadcast(tell,chainServer(Server)).
+	
 
 /* Planos */
-+!createCryptocurrency: chainServer(Server)  
-							& bankPrivateKey(PrK) 
-							& bankWallet(PuK) <-
-	.print("Criando Moeda Digital");
-	buildToken(Server,PrK,PuK,"MyCoin",200);
-	?bankCoin(ID);
-	.broadcast(tell,bankCoin(ID)).
-
-
-+!solicitacaoEmprestimo(NrProtocolo,NrCarteira,Valor)[source(Cliente)]: chainServer(URL)<-
-	.print("Prezado Agente ",Cliente,", seja bem-vindo ao BanChain! - Aguarde equanto validamos sua carteira.");
-
-
-
-
-// 	consultaUltimaTransacao(URL, NrCarteira);
-// 	.wait(5000);
-// 	!efetivaCadastro(NrProtocolo,NrCarteira,Cliente).
-
-// +!efetivaCadastro(NrProtocolo,NrCarteira,Cliente):bigchainDBServer(URL) 
-// & bancoPrivateKey(PrivateKey) & bancoPublicKey(PublicKey)
-// & transacaoValida(Ativo,Transacao)& 
-// Ativo==NrCarteira & Transacao==NrProtocolo <-
-// 	.print("Carteira ",NrCarteira," validada com sucesso!");
-// 	abrirConta(URL,PrivateKey,PublicKey,NrCarteira,10);
-// 	.print("Depósito inicial realizado na Carteira ", NrCarteira);
-// 	+conta(Cliente,NrCarteira);
-// 	.send(Cliente,tell,contaBancaria(ok))
-	.		
++!solicitacaoEmprestimo(Protocolo,NrCarteira,Valor)[source(Cliente)]: 
+		chainCoin(Coin) & myWallet(Prk,PuB) & chainServer(Server) <-
+		
+	.print("Prezado Agente ",Cliente,", seja bem-vindo ao BanChain! - Aguarde equanto validamos sua transação.");
+	.stampTransaction(Server,Prk,PuB,Protocolo);
+	.transferToken(Server,Prk,PuB,Coin,NrCarteira,Valor,transactionTransfer);
+	.send(Cliente,tell,contaBancaria(ok)).
+		
 
 +!pix(Destino,Valor)[source(Origem)]: 
 		bigchainDBServer(URL) & conta(Cliente,NrCarteira) & Cliente=Origem<-

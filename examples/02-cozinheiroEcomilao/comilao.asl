@@ -1,57 +1,27 @@
 // Agent comilao in project cozinheiroEcomilao.mas2j
 /* Crenças Iniciais */
-chainServer("http://testchain.chon.group:9984/").
 estoqueComida(0).
 energia(0).
 
 /* Objetivos Iniciais */
-//!curtir.
-//!gerarCarteira.
-!createWallet.
-
-+!createWallet <-
-	.print("Gerando carteira digital");
-	createWallet("base58");
-	.wait(2000);
-	!pedirEmprestimo.
+!curtir.
 
 /* Planos */
-+!pedirEmprestimo: publicKey(MyWallet) & privateKey(PrivK) & chainServer(Server)<-
-	.print("Criando Conta Bancária e solicitando crédito");
-	.my_name(Ag);
-
-	.send(banco,askOne,bankWallet(BW),Replay);
-	+Replay;
-	?bankWallet(BankWallet);
-
-	buildAsset("Agent Name",Ag,
-			"ContextNet Address","5362fe5e-aaf1-43e6-9643-7ab094836ff4",
-			"Public Wallet", MyWallet);
-	deployAsset(Server,PrivK,MyWallet);
-	?assetID(AccountID)[source(percept)];
-
-	buildTransfer("Description","Solicitação de Empréstimo");
-	deployTransfer(Server,PrivK,MyWallet,AccountID,BankWallet);
-	?transferID(ProtocolID);
-	.print("NFT transferred: ",Server,"api/v1/transactions/",ProtocolID);
-
-	.print("Solicitando Abertura de conta");
-	.send(banco,achieve,solicitacaoEmprestimo(ProtocolID,MyWallet,20));
-	.print("cozinheiro OK").
-
-
-+!gerarCarteira: myPublicKey(PublK) & not protocolo(P)  <-
-		.print("Gerando carteira digital");
-		.send(banco,askOne,bancoPublicKey(BancoP),Replay);
-		-+Replay;
-		?bancoPublicKey(BancoP);
-		gerarCarteira("http://testchain.chon.group:9984/","5vNY4i324pxKD7rV9K3sztju96BZgTKn7CnGuxhiVMqn",PublK,BancoP);
-		-Replay;
-		?protocolo(NrProtocolo);
-		?myWallet(NrCarteira);
-		.print("Solicitando Abertura de conta");
-		.send(banco,achieve,cadastrarContaBancaria(NrProtocolo,NrCarteira));
-		.abolish(protocolo(_)[source(percept)]).
++!pedirEmprestimo: cryptocurrency(Coin) & bankWallet(BankW) & chainServer(Server) & myWallet(MyPriv,MyPub)<-
+	.print("Solicitando crédito");
+	.deployNFT(Server,MyPriv,MyPub,
+				"name:comilao;address:5362fe5e-aaf1-43e6-9643-7ab094836ff4",
+				"description:Criação de conta bancária",
+				contaID);
+				
+	?contaID(AssetID);
+	.transferNFT(Server,MyPriv,MyPub,AssetID,BankW,
+				 "description:solicitação de empréstimo;valor_chainCoin:15",protocoloID);
+	?protocoloID(PP);
+	
+	.print("protocolo nr:",PP);
+	.send(banco,achieve,solicitacaoEmprestimo(PP,MyPub,15)).
+	
 	
 +!comer: sintoFome & estoqueComida(C) & C>3 & energia(E) & E<=10 <-
 	-+estoqueComida(C-3);
@@ -86,21 +56,29 @@ energia(0).
 	.wait(2000);
 	!comer.
 
-+!pedirComida: contaBancaria(ok)[source(banco)] <-
++!pedirComida: contaBancaria(ok)[source(banco)] & cryptocurrency(Coin) 
+			& chainServer(Server) & myWallet(MyPriv,MyPub) 
+			& cozinheiroWallet(Cozinheiro)<-
+			
 	.print("Pedindo Comida.....");
-	.send(banco,achieve,pix(cozinheiro,5));
-	.wait(10000);
-	?operacao(CodPix,comilao,cozinheiro,5);
+	.transferToken(Server,MyPriv,MyPub,Coin,Cozinheiro,5,pix);
+	?pix(CodPix);
 	.send(cozinheiro,achieve,pedido(lanche,5,CodPix));
-	-operacao(CodPix,comilao,cozinheiro,5);
 	.wait(5000);
 	!comer.
 
 +!pedirComida: not contaBancaria(ok)[source(banco)] <-
 	.wait(5000);
-	!gerarCarteira;
-	.wait(20000);
+	.buildWallet(myWallet);
+	!pedirEmprestimo;
+	.wait(5000);
+	.send(cozinheiro,askOne,cozinheiroWallet(Cozinheiro),Reply);
+	+Reply;
 	!pedirComida.
+	
+-!pedirComida: cryptocurrency(Coin) & chainServer(Server) 
+		& myWallet(MyPriv,MyPub) <-
+		.tokenBalance(Server,MyPriv,MyPub,Coin,saldo).	
 
 +entregaComida(Product,Qtd)[source(Entregador)] <-
 	?estoqueComida(X);
@@ -108,10 +86,9 @@ energia(0).
 	.print("Oba! Chegou comida!!!!");
 	-entregaComida(Product,Qtd)[source(Entregador)].
 	
-+semDinheiro[source(banco)] <-
++saldo(T,V)[source(self)]: cryptocurrency(Coin)[source(banco)] & V<5 & Coin==T <-
 	.drop_desire(curtir);
-	.drop_desire(pedirComida);
 	.print("Ababou a festa :(");
-	.wait(5000);
+	.wait(10000);
 	.stopMAS.
 

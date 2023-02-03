@@ -12,6 +12,7 @@ import okhttp3.Response;
 public class ServerResponse {
     private static boolean boolWait = false;
     private static boolean lock	 = false;
+    private static boolean result = false;
 
     /**
      *  Checks whether it is waiting for a transaction preparation.
@@ -78,6 +79,7 @@ public class ServerResponse {
 
             @Override
             public void transactionMalformed(Response response) {
+                ServerResponse.setResult(false);
                 System.out.print("[malformed " + response.message()+"]");
                 setBoolWait(false);
                 onFailure();
@@ -85,6 +87,7 @@ public class ServerResponse {
 
             @Override
             public void pushedSuccessfully(Response response) {
+                ServerResponse.setResult(true);
                 System.out.print("[pushed]");
                 setBoolWait(false);
                 onSuccess(response);
@@ -92,6 +95,7 @@ public class ServerResponse {
 
             @Override
             public void otherError(Response response) {
+                ServerResponse.setResult(false);
                 System.out.print("[otherError" + response.message()+"]");
                 setBoolWait(false);
                 onFailure();
@@ -102,15 +106,33 @@ public class ServerResponse {
     }
 
     private static void onSuccess(Response response) {
-        //TODO : Add your logic here with response from server
+        ServerResponse.setResult(true);
         System.out.println("[successfully]");
         setBoolWait(false);
     }
 
     private static void onFailure() {
-        //TODO : Add your logic here
+        ServerResponse.setResult(false);
         System.out.println("[Transaction failed]");
         setBoolWait(false);
     }
 
+    /**
+     *  Defines if a transaction was completed deployed
+     *
+     * @param result boolean
+     *
+     */
+    public static void setResult(boolean result) {
+        ServerResponse.result = result;
+    }
+
+    /**
+     * Verifies if a transaction was completed deployed
+     *
+      * @return boolean
+     */
+    public static boolean isResult() {
+        return result;
+    }
 }

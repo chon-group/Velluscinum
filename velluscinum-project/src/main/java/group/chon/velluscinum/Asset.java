@@ -110,7 +110,7 @@ public class Asset {
      */
     public void buildTransfer(String key, String value){
         this.transferMetadata = new JSONObject();
-        addTransferAdditionalInformation(key,value);
+        addTransferInformation(key,value);
     }
 
     /**
@@ -120,7 +120,7 @@ public class Asset {
      * @param value Receives the value parameter from the key-value format.
      *
      */
-    public void addTransferAdditionalInformation(String key, String value) {
+    public void addTransferInformation(String key, String value) {
         this.transferMetadata.put(key,value);
     }
 

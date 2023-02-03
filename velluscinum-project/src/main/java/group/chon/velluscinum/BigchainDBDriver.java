@@ -6,6 +6,7 @@ import com.bigchaindb.builders.*;
 import com.bigchaindb.constants.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -46,19 +47,18 @@ public class BigchainDBDriver {
                               String privateKey,
                               String publicKey,
                               String tokenName,
-                              String amount) {
+                              Long amount) {
 
         setConfig(url);
         EdDSAPrivateKey edDSAPrivateKey = keyManagement.stringToEdDSAPrivateKey(privateKey,"base58");
         EdDSAPublicKey edDSAPublicKey = keyManagement.stringToEdDSAPublicKey(publicKey,"base58");
-        Long longAmount = Long.parseLong(amount);
+
 
         JSONObject asset = new JSONObject(tokenName);
         JSONObject jsonAsset 	= new JSONObject(asset.getJSONArray("asset").get(0).toString());
-        JSONObject jsonMeta 	= new JSONObject(asset.getJSONArray("metadata").get(0).toString());
+        //JSONObject jsonMeta 	= new JSONObject(asset.getJSONArray("metadata").get(0).toString());
 
-        //Construindo Ativo
-        Map<String, String> assetData = new TreeMap<String, String>(){{
+       Map<String, String> assetData = new TreeMap<String, String>(){{
             String field = null;
             for(int i = 0; i<jsonAsset.length(); i++){
                 field = jsonAsset.names().getString(i);
@@ -66,32 +66,24 @@ public class BigchainDBDriver {
             }
         }};
 
-        //Construindo Metadata relativo ao Ativo
-        MetaData metaData = new MetaData();
-        String field = null;
-        for(int i = 0; i<jsonMeta.length(); i++){
-            field = jsonMeta.names().getString(i);
-            metaData.setMetaData(field, jsonMeta.get(field).toString());
-        }
-        //metaData.setMetaData("timestamp", Long.toString(System.currentTimeMillis()));
-
-
         try {
             ServerResponse.setLock(true);
             ServerResponse.setBoolWait(true);
             Transaction transaction = null;
             transaction = BigchainDbTransactionBuilder
                     .init()
-                    .addOutput(String.valueOf(longAmount), edDSAPublicKey)
+                    .addOutput(String.valueOf(amount), edDSAPublicKey)
                     .addAssets(assetData, TreeMap.class)
-                    .addMetaData(metaData)
                     .operation(Operations.CREATE)
                     .buildAndSign(edDSAPublicKey, edDSAPrivateKey)
                     .sendTransaction(ServerResponse.handleServerResponse());
-            System.out.print(Main.DRIVERNAME+" Creating Token... "+ transaction.getId()+" ");
+            System.out.print(Api.DRIVERNAME+" Creating Token... "+ transaction.getId()+" ");
             ServerResponse.waitDone();
             ServerResponse.setLock(false);
-            return transaction.getId();
+            if(ServerResponse.isResult()){
+                return transaction.getId();
+            }
+                return null;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -182,7 +174,7 @@ public class BigchainDBDriver {
                             .buildAndSign(bobPublicKey, bobPrivateKey)
                             .sendTransaction(ServerResponse.handleServerResponse());
                 }
-                System.out.print(Main.DRIVERNAME+" Transfer Token... "+transferTransaction.getId()+" ");
+                System.out.print(Api.DRIVERNAME+" Transfer Token... "+transferTransaction.getId()+" ");
                 ServerResponse.waitDone();
                 ServerResponse.setLock(false);
                 return transferTransaction.getId();
@@ -194,7 +186,7 @@ public class BigchainDBDriver {
                 return null;
             }
         }else{
-            System.out.println(" Insufficient funds");
+            System.out.println(Api.DRIVERNAME+" Transfer Token... "+strTransactionID+" [malformed] [insufficient funds]");
             return null;
         }
     }
@@ -271,7 +263,6 @@ public class BigchainDBDriver {
                               String nftID,
                               String transferMetadata,
                               String recipientPublicKey) {
-
         try {
             setConfig(url);
             return newTransfer(
@@ -283,6 +274,81 @@ public class BigchainDBDriver {
         }catch(Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    /**
+     * Stamps a transaction
+     *
+     * @param url   Receives a <b>URL:PORT</b> Address from a bigchainDB Server
+     *               <br>&emsp;&emsp; (e.g., "http://testchain.chon.group:9984")
+     * @param privateKey Receives a Base58 format <b>Private Key</b> from the sender wallet in the BigChainDB Network
+     *              <br>&emsp;&emsp; (e.g., "A4BAzNZdGBqkGHQP7gWovcYaGP3UELL6f4THhuHSQHCK").
+     * @param publicKey Receives a Base58 format <b>Public Key</b> from the sender wallet in the BigChainDB Network
+     *              <br>&emsp;&emsp; (e.g., "arDLZkDEmZi5wWtebvZrC5KgSs2tX8ULLeBSFp8dTJR").
+     * @param transaction    Receives a Transaction Object.
+     *
+     * @return Return the <b>TRANSFER-ID</b> case every crypto-conditions are fulfilled in the transaction at BigChainDB Network
+     *          <br>&emsp;&emsp; (e.g, "9019f938c175ad768f76b3ce4842a066a99198f68dc3078b0fab58349ece5896").
+     */
+    public String stampTransaction(String url,
+                                   String privateKey,
+                                   String publicKey,
+                                   Transaction transaction){
+
+        Input input = transaction.getInputs().get(0);
+        if(publicKey.equals(input.getOwnersBefore().get(0))){
+            return null;
+        }else{
+            try {
+
+                List<Output> outputs = transaction.getOutputs();
+                String tokenID = transaction.getAsset().getId();
+                Integer outputIndex = 0;
+                Long amount = 0L;
+
+                for(int i=0; i<transaction.getOutputs().size(); i++){
+                    List<String> publicKeysOutput =  outputs.get(i).getPublicKeys();
+                    for (int j=0; j<publicKeysOutput.size(); j++){
+                        String outputOwner = publicKeysOutput.get(j);
+                        if(outputOwner.equals(publicKey)){
+                            outputIndex = i;
+                            amount = Long.parseLong(outputs.get(i).getAmount());
+                        }
+                    }
+                }
+                KeyManagement keyManagement = new KeyManagement();
+                EdDSAPublicKey edDSAPublicKey = keyManagement.stringToEdDSAPublicKey(publicKey,"base58");
+                EdDSAPrivateKey edDSAPrivateKey = keyManagement.stringToEdDSAPrivateKey(privateKey,"base58");
+
+
+                FulFill spendFrom = new FulFill();
+                spendFrom.setTransactionId(transaction.getId());
+                spendFrom.setOutputIndex(outputIndex);
+
+                ServerResponse.setLock(true);
+                ServerResponse.setBoolWait(true);
+                Transaction transferTransaction = BigchainDbTransactionBuilder
+                        .init()
+                        .addInput(null, spendFrom, edDSAPublicKey)
+                        .addAssets(tokenID, String.class)
+                        .addOutput(amount.toString(),edDSAPublicKey)
+                        .operation(Operations.TRANSFER)
+                        .buildAndSign(edDSAPublicKey,edDSAPrivateKey)
+                        .sendTransaction(ServerResponse.handleServerResponse());
+
+                System.out.print(Api.DRIVERNAME + " Stamp Transaction... " + transferTransaction.getId() + " ");
+                ServerResponse.waitDone();
+                ServerResponse.setLock(false);
+                if (ServerResponse.isResult()) {
+                    return transferTransaction.getId();
+                } else {
+                    return null;
+                }
+            }catch (Exception ex){
+                return null;
+            }
+
         }
     }
 
@@ -416,10 +482,15 @@ public class BigchainDBDriver {
                     .buildAndSign(bobPublicKey, bobPrivateKey)
                     .sendTransaction(ServerResponse.handleServerResponse());
 
-            System.out.print(Main.DRIVERNAME+" Transfer Asset... "+transferTransaction.getId()+" ");
+            System.out.print(Api.DRIVERNAME+" Transfer Asset... "+transferTransaction.getId()+" ");
             ServerResponse.waitDone();
             ServerResponse.setLock(false);
-            return transferTransaction.getId();
+            if(ServerResponse.isResult()){
+                return transferTransaction.getId();
+            }else{
+                return null;
+            }
+
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -475,10 +546,14 @@ public class BigchainDBDriver {
                     .operation(Operations.CREATE)
                     .buildAndSign(edDSAPublicKey, edDSAPrivateKey)
                     .sendTransaction(ServerResponse.handleServerResponse());
-            System.out.print(Main.DRIVERNAME+" Creating Asset... "+ transaction.getId()+" ");
+            System.out.print(Api.DRIVERNAME+" Creating Asset... "+ transaction.getId()+" ");
             ServerResponse.waitDone();
             ServerResponse.setLock(false);
-            return transaction.getId();
+            if(ServerResponse.isResult()){
+                return transaction.getId();
+            }else{
+                return null;
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -486,8 +561,6 @@ public class BigchainDBDriver {
         }
     }
 
-
-    ///// Fungible
     private String getLastTransaction(
             EdDSAPrivateKey bobPrivateKey,
             EdDSAPublicKey bobPublicKey,
@@ -575,7 +648,7 @@ public class BigchainDBDriver {
                     .operation(Operations.TRANSFER)
                     .buildAndSign(bobPublicKey, bobPrivateKey)
                     .sendTransaction(ServerResponse.handleServerResponse());
-            System.out.print(Main.DRIVERNAME+" Merging Tokens... "+transferTransaction.getId()+" ");
+            System.out.print(Api.DRIVERNAME+" Merging Tokens... "+transferTransaction.getId()+" ");
             ServerResponse.waitDone();
             ServerResponse.setLock(false);
             return transferTransaction.getId();
