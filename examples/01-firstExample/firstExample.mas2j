@@ -1,8 +1,10 @@
 /* Jason Project */
 MAS firstExample{
     infrastructure: Local
-    agents:
-        bob;
 
+    agents: 
+		bob;
+		
+	aslSourcePath: "agt";
 }
 

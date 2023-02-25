@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"group.chon.velluscinum"},{"l":"jason.stdlib"}];updateSearchResults();

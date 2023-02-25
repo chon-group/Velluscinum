@@ -1,8 +1,8 @@
 # Um middleware para integração de Agentes BDI com o BigChainDB
-_[@nilsonmori](https://github.com/nilsonmori/), [@souzavdj](https://github.com/souzavdj), [@igormcoelho](https://github.com/igormcoelho), [@profpantoja](https://github.com/profpantoja)_
+
 
 ### Resumo
-Este trabalho, apresenta um middleware para interação de Sistemas Multiagentes com a BigChainDB, um banco de dados distribuído com características blockchain [McConaghy et al. 2016]. Assim como em Lebioda et al. (2019), cada agente possuiu uma chave pública e uma chave privada, entretanto, neste trabalho cada agente consegue assinar sua própria transação, através de seu par de chave assimétrica. Tal como Alaeddini et al. (2021), este trabalho utiliza a blockchain como uma base aberta e confiável para alimentar as crenças dos agentes, entretanto uma prova de conceito foi implementada e testada. Por fim, diferente de Papi et al. (2022) não é necessário a criação de uma instituição virtual, além disso, cada agente consegue interagir diretamente com os ativos digitais, através do próprio ambiente endógeno do SMA.
+
 
 ### Metodologia
 Uma integração entre agentes Jason BDI com o BigChainDB ocorre, de forma que, um agente possa criar ou transferir um ativo digital diretamente por ações internas.
@@ -53,12 +53,6 @@ aliceKey("FNJPJdtuPQYsqHG6tuUjKjqv7SW84U4ipiyyLV2j6MEW").
 * [Cozinheiro e Comilão](https://github.com/nilsonmori/velluscinum/tree/master/examples/02-cozinheiroEcomilao)
 
 ### Referências
-ALAEDDINI, Morteza; DUGDALE, Julie; REAIDY, Paul; MADIÈS, Philippe; GÜRCAN, Önder. An agent-oriented, blockchain-based design of the interbank money market trading system. Agents and multi-agent systems: Technologies and applications 2021. [S. l.]: Springer, 2021. p. 3–16.
-
 GMBH, BigchainDB. BigchainDB 2.0 The Blockchain Database. [S. l.: s. n.], 2018. Disponível em: https://www.bigchaindb.com/whitepaper/.
 
-LEBIODA, Andre; LACHENMAIER, Jens; BURKHARDT, Daniel. Control of cyber-physical production systems: A concept to increase the trustworthiness within multi-agent systems with distributed ledger technology. 2019.
-
 MCCONAGHY, Trent; MARQUES, Rodolphe; MÜLLER, Andreas; DE JONGHE, Dimitri; MCCONAGHY, Troy; MCMULLEN, Greg; HENDERSON, Ryan; BELLEMARE, Sylvain; GRANZOTTO, Alberto. Bigchaindb: a scalable blockchain database. white paper, BigChainDB, 2016.
-
-PAPI, Fernando Gomes; HÜBNER, Jomi Fred; DE BRITO, Maiquel. A Blockchain integration to support transactions of assets in multi-agent systems. Engineering Applications of Artificial Intelligence, v. 107, p. 104534, 2022.

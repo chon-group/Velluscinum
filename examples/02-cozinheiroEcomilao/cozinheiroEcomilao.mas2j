@@ -9,5 +9,6 @@ MAS cozinheiroEcomilao {
         comilao;
         banco;
 
+	aslSourcePath: "agt";
 }
 
