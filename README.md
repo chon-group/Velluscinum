@@ -1,36 +1,50 @@
 # Um middleware para integração de Agentes BDI com o BigChainDB
-
-
-### Resumo
-
-
-### Metodologia
-Uma integração entre agentes Jason BDI com o BigChainDB ocorre, de forma que, um agente possa criar ou transferir um ativo digital diretamente por ações internas.
-A Figura abaixo apresenta a metodologia proposta.
+## Metodologia
+Uma integração entre agentes Jason BDI com o BigChainDB ocorre, de forma que, um agente possa criar ou transferir um ativo digital diretamente por ações internas. A Figura abaixo apresenta a metodologia proposta.
 
 ![alt text for screen readers](https://raw.githubusercontent.com/nilsonmori/velluscinum/master/paper/schema.png "shema.png")
 
-Para possibilitar a interação direta dos agentes, através de ações internas é necessária a importação da biblioteca ( [velluscinum.jar](https://raw.githubusercontent.com/nilsonmori/velluscinum/master/velluscinum-project/out/velluscinum.jar) ), para o diretório /lib no projeto.
+Para possibilitar a interação direta dos agentes, através de ações internas é necessária a importação da biblioteca [velluscinum.jar](https://sourceforge.net/p/chonos/velluscinum/ci/master/tree/paper/schema.png?format=raw), para o diretório /lib no projeto.
 
-__Abaixo são descritas as ações internas__
-* ___.buildWallet__(wallet)_ -  Gera um par de chaves e adiciona uma crença __wallet(P,Q)__ na mente do agente, onde: ___wallet___ é a crença definida na chamada da ação interna; ___P___ é um literal contendo a chave privada do agente; ___Q___ é a chave pública do agente.
-* ___.deployNFT__(S,P,Q,"key:value","metadataKey:metadataValue",nft)_  - Gera um token não fungível e adiciona uma crença __nft(N)__ na mente do agente, onde: ___nft___ é a crença definida na chamada da ação interna; ___N___ é o identificador (ASSET-ID) do token gerado.
-* ___.transferNFT__(S,P,Q,N,R,"metadaKey:metadaValue",transaction)_ - Transfere o token não fungível (__N__) para outra carteira (__R__) e adiciona uma crença __transaction(T)__ na mente do agente, onde: ___transaction___ é a crença definida na chamada da ação interna; ___T___ é o identificador (TRANSFER_ID) da transação realizada.
-* ___.deployToken__(S,P,Q,"name:cryptocurrency",A,coin)_ - Cria __A__ unidades de um token fungível e adiciona uma crença __coin( C )__ na mente do agente, onde: ___coin___ é uma crença definida na chamada da ação interna; ___C___ é o identificador (ASSET-ID) do token gerado.
-* ___.transferToken__(S,P,Q,C,W,A,transaction)_ - Transfere __A__ unidades do token __C__ para a carteira __W__ e adiciona __transaction(T)__ na mente do agente, onde: ___transaction___ é a crença definida na chamada da ação interna; ___T___ é o identificador (TRANSFER_ID) da transação realizada.
-* ___.stampTransaction__(S,P,Q,T)_ - Carimba a transação (T);
-* ___.tokenBalance__(S,P,Q,C,balance)_ - Consulta o saldo do token __C__ na carteira __Q__.
+### Ações internas:
+- .buildWallet(w) - gera uma carteira e retorna a crença +w(P,Q);
+- .deployNFT(S,P,Q,I,M,b) - gera um NFT e retorna a crença +b(A);
+- .transferNFT(S,P,Q,A,R,M,b) - transfere um NFT e retorna +b(T);
+- .deployToken(S,P,Q,I,V,b) - cria V unidades de um token e retorna +b(C );
+- .transferToken(S,P,Q,C,R,V,b) - transfere V unidades de C e retorna +b(T );
+- .stampTransaction(S,P,Q,T) - carimba a transação (T );
+- .tokenBalance(S,P,Q,C,q) - retorna +q(C,V).
 
-#### Exemplo Simples
-* Agent agent001 in project [firstExample.mas2j](https://github.com/nilsonmori/velluscinum/tree/master/examples/01-firstExample)
+Onde:
+- Crenças:
+-- b é uma crença que representa o resultado de uma operação na DLT;
+-- w é uma crença que representa a carteira do agente;
+-- q é uma crença que representa o saldo do token C na carteira do agente.
+- Literais:
+-- A é um literal que representa um NFT na DLT;
+-- C é um literal que representa um Token na DLT;
+-- P é um literal que representa a chave privada do agente;
+-- Q é um literal que representa a chave pública do agente;
+-- R é um literal que representa a chave pública de um agente destinatário;
+-- S é um literal que representa o endereço de um nó da DLT;
+-- T é um literal que representa uma transação realizada na DTL;
+-- V é um literal que representa a quantidade de um Token na DTL;
+- Arrays:
+-- I é um array chave-valor (K1:V1;K2:V2;Kn:Vn) que representa os dados imutáveis de um ativo digital (ASSET);
+-- M é um array chave-valor (k1:v1;k2:v2;kn:vn) que representa os metadados do ativo ou de uma transação (METADATA);
+
+
+### Exemplo Simples
+* Agent bob in project [firstExample.mas2j](https://sourceforge.net/p/chonos/velluscinum/ci/master/tree/examples/01-firstExample/)
+
 ```sh
 // Agent bob in project firstExample.mas2j
 /* Initial beliefs and rules */
 bigchainDB("http://testchain.chon.group:9984/").
 aliceKey("FNJPJdtuPQYsqHG6tuUjKjqv7SW84U4ipiyyLV2j6MEW").
 
-/* Initial goals */
-!start.
+/* Initial goal */
+!start. 
 
 /* Plans */
 +!start: bigchainDB(Server) & aliceKey(AliceKey) <-
@@ -48,11 +62,10 @@ aliceKey("FNJPJdtuPQYsqHG6tuUjKjqv7SW84U4ipiyyLV2j6MEW").
 				transaction);
 ```
 
-
 ### Outros Exemplos
-* [Cozinheiro e Comilão](https://github.com/nilsonmori/velluscinum/tree/master/examples/02-cozinheiroEcomilao)
+* [Cozinheiro e Comilão](https://sourceforge.net/p/chonos/velluscinum/ci/master/tree/examples/02-cozinheiroEcomilao/)
+* [Domestic Robot](https://sourceforge.net/p/chonos/velluscinum/ci/master/tree/examples/03-domestic-robot/)
 
-### Referências
+# Referências
 GMBH, BigchainDB. BigchainDB 2.0 The Blockchain Database. [S. l.: s. n.], 2018. Disponível em: https://www.bigchaindb.com/whitepaper/.
-
 MCCONAGHY, Trent; MARQUES, Rodolphe; MÜLLER, Andreas; DE JONGHE, Dimitri; MCCONAGHY, Troy; MCMULLEN, Greg; HENDERSON, Ryan; BELLEMARE, Sylvain; GRANZOTTO, Alberto. Bigchaindb: a scalable blockchain database. white paper, BigChainDB, 2016.
