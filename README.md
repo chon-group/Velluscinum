@@ -4,7 +4,7 @@ Uma integração entre agentes Jason BDI com o BigChainDB ocorre, de forma que, 
 
 ![alt text for screen readers](https://raw.githubusercontent.com/nilsonmori/velluscinum/master/paper/schema.png "shema.png")
 
-Para possibilitar a interação direta dos agentes, através de ações internas é necessária a importação da biblioteca [velluscinum.jar](https://sourceforge.net/p/chonos/velluscinum/ci/master/tree/paper/schema.png?format=raw), para o diretório /lib no projeto.
+Para possibilitar a interação direta dos agentes, através de ações internas é necessária a importação da biblioteca [velluscinum.jar](https://sourceforge.net/p/chonos/velluscinum/ci/master/tree/velluscinum-project/out/velluscinum.jar?format=raw), para o diretório /lib no projeto.
 
 ### Ações internas:
 - .buildWallet(w) - gera uma carteira e retorna a crença +w(P,Q);
