@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# this scripts transforms a moise specification (and .xml file) into
+# a .dot file and then into .svg, .pdf, ...
+
+source "`dirname "$0"`/jacamo-setup"
+
+java -cp "$JACAMO_HOME/libs/*" moise.tools.os2dotGUI $*

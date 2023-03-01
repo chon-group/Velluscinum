@@ -1,0 +1,34 @@
+/*
+
+    JaCaMo Project File
+
+
+*/
+mas step_main {
+
+    agent org_agent {
+        join: server
+    }
+
+    workspace server {
+        artifact msg_console: easss.step.GUIConsole
+        artifact calculator : easss.step.Calculator
+        artifact lock       : easss.step.Lock
+        artifact barrier    : easss.step.Barrier
+    }
+
+    organisation org : org-spec.xml {
+        group easssGr :easssGr {
+            responsible-for: easssSch
+            debug
+
+            players: org_agent computer
+        }
+        scheme easssSch : easssSch {
+            debug
+        }
+    }
+
+    platform: cartago("infrastructure")
+
+}
