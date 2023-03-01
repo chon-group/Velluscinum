@@ -23,7 +23,7 @@ chainServer("http://testchain.chon.group:9984/").
 		chainCoin(Coin) & myWallet(Prk,PuB) & chainServer(Server) <-
 		
 	.print("Prezado Agente ",Cliente,", seja bem-vindo ao BanChain! - Aguarde equanto validamos sua transação.");
-	.stampTransaction(Server,Prk,PuB,Protocolo);
+	.stampTransaction(Server,Prk,PuB,Protocolo,emprestimo(Cliente));
 	.transferToken(Server,Prk,PuB,Coin,NrCarteira,Valor,transactionTransfer);
 	.send(Cliente,tell,contaBancaria(ok)).
 		

@@ -6,7 +6,7 @@ import group.chon.velluscinum.*;
 import group.chon.velluscinum.JasonUtil;
 
 /**
- * 	.deployNFT(Server,MyPriv,MyPub,"asset:data","asset:metadata",beliefReply);
+ * 	.deployNFT(Server,MyPriv,MyPub,"asset:data","asset:metadata",nftBelief);
  */
 public class deployNFT extends DefaultInternalAction {
     @Override
@@ -24,12 +24,11 @@ public class deployNFT extends DefaultInternalAction {
                     arrayArgs[4].toString()
             );
             if(assetID!=null){
-//                ts.getAg().getBB().add(
-//                        Literal.parseLiteral(arrayArgs[args.length-1]+"(\""+assetID+"\")[source(self)]"));
                 Message m = new Message("tell",
                         ts.getAgArch().getAgName(),
                         ts.getAgArch().getAgName(),
-                        Literal.parseLiteral(arrayArgs[args.length-1]+"(\""+assetID+"\")"));
+                        Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],assetID )));
+                        //Literal.parseLiteral(arrayArgs[args.length-1]+"(\""+assetID+"\")"));
                 ts.getAgArch().sendMsg(m);
 
                 return true;

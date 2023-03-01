@@ -10,7 +10,7 @@ import jason.asSyntax.Term;
 import java.util.ArrayList;
 
 /**
- * .tokenBalance(Server,MyPriv,MyPub,Coin,balance).
+ * .tokenBalance(Server,MyPriv,MyPub,Coin,balanceBelief).
  */
 public class tokenBalance extends DefaultInternalAction {
     @Override
@@ -33,14 +33,13 @@ public class tokenBalance extends DefaultInternalAction {
                 }
 
             }
-            //ts.getAg().getBB().add(
-            //        Literal.parseLiteral(arrayArgs[4]+"(\""+arrayArgs[3]+"\","+balance.toString()+")[source(self)]"));
+
             Message m = new Message("tell",
                     ts.getAgArch().getAgName(),
                     ts.getAgArch().getAgName(),
-                    Literal.parseLiteral(arrayArgs[4]+"(\""+arrayArgs[3]+"\","+balance.toString()+")"));
+                    Literal.parseLiteral(util.newBelief(arrayArgs[4],arrayArgs[3],balance)));
+                    //Literal.parseLiteral(arrayArgs[4]+"(\""+arrayArgs[3]+"\","+balance.toString()+")"));
             ts.getAgArch().sendMsg(m);
-
             return true;
         }else{
             return false;

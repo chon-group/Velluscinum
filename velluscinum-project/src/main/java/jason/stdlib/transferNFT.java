@@ -16,7 +16,7 @@ import jason.asSyntax.Term;
  * 				AssetID,
  * 				AliceKey,
  * 				"value_eur:30000000;owner:Alice;location:Rio de Janeiro",
- * 				transaction);
+ * 				transactionBelief);
  */
 public class transferNFT extends DefaultInternalAction {
     @Override
@@ -41,12 +41,11 @@ public class transferNFT extends DefaultInternalAction {
         if(args.length==6 && tranferID!=null) {
             return true;
         }else if(args.length==7 && tranferID!=null) {
-//            ts.getAg().getBB().add(
-//                    Literal.parseLiteral(arrayArgs[args.length-1]+"(\""+tranferID+"\")[source(self)]"));
             Message m = new Message("tell",
                     ts.getAgArch().getAgName(),
                     ts.getAgArch().getAgName(),
-                    Literal.parseLiteral(arrayArgs[args.length-1]+"(\""+tranferID+"\")"));
+                    Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],tranferID )));
+                    //Literal.parseLiteral(arrayArgs[args.length-1]+"(\""+tranferID+"\")"));
             ts.getAgArch().sendMsg(m);
             return true;
         }else{

@@ -10,7 +10,7 @@ import jason.asSyntax.Literal;
 import jason.asSyntax.Term;
 
 /**
- * .buildWallet(myWallet);
+ * .buildWallet(walletBelief);
  */
 public class buildWallet extends DefaultInternalAction {
     @Override
@@ -21,12 +21,11 @@ public class buildWallet extends DefaultInternalAction {
             String[] arrayArgs = util.toArray(args);
             String[] keyPair = api.buildWallet();
 
-//            ts.getAg().getBB().add(
-//                    Literal.parseLiteral(arrayArgs[0]+"(\""+keyPair[0]+"\",\""+keyPair[1]+"\")[source(self)]"));
             Message m = new Message("tell",
                     ts.getAgArch().getAgName(),
                     ts.getAgArch().getAgName(),
-                    Literal.parseLiteral(arrayArgs[0]+"(\""+keyPair[0]+"\",\""+keyPair[1]+"\")"));
+                    Literal.parseLiteral(util.newBelief(arrayArgs[0],keyPair[0],keyPair[1])));
+                    //Literal.parseLiteral(arrayArgs[0]+"(\""+keyPair[0]+"\",\""+keyPair[1]+"\")"));
             ts.getAgArch().sendMsg(m);
             return true;
         }else{

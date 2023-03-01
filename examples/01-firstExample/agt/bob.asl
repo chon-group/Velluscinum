@@ -39,8 +39,8 @@ aliceKey("FNJPJdtuPQYsqHG6tuUjKjqv7SW84U4ipiyyLV2j6MEW").
 				AssetID,
 				AliceKey,
 				"value_eur:30000000;owner:Alice;location:Rio de Janeiro",
-				transaction);
+				transactionTo(alice));
 				
-	?transaction(TransferID);
+	?transactionTo(alice,TransferID);
 	.print("NFT transferred: ",Server,"api/v1/transactions/",TransferID).
 

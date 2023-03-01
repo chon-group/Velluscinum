@@ -10,7 +10,7 @@ import jason.asSyntax.Literal;
 import jason.asSyntax.Term;
 
 /**
- *  .transferToken(Server,Prk,Puk,MyCoin,BobKey,50,tranferID).
+ *  .transferToken(Server,Prk,Puk,MyCoin,BobKey,50,transferBelief).
  */
 public class transferToken extends DefaultInternalAction {
     @Override
@@ -30,12 +30,11 @@ public class transferToken extends DefaultInternalAction {
             );
             if(transferTokenID!=null){
                 if(args.length==7){
-//                    ts.getAg().getBB().add(
-//                            Literal.parseLiteral(arrayArgs[args.length-1]+"(\""+transferTokenID+"\")[source(self)]"));
                     Message m = new Message("tell",
                             ts.getAgArch().getAgName(),
                             ts.getAgArch().getAgName(),
-                            Literal.parseLiteral(arrayArgs[args.length-1]+"(\""+transferTokenID+"\")[source(self)]"));
+                            Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],transferTokenID )));
+                            //Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],transferTokenID ));
                     ts.getAgArch().sendMsg(m);
                 }
                 return true;

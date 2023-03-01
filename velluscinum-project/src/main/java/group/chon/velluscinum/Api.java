@@ -2,6 +2,7 @@ package group.chon.velluscinum;
 
 import com.bigchaindb.api.TransactionsApi;
 import com.bigchaindb.model.Transaction;
+import jason.asSyntax.Literal;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -272,23 +273,24 @@ public class Api {
      * @param transactionID    Receives the <b>TRANSFER-ID</b> from the token that wants to transfer to another wallet
      *              <br>&emsp;&emsp; (e.g., "095ee8b3a8599fabe61a09c1c046df7b8af3cb4f70b815222daad132988bd67d").
      *
-     * @return True if the transaction was successfully stamped.
+     * @return Not null if the transaction was successfully stamped.
      */
-    public boolean stampTransaction(String url,
+    public String stampTransaction(String url,
                                    String privateKey,
                                    String publicKey,
                                    String transactionID){
         BigchainDBDriver bigchainDBDriver = new BigchainDBDriver();
         try{
             Transaction transaction = TransactionsApi.getTransactionById(transactionID);
-            if(bigchainDBDriver.stampTransaction(url,privateKey,publicKey,transaction)!=null){
+            return bigchainDBDriver.stampTransaction(url,privateKey,publicKey,transaction);
+           /* if(bigchainDBDriver.stampTransaction(url,privateKey,publicKey,transaction)!=null){
                 return true;
             }else{
                 return false;
-            }
+            }*/
         }catch (Exception ex){
             System.out.println(ex);
-            return false;
+            return null;
         }
 
 

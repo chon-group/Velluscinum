@@ -25,19 +25,17 @@ ultimoPedido(0).
 
 +!pedido(Product,Qtd,Pix)[source(Cliente)]: cryptocurrency(Coin) 
 			& chainServer(Server) & myWallet(MyPriv,MyPub) <-
-	.print("Recebi pedido... validando");
-	.stampTransaction(Server,MyPriv,MyPub,Pix);
-	+preparandoPedido;
-	!prepararPedido(Product,Qtd,Pix,Registro,Cliente);
-	-preparandoPedido.
-
-+!prepararPedido(Product,Qtd,Pix,Validacao,Cliente): Pix=Validacao & not atendido(Pix)<-
 	?ultimoPedido(N);
 	NrPedido=N+1;
 	-+ultimoPedido(NrPedido);
+	.print("Recebi pedido",NrPedido," ...validando");
+	.stampTransaction(Server,MyPriv,MyPub,Pix,pagamento(NrPedido));
+	+preparandoPedido;
+	!prepararPedido(NrPedido,Product,Qtd,Cliente);
+	-preparandoPedido.
+
++!prepararPedido(NrPedido,Product,Qtd,Cliente) <-
 	.print("Preparando o pedido Nr ",NrPedido);
-	.wait(2000);
+	.wait(1000);
 	.send(Cliente,tell,entregaComida(Product,Qtd)).
 	
--!prepararPedido(Product,Qtd,Pix,Validacao,Cliente) <-
-	.print("Pix inválido ou já atendido").

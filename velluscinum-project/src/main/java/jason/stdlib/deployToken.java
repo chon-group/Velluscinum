@@ -11,7 +11,7 @@ import jason.asSyntax.Literal;
 import jason.asSyntax.Term;
 
 /**
- * .buildToken(Server,PrK,PuK,"cryptocurrency:ChainChon",200,chainCoin);
+ * .buildToken(Server,PrK,PuK,"cryptocurrency:ChainChon",200,coinBelief);
  */
 public class deployToken extends DefaultInternalAction {
     @Override
@@ -23,12 +23,11 @@ public class deployToken extends DefaultInternalAction {
             Long amount = Long.parseLong(arrayArgs[4]);
             String tokenID = api.deploy(arrayArgs[0],arrayArgs[1],arrayArgs[2],arrayArgs[3],amount);
             if(tokenID!=null){
-//                ts.getAg().getBB().add(
-//                        Literal.parseLiteral(arrayArgs[args.length-1]+"(\""+tokenID+"\")[source(self)]"));
                 Message m = new Message("tell",
                         ts.getAgArch().getAgName(),
                         ts.getAgArch().getAgName(),
-                        Literal.parseLiteral(arrayArgs[args.length-1]+"(\""+tokenID+"\")"));
+                        Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],tokenID )));
+                        //Literal.parseLiteral(arrayArgs[args.length-1]+"(\""+tokenID+"\")"));
                 ts.getAgArch().sendMsg(m);
                 return true;
             }else{
