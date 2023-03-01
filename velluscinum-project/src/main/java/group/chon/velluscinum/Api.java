@@ -447,13 +447,14 @@ public class Api {
         Asset asset = new Asset();
         String strPrivateKey = keyManagement.importKeyFromFile(args[2]);
         //[SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [TOKEN-FILE] [AMOUNT]
-        bigchainDBDriver.deployToken(
+        String tokenId = bigchainDBDriver.deployToken(
                 args[1],
                 keyManagement.importKeyFromFile(args[2]),
                 keyManagement.importKeyFromFile(args[3]),
                 asset.importTransferFromFile(args[4]).toString(),
                 Long.parseLong(args[5])
         );
+        keyManagement.keyToFile(tokenId,args[4]+"Id");
     }
 
     /**
