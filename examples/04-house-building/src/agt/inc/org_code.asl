@@ -35,9 +35,18 @@ task_roles("Painting",         [painter]).
 
 +!requestPayment(Service): myWallet(P,Q) & bigchaindbNode(S) 
       & agreement(ArtId,Task) & contract(Client,W,ArtId,ContractID,Price) & Service=Task <-
-   
-   .print("Requesting payment of ",Price," for task ",Task,", according to contract ",ContractID);
-   .send(Client,achieve,payment(ArtId,Q)).
+   .print("Requesting payment of ",Task,", according to contract ",ContractID);
+   +waitingPayment(ArtId,ContractID);
+   .send(Client,achieve,payment(ArtId,Q));
+   .wait({+payed(ArtId,T)}).
+
++!paymentProof(ArtID,PaymentTransaction): myWallet(P,Q) & bigchaindbNode(S) 
+      & waitingPayment(ArtID,ContractID) & contract(Client,W,ArtID,ContractID,Price) <-
+   .stampTransaction(S,P,Q,PaymentTransaction);
+   .concat("Payment:OK;Value:",Price,M);
+   .transferNFT(S,P,Q,ContractID,W,M,payed(ArtID));
+   -waitingPayment(ArtID,ContractID);
+    .print("Tanks Agent ",Client).
 
 +!in_ora4mas : in_ora4mas.
 +!in_ora4mas : .intend(in_ora4mas)

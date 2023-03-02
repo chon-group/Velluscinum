@@ -18,5 +18,5 @@ my_price(1500). // initial belief
 { include("org_code.asl") }
 
 +!site_prepared
-   <- prepareSite. // simulates the action (in GUI artifact)
-
+   <- prepareSite; // simulates the action (in GUI artifact)
+   !requestPayment("SitePreparation").

@@ -1,4 +1,4 @@
-myWallet("8EPxtkcoR1V3iKLD5fqLAoDZ2ckQBfXHyYB288q2idC7","Bi7eCwHTzVSrZES9QuJfNN8pPwruTkzssSTVpWPpQYkQ"). /* Auto generated GiacomoWallet - consult startMAS.sh*/
+myWallet("8jpznkGVo8DGP2uwAv1a3UkPkRgv226mEzbq9Ss7wdW3","GaEAd9iBtUQ3CurSDNCEtXMUoRaEgKmAGe7naeksFuhe"). /* Auto generated GiacomoWallet - consult startMAS.sh*/
 // Agent Giacomo, who wants to build a house
 
 { include("common.asl") }
@@ -78,16 +78,20 @@ number_of_tasks(NS) :- .findall( S, task(S), L) & .length(L,NS).
 //  prepareContract(ContractID,Q,Price) 
 +!prepareContract(ArtId,CompanyPublicKey)[source(Company)]: 
             myWallet(P,Q) & bigchaindbNode(S)    <- 
-
-      ?registredContract(ArtId,ContractID);
-      ?bestBid(ArtId,Task,Price);
-      .concat("ArtId:",ArtId,";Winner:",Company,";Price:",Price,M);
-      .transferNFT(S,P,Q,ContractID,CompanyPublicKey,M,agreement(Company,ArtId,Price)).
+   ?registredContract(ArtId,ContractID);
+   ?bestBid(ArtId,Task,Price);
+   .concat("ArtId:",ArtId,";Winner:",Company,";Price:",Price,M);
+   .transferNFT(S,P,Q,ContractID,CompanyPublicKey,M,agreement(Company,ArtId,Price));
+   ?agreement(Company,ArtId,Price,ContractTransaction);
+   .print("[",Task,"] Transfering to ",Company," the contract ",ContractID).
 
 +!payment(ArtID, CompanyPublicKey)[source(Company)]: myWallet(P,Q) & bigchaindbNode(S) & jacamoCoin(C) &
-         agreement(Company,ArtefactId,Price,TransactionID) & ArtID=ArtefactId <-
-   .print("Payment for execution of ",ArtID);
-   .transferToken(S,P,Q,C,CompanyPublicKey,Price,payment(ArtID)).
+         agreement(Company,ArtID,Price,TransactionID) & registredContract(ArtID,ContractID) & bestBid(ArtID,Task,Price)<-
+   .print("[",Task,"] Payment of contract ",ContractID);
+   .transferToken(S,P,Q,C,CompanyPublicKey,Price,paymentTransaction(ArtID));
+   .wait(3000);
+   ?paymentTransaction(ArtID,PaymentTransaction);
+   .send(Company, achieve, paymentProof(ArtID,PaymentTransaction)).
 
 /* Plans for managing the execution of the house construction */
 
