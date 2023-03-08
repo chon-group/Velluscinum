@@ -5,23 +5,12 @@ ultimoPedido(0).
 /* Objetivos Iniciais */
 !createWallet.
 
-
 /* Planos */
 +!createWallet <-
 	.print("Gerando carteira digital");
 	.buildWallet(myWallet);
-	?myWallet(Priv,Pub);
-	+cozinheiroWallet(Pub);
-	!aguardarPedidos.
-		
-+!aguardarPedidos: not preparandoPedido <-
-	.print("Aguardando Pedidos");
-	.wait(5000);
-	!aguardarPedidos.
-
-+!aguardarPedidos: preparandoPedido<-
-	.wait(10000);
-	!aguardarPedidos.
+	.wait(myWallet(Priv,Pub));
+	+cozinheiroWallet(Pub).
 
 +!pedido(Product,Qtd,Pix)[source(Cliente)]: cryptocurrency(Coin) 
 			& chainServer(Server) & myWallet(MyPriv,MyPub) <-
@@ -38,4 +27,3 @@ ultimoPedido(0).
 	.print("Preparando o pedido Nr ",NrPedido);
 	.wait(1000);
 	.send(Cliente,tell,entregaComida(Product,Qtd)).
-	

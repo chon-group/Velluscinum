@@ -1,7 +1,7 @@
 // Agent comilao in project cozinheiroEcomilao.mas2j
 /* Crenças Iniciais */
-estoqueComida(0).
-energia(0).
+estoqueComida(10).
+energia(10).
 
 /* Objetivos Iniciais */
 !curtir.
@@ -14,10 +14,10 @@ energia(0).
 				"description:Criação de conta bancária",
 				contaID);
 				
-	?contaID(AssetID);
+	.wait(contaID(AssetID));
 	.transferNFT(Server,MyPriv,MyPub,AssetID,BankW,
 				 "description:solicitação de empréstimo;valor_chainCoin:10",protocoloID);
-	?protocoloID(PP);
+	.wait(protocoloID(PP));
 	
 	.print("protocolo nr:",PP);
 	.send(banco,achieve,solicitacaoEmprestimo(PP,MyPub,10)).
@@ -27,6 +27,7 @@ energia(0).
 	-+estoqueComida(C-3);
 	-+energia(E+3);
 	.print("Comendo........ [Geladeira=",C-3,"] [Energia=",E+3,"]");
+	.wait(1000);
 	!comer.
 	
 +!comer: energia(E) & E>10	<-
@@ -37,10 +38,12 @@ energia(0).
 +!comer <-
 	?estoqueComida(X);
 	.print("Preciso pedir comida..... [Geladeira=",X,"]");
+	.wait(1000);
 	!pedirComida.
 
 +!curtir: energia(E) & E>5 <-
 	.print("Curtindo....");
+	.wait(1000);
 	-+energia(E-3);
 	-sintoFome;
 	!curtir.
@@ -56,7 +59,7 @@ energia(0).
 			
 	.print("Pedindo Comida.....");
 	.transferToken(Server,MyPriv,MyPub,Coin,Cozinheiro,5,pix);
-	?pix(CodPix);
+	.wait(pix(CodPix));
 	.send(cozinheiro,achieve,pedido(lanche,5,CodPix));
 	.wait(5000);
 	!comer.

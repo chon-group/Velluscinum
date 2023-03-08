@@ -8,39 +8,29 @@ aliceKey("FNJPJdtuPQYsqHG6tuUjKjqv7SW84U4ipiyyLV2j6MEW").
 
 /* Plans */
 +!start <-
-	!buildWallet;
-	!deployNFT;
-	!transferNFT.
-
-
-+!buildWallet <-
+	.print("Creating a Wallet");
 	.buildWallet(myWallet);
-	?myWallet(PrivateKey,PublicKey);
-	.print("Wallet address:",PublicKey).
-		
-+!deployNFT: bigchainDB(Server)<-
-	?myWallet(MyPriv,MyPub);
+	.wait(myWallet(PrivateKey,PublicKey));
 	
+	.print("Creating a NFT");
+	?bigchainDB(Server);
 	.deployNFT(Server,
-			MyPriv,MyPub,
+			PrivateKey,PublicKey,
 			"name:Meninas;author:Silva y Velázquez;place:Madrid;year:1656",
 			"location:Madrid;value_eur:25000000;owner:Bob Agent",
 			myNFT);
-			
-	?myNFT(NFT_ID);
-	.print("NFT registered: ",Server,"api/v1/transactions/",NFT_ID).
-			
-	
-+!transferNFT: bigchainDB(Server) & aliceKey(AliceKey)<-
-	?myWallet(MyPriv,MyPub);
-	?myNFT(AssetID);
+
+	.wait(myNFT(AssetID));
+	.print("NFT registered: ",Server,"api/v1/transactions/",AssetID);
+
+	.print("Tranfering the NFT");
+	?aliceKey(AliceKey);
 	.transferNFT(Server,
-				MyPriv,MyPub,
+				PrivateKey,PublicKey,
 				AssetID,
 				AliceKey,
 				"value_eur:30000000;owner:Alice;location:Rio de Janeiro",
 				transactionTo(alice));
 				
-	?transactionTo(alice,TransferID);
+	.wait(transactionTo(alice,TransferID));
 	.print("NFT transferred: ",Server,"api/v1/transactions/",TransferID).
-
