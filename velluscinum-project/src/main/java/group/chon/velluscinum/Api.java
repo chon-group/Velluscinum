@@ -4,10 +4,7 @@ import com.bigchaindb.api.TransactionsApi;
 import com.bigchaindb.model.Transaction;
 import jason.asSyntax.Literal;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -257,7 +254,6 @@ public class Api {
                                   String assetID,
                                   String recipientPublicKey,
                                   Integer amount){
-
         BigchainDBDriver bigchainDBDriver = new BigchainDBDriver();
         return bigchainDBDriver.transferToken(url,senderPrivateKey,senderPublicKey,assetID,recipientPublicKey,amount);
     }
@@ -317,7 +313,8 @@ public class Api {
                                                          String privateKey,
                                                          String publicKey){
         Wallet wallet = new Wallet();
-        return wallet.getMyTokens(url,privateKey,publicKey);
+        ArrayList<WalletContent> result = wallet.getMyTokens(url,privateKey,publicKey);
+        return result;
     }
 
 
@@ -547,4 +544,5 @@ public class Api {
         }
         System.exit(1);
     }
+
 }

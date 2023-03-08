@@ -9,19 +9,14 @@ bigchaindbNode("http://testchain.chon.group:9984/").   /* initial belief */
 /* Plains */
 +!createCoin: bigchaindbNode(DLTNode) <-
 	.print("Creating the MAS2jCoin");
-	.wait(2500);
 	.buildWallet(bankWallet);
-	?bankWallet(PrK,PuK);
+	.wait(bankWallet(PrK,PuK));
 	.deployToken(DLTNode,PrK,PuK,"cryptocurrency:MAS2jCoin",1000,mas2jCoin);
-	!publicateCoin.
-	
-+!publicateCoin: mas2jCoin(Coin) & bankWallet(Prk,PuB) & bigchaindbNode(DLTNode) <-
-	.broadcast(tell,cryptocurrency(Coin));
-	.broadcast(tell,bigchaindbNode(DLTNode)).
+	.wait(mas2jCoin(Coin));
+	.broadcast(tell,bigchaindbNode(DLTNode));
+	.broadcast(tell,cryptocurrency(Coin)).
 	
 +!cashOut(ClientWallet,Amount)[source(Client)]: 
 		mas2jCoin(Coin) & bankWallet(Prk,PuB) & bigchaindbNode(DLTNode) <-
-		
 	.print("Hello Agent ",Client,", wellcome to MAS2jBank!");
-	.transferToken(DLTNode,Prk,PuB,Coin,ClientWallet,Amount,transactionTransfer);
-	.send(Client,tell,money(ok)).
+	.transferToken(DLTNode,Prk,PuB,Coin,ClientWallet,Amount,transactionTransfer).

@@ -2,6 +2,10 @@ package group.chon.velluscinum;
 import jason.asSyntax.Literal;
 import jason.asSyntax.Term;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Random;
+
 /**
  * Jason Utilities
  */
@@ -38,6 +42,34 @@ public class JasonUtil {
             return strBelief.substring(0,strBelief.length()-1)+",\""+strArg1+"\","+longBalance.toString()+")";
         }else{
             return strBelief+"(\""+strArg1+"\","+longBalance.toString()+")";
+        }
+    }
+
+    public void lock(boolean lock){
+        try {
+            File file = new File("velluscinum.lock");
+            if (lock) {
+                file.createNewFile();
+            } else {
+                file.delete();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isLocked(){
+        File file = new File("velluscinum.lock");
+        if (file.exists()) {
+            Random randI = new Random();
+            try {
+                Thread.sleep(1000+randI.nextInt(4000));
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            return true;
+        } else {
+            return false;
         }
     }
 }

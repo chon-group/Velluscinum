@@ -1,28 +1,13 @@
 /* Initial goals */
 
-//!get(beer).   // initial goal: get a beer
-//!check_bored. // initial goal: verify whether I am getting bored
+!get(beer).   // initial goal: get a beer
+!check_bored. // initial goal: verify whether I am getting bored
 
-+cryptocurrency(Coin)[source(bank)]<-
-   .print("Creating wallet");
-   .buildWallet(ownerWallet);
-   !cashOut.
-
-+!cashOut: ownerWallet(PrivateKey,PublicKey) <-
-   .print("Requesting funds");
-   .send(bank,achieve,cashOut(PublicKey,100)).
-
-+money(ok)[source(bank)] <- 
-   !get(beer); 
-   !check_bored.
-
-+!get(beer) : money(ok) & ownerWallet(PrivateKey,PublicKey)<-
-   .send(robot, tell, ownerWallet(PrivateKey,PublicKey));
-   .send(robot, achieve, has(owner,beer)).
++!get(beer) : true
+   <- .send(robot, achieve, has(owner,beer)).
 
 +has(owner,beer) : true
    <- !drink(beer).
-
 -has(owner,beer) : true
    <- !get(beer).
 
@@ -43,3 +28,8 @@
    <- .print("Message from ",Ag,": ",M);
       -msg(M).
 
++cryptocurrency(Coin)[source(bank)] <-
+   .buildWallet(ownerWallet);
+   .wait(ownerWallet(PrivateKey,PublicKey));
+   .send(bank,achieve,cashOut(PublicKey,100));
+   .send(robot, tell, ownerWallet(PrivateKey,PublicKey)).

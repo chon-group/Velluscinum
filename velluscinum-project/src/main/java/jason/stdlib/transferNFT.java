@@ -26,6 +26,8 @@ public class transferNFT extends DefaultInternalAction {
         String[] arrayArgs = util.toArray(args);
         String tranferID = null;
         if(args.length==6 || args.length==7) {
+            while (util.isLocked());
+            util.lock(true);
             tranferID = api.transfer(
                     arrayArgs[0],
                     arrayArgs[1],
@@ -33,6 +35,7 @@ public class transferNFT extends DefaultInternalAction {
                     arrayArgs[3],
                     arrayArgs[4],
                     arrayArgs[5]);
+            util.lock(false);
         }else{
             ts.getAg().getLogger().info("Input error");
             return false;
@@ -44,7 +47,7 @@ public class transferNFT extends DefaultInternalAction {
             Message m = new Message("tell",
                     ts.getAgArch().getAgName(),
                     ts.getAgArch().getAgName(),
-                    Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],tranferID )));
+                    Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],tranferID)));
                     //Literal.parseLiteral(arrayArgs[args.length-1]+"(\""+tranferID+"\")"));
             ts.getAgArch().sendMsg(m);
             return true;

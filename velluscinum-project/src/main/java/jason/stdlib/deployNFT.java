@@ -16,6 +16,8 @@ public class deployNFT extends DefaultInternalAction {
         String[] arrayArgs = util.toArray(args);
 
         if(args.length==6){
+            while (util.isLocked());
+            util.lock(true);
             String assetID = api.deploy(
                     arrayArgs[0].toString(),
                     arrayArgs[1].toString(),
@@ -23,6 +25,7 @@ public class deployNFT extends DefaultInternalAction {
                     arrayArgs[3].toString(),
                     arrayArgs[4].toString()
             );
+            util.lock(false);
             if(assetID!=null){
                 Message m = new Message("tell",
                         ts.getAgArch().getAgName(),
@@ -30,7 +33,6 @@ public class deployNFT extends DefaultInternalAction {
                         Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],assetID )));
                         //Literal.parseLiteral(arrayArgs[args.length-1]+"(\""+assetID+"\")"));
                 ts.getAgArch().sendMsg(m);
-
                 return true;
             }else{
                 return false;

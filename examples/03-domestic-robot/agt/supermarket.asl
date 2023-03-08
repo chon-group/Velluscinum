@@ -1,22 +1,23 @@
 last_order_id(1). // initial belief
 
 // plan to achieve the goal "order" for agent Ag
-+!order(Product,Qtd,Transaction)[source(Ag)] <-
-    !verifyPayment(Transaction);   
-    ?last_order_id(N);
++!order(Product,Qtd)[source(Ag)] : true
+  <- ?last_order_id(N);
      OrderId = N + 1;
      -+last_order_id(OrderId);
-     .print("Delivering the Beer!!!");
+     !requestPayment(OrderId,Ag,Qtd);    
+     .wait(orderPayed(OrderId));
      deliver(Product,Qtd);
      .send(Ag, tell, delivered(Product,Qtd,OrderId)).
 
++!requestPayment(OrderId,Ag,Amount):supermarketWallet(PrivateKey,PublicKey) & bigchaindbNode(DLTNode) <-
+   .print("Requesting payment");
+   .send(Ag, tell, payOrder(OrderId,Amount,PublicKey));
+   .wait({+payment(OrderId,Transaction)});
+   .print("Validating payment");
+   .stampTransaction(DLTNode,PrivateKey,PublicKey,Transaction,confirmed(OrderId));
+   +orderPayed(OrderId).
+
 +cryptocurrency(Coin)[source(bank)]<-
    .print("Creating wallet");
-   .buildWallet(supermarketWallet);
-   ?supermarketWallet(PrivateKey,PublicKey);
-   .broadcast(tell,supermarketWallet(PublicKey)).
-
-+!verifyPayment(T): supermarketWallet(PrivateKey,PublicKey) 
-  & bigchaindbNode(Server) <-
-  .print("Validating the payment");
-  .stampTransaction(Server,PrivateKey,PublicKey,T).
+   .buildWallet(supermarketWallet).

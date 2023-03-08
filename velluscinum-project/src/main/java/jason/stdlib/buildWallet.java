@@ -19,7 +19,10 @@ public class buildWallet extends DefaultInternalAction {
         Api api = new Api();
         if(args.length==1){
             String[] arrayArgs = util.toArray(args);
+            while (util.isLocked());
+            util.lock(true);
             String[] keyPair = api.buildWallet();
+            util.lock(false);
 
             Message m = new Message("tell",
                     ts.getAgArch().getAgName(),

@@ -20,6 +20,8 @@ public class transferToken extends DefaultInternalAction {
         if(args.length==7||args.length==6){
             String[] arrayArgs = util.toArray(args);
             Integer amount = Integer.parseInt(arrayArgs[5]);
+            while (util.isLocked());
+            util.lock(true);
             String transferTokenID = api.transfer(
                     arrayArgs[0],
                     arrayArgs[1],
@@ -28,6 +30,7 @@ public class transferToken extends DefaultInternalAction {
                     arrayArgs[4],
                     amount
             );
+            util.lock(false);
             if(transferTokenID!=null){
                 if(args.length==7){
                     Message m = new Message("tell",

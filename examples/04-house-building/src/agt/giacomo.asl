@@ -1,4 +1,4 @@
-myWallet("8jpznkGVo8DGP2uwAv1a3UkPkRgv226mEzbq9Ss7wdW3","GaEAd9iBtUQ3CurSDNCEtXMUoRaEgKmAGe7naeksFuhe"). /* Auto generated GiacomoWallet - consult startMAS.sh*/
+myWallet("GFachzotPYyJSJmVnbxerAoAyAEf5P5kiURdoaGSLdAL","7o3itXeDUgo2uCSMVviDNgWhvEGzTszS5dnr2fho3hM8"). /* Auto generated GiacomoWallet - consult startMAS.sh*/
 // Agent Giacomo, who wants to build a house
 
 { include("common.asl") }
@@ -51,7 +51,8 @@ number_of_tasks(NS) :- .findall( S, task(S), L) & .length(L,NS).
    ?bigchaindbNode(S);
    .concat("Task:",Task,I);
    .concat("MaxPrice:",MaxPrice,M);
-   .deployNFT(S,P,Q,I,M,registredContract(ArtId)).
+   .deployNFT(S,P,Q,I,M,registredContract(ArtId));
+   .wait(registredContract(ArtId,ContractID)).
 
 -!create_auction_artifact(Task,MaxPrice)[error_code(Code)]
    <- .print("Error creating artifact ", Code).
@@ -69,28 +70,27 @@ number_of_tasks(NS) :- .findall( S, task(S), L) & .length(L,NS).
 
          /*[Velluscinum] informing the winner, asking about Public Key to transfer the NFT*/
          ?registredContract(ArtId,ContractID);
-         ?publicwallet(W);
+         ?myWallet(P,Q);
          +bestBid(ArtId,Task,Price);
-         .send(Ag, achieve, bestBid(ArtId,ContractID,W,Price));
+         //.print("Sending solicitation about Wallet of ",Ag," to transfer contract ",ContractID);
+         .send(Ag, achieve, bestBid(ArtId,ContractID,Q,Price));
       }.
 
 /*[Velluscinum] transfering to the winner the NFT*/
 //  prepareContract(ContractID,Q,Price) 
-+!prepareContract(ArtId,CompanyPublicKey)[source(Company)]: 
-            myWallet(P,Q) & bigchaindbNode(S)    <- 
-   ?registredContract(ArtId,ContractID);
-   ?bestBid(ArtId,Task,Price);
++!prepareContract(ContractID,CompanyPublicKey)[source(Company)]: 
+         myWallet(P,Q) & bigchaindbNode(S) & registredContract(ArtId,RegistredID) &
+         ContractID=RegistredID & bestBid(ArtefactId,Task,Price) & ArtId=ArtefactId <- 
    .concat("ArtId:",ArtId,";Winner:",Company,";Price:",Price,M);
    .transferNFT(S,P,Q,ContractID,CompanyPublicKey,M,agreement(Company,ArtId,Price));
-   ?agreement(Company,ArtId,Price,ContractTransaction);
-   .print("[",Task,"] Transfering to ",Company," the contract ",ContractID).
+   .wait(agreement(Company,ArtId,Price,ContractTransaction)).
+   
 
 +!payment(ArtID, CompanyPublicKey)[source(Company)]: myWallet(P,Q) & bigchaindbNode(S) & jacamoCoin(C) &
          agreement(Company,ArtID,Price,TransactionID) & registredContract(ArtID,ContractID) & bestBid(ArtID,Task,Price)<-
-   .print("[",Task,"] Payment of contract ",ContractID);
+   //.print("[",Task,"] Payment of contract ",ContractID);
    .transferToken(S,P,Q,C,CompanyPublicKey,Price,paymentTransaction(ArtID));
-   .wait(3000);
-   ?paymentTransaction(ArtID,PaymentTransaction);
+   .wait(paymentTransaction(ArtID,PaymentTransaction));
    .send(Company, achieve, paymentProof(ArtID,PaymentTransaction)).
 
 /* Plans for managing the execution of the house construction */
@@ -135,7 +135,7 @@ number_of_tasks(NS) :- .findall( S, task(S), L) & .length(L,NS).
             ?task(Task)[artifact_id(ArtId)];
             println("Contracting ",Ag," for ", Task);
             /* Velluscinum sending the transaction ID to validade the contract */
-            ?agreement(Company,ArtId,Price,TransactionID);
+            .wait(agreement(Company,ArtId,Price,TransactionID));
             .send(Ag, achieve, contract(Task,GroupName,ArtId,TransactionID)) // sends the message to the agent notifying it about the result
       }.
 

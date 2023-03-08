@@ -20,10 +20,13 @@ public class tokenBalance extends DefaultInternalAction {
         if(args.length==5){
             String[] arrayArgs = util.toArray(args);
 
+            while (util.isLocked());
+            util.lock(true);
             ArrayList<WalletContent> walletContents = api.walletBalance(
                     arrayArgs[0],
                     arrayArgs[1],
                     arrayArgs[2]);
+            util.lock(false);
 
             Long balance = 0L;
             for(int i=0; i<walletContents.size(); i++){

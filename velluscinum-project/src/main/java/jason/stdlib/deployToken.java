@@ -21,7 +21,10 @@ public class deployToken extends DefaultInternalAction {
         if(args.length==6){
             String[] arrayArgs = util.toArray(args);
             Long amount = Long.parseLong(arrayArgs[4]);
+            while (util.isLocked());
+            util.lock(true);
             String tokenID = api.deploy(arrayArgs[0],arrayArgs[1],arrayArgs[2],arrayArgs[3],amount);
+            util.lock(false);
             if(tokenID!=null){
                 Message m = new Message("tell",
                         ts.getAgArch().getAgName(),

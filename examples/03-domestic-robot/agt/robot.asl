@@ -4,7 +4,7 @@
 available(beer,fridge).
 
 // my owner should not consume more than 10 beers a day :-)
-limit(beer,5).
+limit(beer,10).
 
 too_much(B) :-
    .date(YY,MM,DD) &
@@ -28,20 +28,10 @@ too_much(B) :-
       .date(YY,MM,DD); .time(HH,NN,SS);
       +consumed(YY,MM,DD,HH,NN,SS,beer).
 
-+!has(owner,beer): not available(beer,fridge) <-         
-   !paybeer;
-   ?transaction(Transaction);
-   .print("Ordering more Beer!!!");
-   .send(supermarket, achieve, order(beer,3,Transaction));
-   -transaction(Transaction);
-   !at(robot,fridge). // go to fridge and wait there.
-
-
-+!paybeer: bigchaindbNode(DLTNode) & ownerWallet(PrivateKey,PublicKey)
-            & cryptocurrency(Coin) & supermarketWallet(SuperMarket) <-
-   .print("Payment for beers");
-   .transferToken(DLTNode,PrivateKey,PublicKey,Coin,SuperMarket,3,transaction);
-   .wait(2000).
++!has(owner,beer)
+   :  not available(beer,fridge)
+   <- .send(supermarket, achieve, order(beer,5));
+      !at(robot,fridge). // go to fridge and wait there.
 
 +!has(owner,beer)
    :  too_much(beer) & limit(beer,L)
@@ -77,3 +67,12 @@ too_much(B) :-
 
 +?time(T) : true
   <-  time.check(T).
+
+
++payOrder(OrderId,Amount,MarketKey)[source(supermarket)] : 
+    bigchaindbNode(DLTNode) & ownerWallet(PrivateKey,PublicKey)
+            & cryptocurrency(Coin) <-
+   .print("Payment for beers");
+   .transferToken(DLTNode,PrivateKey,PublicKey,Coin,MarketKey,Amount,transaction);
+   .wait(transaction(Transaction));
+   .send(supermarket,tell,payment(OrderId,Transaction)).
