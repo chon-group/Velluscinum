@@ -13,7 +13,7 @@ echo " "
 echo "Transfering 50000 JacamoCoin to Giacomo Agent"
 java -jar ../../lib/jacamo-1.1/libs/velluscinum.jar buildWallet .jacamoCoin/giacomoWallet 
 JacamoCoinID=`cat .jacamoCoin/JacamoCoin.assetId`
-java -jar ../../lib/jacamo-1.1/libs/velluscinum.jar transferToken $bigchaindbNODE .jacamoCoin/bankOfAgents.privkey .jacamoCoin/bankOfAgents.publkey $JacamoCoinID .jacamoCoin/giacomoWallet.publkey 50000
+java -jar ../../lib/jacamo-1.1/libs/velluscinum.jar transferToken $bigchaindbNODE .jacamoCoin/bankOfAgents.privkey .jacamoCoin/bankOfAgents.publkey $JacamoCoinID .jacamoCoin/giacomoWallet.publkey 10700
 
 echo " "
 echo "Updating beliefs about jacamoCoin"

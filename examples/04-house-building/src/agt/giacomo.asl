@@ -1,4 +1,4 @@
-myWallet("GFachzotPYyJSJmVnbxerAoAyAEf5P5kiURdoaGSLdAL","7o3itXeDUgo2uCSMVviDNgWhvEGzTszS5dnr2fho3hM8"). /* Auto generated GiacomoWallet - consult startMAS.sh*/
+myWallet("BbwdGTSfQA368Cjemm9eiazryWKqNeQt9DGJ6L5s8DQZ","T2fReYrUcRFmgTyY91ZS7mKXmRAoQsTRboEeCvn7NDJ"). /* Auto generated GiacomoWallet - consult startMAS.sh*/
 // Agent Giacomo, who wants to build a house
 
 { include("common.asl") }
@@ -41,18 +41,16 @@ number_of_tasks(NS) :- .findall( S, task(S), L) & .length(L,NS).
        !create_auction_artifact("ElectricalSystem", 500);
        !create_auction_artifact("Painting",        1200).
 
-+!create_auction_artifact(Task,MaxPrice)<- 
-   .concat("auction_for_",Task,ArtName);
-   makeArtifact(ArtName, "tools.AuctionArt", [Task, MaxPrice], ArtId);
-   focus(ArtId);
-   
-   /* Velluscinum creating a NFT as a Contract*/
-   ?myWallet(P,Q);
-   ?bigchaindbNode(S);
-   .concat("Task:",Task,I);
-   .concat("MaxPrice:",MaxPrice,M);
-   .deployNFT(S,P,Q,I,M,registredContract(ArtId));
-   .wait(registredContract(ArtId,ContractID)).
++!create_auction_artifact(Task,MaxPrice)
+   <- .concat("auction_for_",Task,ArtName);
+      makeArtifact(ArtName, "tools.AuctionArt", [Task, MaxPrice], ArtId);
+      focus(ArtId);
+      ?myWallet(P,Q);                                 /* new action */
+      ?bigchaindbNode(S);                             /* new action */
+      .concat("Contract of:",Task,I);                 /* new action */
+      .concat("MaxPrice:",MaxPrice,M);                /* new action */
+      .deployNFT(S,P,Q,I,M,registredContract(ArtId)); /* new action */
+      .wait(registredContract(ArtId,ContractID)).     /* new action */
 
 -!create_auction_artifact(Task,MaxPrice)[error_code(Code)]
    <- .print("Error creating artifact ", Code).
@@ -67,31 +65,18 @@ number_of_tasks(NS) :- .findall( S, task(S), L) & .length(L,NS).
          ?currentBid(Price)[artifact_id(ArtId)]; // check the current bid
          ?task(Task)[artifact_id(ArtId)];          // and the task it is for
          println("Winner of task ", Task," is ", Ag, " for ", Price);
-
-         /*[Velluscinum] informing the winner, asking about Public Key to transfer the NFT*/
-         ?registredContract(ArtId,ContractID);
-         ?myWallet(P,Q);
-         +bestBid(ArtId,Task,Price);
-         //.print("Sending solicitation about Wallet of ",Ag," to transfer contract ",ContractID);
-         .send(Ag, achieve, bestBid(ArtId,ContractID,Q,Price));
+         ?registredContract(ArtId,ContractID);       /* new action */
+         ?myWallet(P,Q);                             /* new action */
+         +bestBid(ArtId,Task,Price);                 /* new action */
+         .send(Ag, achieve, 
+            bestBid(ArtId,ContractID,Q,Price));      /* new action */ 
       }.
 
-/*[Velluscinum] transfering to the winner the NFT*/
-//  prepareContract(ContractID,Q,Price) 
-+!prepareContract(ContractID,CompanyPublicKey)[source(Company)]: 
-         myWallet(P,Q) & bigchaindbNode(S) & registredContract(ArtId,RegistredID) &
-         ContractID=RegistredID & bestBid(ArtefactId,Task,Price) & ArtId=ArtefactId <- 
-   .concat("ArtId:",ArtId,";Winner:",Company,";Price:",Price,M);
-   .transferNFT(S,P,Q,ContractID,CompanyPublicKey,M,agreement(Company,ArtId,Price));
-   .wait(agreement(Company,ArtId,Price,ContractTransaction)).
-   
-
-+!payment(ArtID, CompanyPublicKey)[source(Company)]: myWallet(P,Q) & bigchaindbNode(S) & jacamoCoin(C) &
-         agreement(Company,ArtID,Price,TransactionID) & registredContract(ArtID,ContractID) & bestBid(ArtID,Task,Price)<-
-   //.print("[",Task,"] Payment of contract ",ContractID);
-   .transferToken(S,P,Q,C,CompanyPublicKey,Price,paymentTransaction(ArtID));
-   .wait(paymentTransaction(ArtID,PaymentTransaction));
-   .send(Company, achieve, paymentProof(ArtID,PaymentTransaction)).
+//+!dispose_auction_artifacts
+//   <- for ( task(_)[artifact_id(ArtId)] ) {
+//         stopFocus(ArtId)
+//         //disposeArtifact(ArtId)
+//      }.
 
 /* Plans for managing the execution of the house construction */
 
@@ -132,13 +117,12 @@ number_of_tasks(NS) :- .findall( S, task(S), L) & .length(L,NS).
       .findall( ArtId, currentWinner(A)[artifact_id(ArtId)] & A \== "no_winner", L) &
       .length(L, NS)
    <- for ( currentWinner(Ag)[artifact_id(ArtId)] ) {
-            ?task(Task)[artifact_id(ArtId)];
-            println("Contracting ",Ag," for ", Task);
-            /* Velluscinum sending the transaction ID to validade the contract */
-            .wait(agreement(Company,ArtId,Price,TransactionID));
-            .send(Ag, achieve, contract(Task,GroupName,ArtId,TransactionID)) // sends the message to the agent notifying it about the result
+        ?task(Task)[artifact_id(ArtId)];
+        println("Contracting ",Ag," for ", Task);
+        .wait(agreement(Company,ArtId,Price,TransactionID)); /* new action */
+        .send(Ag, achieve, 
+        contract(Task,GroupName,ArtId,TransactionID))    /* updated action */
       }.
-
 +!contract_winners(_)
    <- println("** I didn't find enough builders!");
       .fail.
@@ -150,3 +134,24 @@ number_of_tasks(NS) :- .findall( S, task(S), L) & .length(L,NS).
 
 +!house_built // I have an obligation towards the top-level goal of the scheme: finished!
    <- println("*** Finished ***").
+
+/* new plans */
++!prepareContract(ContractID,CompanyPublicKey)[source(Company)]: 
+         bigchaindbNode(S) & registredContract(ArtId,RegistredID) &
+         myWallet(P,Q) & ContractID=RegistredID & 
+         bestBid(ArtefactId,Task,Price) & ArtId=ArtefactId <- 
+
+   .concat("ArtId:",ArtId,";Winner:",Company,";Price:",Price,M);
+   .transferNFT(S,P,Q,ContractID,CompanyPublicKey,
+                                M,agreement(Company,ArtId,Price));
+   .wait(agreement(Company,ArtId,Price,ContractTransaction)).
+   
+
++!payment(ArtID, CompanyPublicKey)[source(Company)]: 
+        myWallet(P,Q) & bigchaindbNode(S) & jacamoCoin(C) &
+        agreement(Company,ArtID,Price,TransactionID) & 
+        registredContract(ArtID,ContractID) & bestBid(ArtID,Task,Price)<-
+
+   .transferToken(S,P,Q,C,CompanyPublicKey,Price,paymentTransaction(ArtID));
+   .wait(paymentTransaction(ArtID,PaymentTransaction));
+   .send(Company, achieve, paymentProof(ArtID,PaymentTransaction)).
