@@ -34,4 +34,11 @@ rm src/agt/giacomo.asl.bkp
 
 echo " "
 echo "Executing the house_building jacamo example"
-java -jar ../../lib/jacamo-1.1/libs/ant-launcher-1.10.5.jar -f bin/house_building.xml
+#Replace ant compiler by gradle
+#java -jar ../../lib/jacamo-1.1/libs/ant-launcher-1.10.5.jar -f bin/house_building.xml
+#Remove this file (this file may be left behind after compiling/running by ant)
+if [ -f "velluscinum.lock" ] ; then
+    rm velluscinum.lock
+fi
+#Run gradle (see the run task on build.gradle file)
+./gradlew run
