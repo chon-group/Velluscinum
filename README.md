@@ -1,37 +1,29 @@
-# Um middleware para integração de Agentes BDI com o BigChainDB
-## Metodologia
-Uma integração entre agentes Jason BDI com o BigChainDB ocorre, de forma que, um agente possa criar ou transferir um ativo digital diretamente por ações internas. A Figura abaixo apresenta a metodologia proposta.
+# [Velluscinum](https://velluscinum.chon.group): A Middleware for Using Digital Assets in Multi-Agent Systems
 
-![alt text for screen readers](https://raw.githubusercontent.com/nilsonmori/velluscinum/master/paper/schema.png "shema.png")
+Distributed Ledger Technologies (DLT) characteristics can contribute to several domains, such as Multi-agent Systems (MAS), facilitating the agreement between agents, managing trust relationships, and distributed scenarios. Some contributions to this integration are in the theoretical stage, and the few existing practical contributions have limitations and low performance. This work presents a MAS approach that can use digital assets as a factor of agreement in the relationship between cognitive agents using the Belief-Desire-Intention model. To validate the proposed methodology, we present the middleware Velluscinum that offers new internal actions to agents. The middleware was tested by adapting the Building-a-House classic example to cryptocurrency and agreements mediated by a distributed ledger.
 
-Para possibilitar a interação direta dos agentes, através de ações internas é necessária a importação da biblioteca [velluscinum.jar](https://sourceforge.net/p/chonos/velluscinum/ci/master/tree/velluscinum-project/out/velluscinum.jar?format=raw), para o diretório /lib no projeto.
+## The built-in internal actions provided by the middleware are described below:
+- .buildWallet(w) - generates a digital wallet and returns the belief +w(P,Q);
+- .deployNFT(S,P,Q,I,M,b) - registers an asset and returns the belief +b(A);
+- .transferNFT(S,P,Q,A,R,M,b) - transfer an asset and returns +b(T);
+- .deployToken(S,P,Q,I,V,b) - creates V units from an asset, returns +b(C);
+- .transferToken(S,P,Q,C,R,V,b) - transfer V units of C and returns +b(T);
+- .stampTransaction(S,P,Q,T) - stamps a transaction (T);
+- .tokenBalance}(S,P,Q,C,q) - check the wallet Q and return +q(C,V).
 
-### Ações internas:
-- .buildWallet(w) - gera uma carteira e retorna a crença +w(P,Q);
-- .deployNFT(S,P,Q,I,M,b) - gera um NFT e retorna a crença +b(A);
-- .transferNFT(S,P,Q,A,R,M,b) - transfere um NFT e retorna +b(T);
-- .deployToken(S,P,Q,I,V,b) - cria V unidades de um token e retorna +b(C );
-- .transferToken(S,P,Q,C,R,V,b) - transfere V unidades de C e retorna +b(T );
-- .stampTransaction(S,P,Q,T) - carimba a transação (T );
-- .tokenBalance(S,P,Q,C,q) - retorna +q(C,V).
-
-Onde:
-- Crenças:
--- b é uma crença que representa o resultado de uma operação na DLT;
--- w é uma crença que representa a carteira do agente;
--- q é uma crença que representa o saldo do token C na carteira do agente.
-- Literais:
--- A é um literal que representa um NFT na DLT;
--- C é um literal que representa um Token na DLT;
--- P é um literal que representa a chave privada do agente;
--- Q é um literal que representa a chave pública do agente;
--- R é um literal que representa a chave pública de um agente destinatário;
--- S é um literal que representa o endereço de um nó da DLT;
--- T é um literal que representa uma transação realizada na DTL;
--- V é um literal que representa a quantidade de um Token na DTL;
-- Arrays:
--- I é um array chave-valor (K1:V1;K2:V2;Kn:Vn) que representa os dados imutáveis de um ativo digital (ASSET);
--- M é um array chave-valor (k1:v1;k2:v2;kn:vn) que representa os metadados do ativo ou de uma transação (METADATA);
+Where:
+- b is a belief that represents a result of an operation in DLT;
+- w is a belief that represents an agent's wallet;
+- q is a belief that represents the balance of C in the agent's wallet.
+- A is a literal that represents a divisible asset;
+- C is a literal that represents a indivisible asset;
+- P e Q are literals that represent the agent's key pair;
+- R is a literal that represents the public key of a recipient agent;
+- S is a literal that represents the address of a DLT node;
+- T is a literal that represents a transaction performed in the DTL;
+- V is a literal that represents the number of parts of a C;
+- I is a key-value array that represents the immutable data of an asset;
+- M is a key-value array representing asset or transaction metadata;
 
 
 ### Exemplo Simples
@@ -78,7 +70,3 @@ aliceKey("FNJPJdtuPQYsqHG6tuUjKjqv7SW84U4ipiyyLV2j6MEW").
 ### Outros Exemplos
 * [Cozinheiro e Comilão](https://sourceforge.net/p/chonos/velluscinum/ci/master/tree/examples/02-cozinheiroEcomilao/)
 * [Domestic Robot](https://sourceforge.net/p/chonos/velluscinum/ci/master/tree/examples/03-domestic-robot/)
-
-# Referências
-GMBH, BigchainDB. BigchainDB 2.0 The Blockchain Database. [S. l.: s. n.], 2018. Disponível em: https://www.bigchaindb.com/whitepaper/.
-MCCONAGHY, Trent; MARQUES, Rodolphe; MÜLLER, Andreas; DE JONGHE, Dimitri; MCCONAGHY, Troy; MCMULLEN, Greg; HENDERSON, Ryan; BELLEMARE, Sylvain; GRANZOTTO, Alberto. Bigchaindb: a scalable blockchain database. white paper, BigChainDB, 2016.
