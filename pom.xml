@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>group.chon.velluscinum</groupId>
+    <groupId>com.github.chon-group</groupId>
     <artifactId>velluscinum</artifactId>
-    <version>1.0</version>
+    <version>0.9.5</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
