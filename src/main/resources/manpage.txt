@@ -1,0 +1,45 @@
+*********************************************************************************
+[Velluscinum] Using version 0.1-beta
+For more information
+	Look the User Manual at https://sourceforge.net/p/chonos/velluscinum/ci/master/tree/
+*********************************************************************************
+
+* How to build an Asset?
+    java -jar velluscinum.jar buildAsset [FILENAME] [Immutable:Data] [Additional:Information]
+        example:
+        java -jar velluscinum.jar buildAsset pieceOfArt "name:Meninas;author:Diego_Velázquez;year:1656" "value_eur:25000000;owner:Bob"
+
+* How to build a Transfer?
+    java -jar velluscinum.jar buildTransfer [FILENAME] [Transfer:Information]
+        example:
+        java -jar velluscinum.jar buildTransfer sale "value_eur:27500000;new owner:Alice"
+
+* How to build a Wallet?
+    java -jar velluscinum.jar buildWallet [FILENAME]
+        example:
+        java -jar velluscinum.jar buildWallet bob
+
+* How to CREATE a Non-Fungible-Token?
+    java -jar velluscinum.jar deployNFT [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [NFT-FILE]
+        example:
+	    java -jar velluscinum.jar deployNFT "http://testchain.chon.group:9984" bob.privkey bob.publkey pieceOfArt.asset
+
+* How to CREATE a Token?
+    java -jar velluscinum.jar deployToken [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [TOKEN-FILE] [AMOUNT]
+        example:
+	    java -jar velluscinum.jar deployToken "http://testchain.chon.group:9984" bob.privkey bob.publkey myCoin.asset 1000
+
+* How to TRANSFER a Non-Fungible-Token?
+    java -jar velluscinum.jar transferNFT [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [ASSET-ID] [TRANSFER-FILE] [DEST-PUBLIC-KEY-FILE]
+        example:
+	    java -jar velluscinum.jar transferNFT "http://testchain.chon.group:9984" bob.privkey bob.publkey 76159024d31feacb0936be45a4b4100cafebbe988fbaab2bedc39d01e4d35b5f sale.transfer alice.publkey
+
+* How to TRANSFER a Token?
+    java -jar velluscinum.jar transferToken [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [ASSET-ID] [DEST-PUBLIC-KEY-FILE] [AMOUNT]
+        example:
+       java -jar velluscinum.jar transferToken "http://testchain.chon.group:9984" bob.privkey bob.publkey e5aa229ed58fb62c39908ace614be6d91b95cadeb2e66b47bc0858b06895110d alice.publkey 50
+
+* How to consult the balance of a Wallet?
+    java -jar out/velluscinum.jar walletBalance [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE]
+        example:
+        java -jar out/velluscinum.jar walletBalance "http://testchain.chon.group:9984" bob.privkey bob.publkey
