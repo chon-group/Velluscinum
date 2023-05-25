@@ -1,5 +1,5 @@
 *********************************************************************************
-[Velluscinum] Using version 0.1-beta
+[Velluscinum] Using version 0.2-beta
 For more information
 	Look the User Manual at https://sourceforge.net/p/chonos/velluscinum/ci/master/tree/
 *********************************************************************************

@@ -26,12 +26,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.jason-lang</groupId>
-            <artifactId>jason</artifactId>
-            <version>v3.1</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver</artifactId>
             <version>3.12.11</version>

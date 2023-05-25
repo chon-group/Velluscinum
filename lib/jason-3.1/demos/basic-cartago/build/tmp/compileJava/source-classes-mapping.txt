@@ -1,2 +1,0 @@
-env/tools/Counter.java
- tools.Counter

@@ -2,7 +2,7 @@ package group.chon.velluscinum;
 
 import com.bigchaindb.api.TransactionsApi;
 import com.bigchaindb.model.Transaction;
-import jason.asSyntax.Literal;
+
 
 import java.io.*;
 import java.util.ArrayList;
