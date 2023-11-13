@@ -1,10 +1,55 @@
-# Velluscinum: A Middleware for Using Digital Assets
+# Velluscinum: A Middleware for BigchainDB
+
+[![](https://jitpack.io/v/chon-group/velluscinum.svg)](https://jitpack.io/#chon-group/velluscinum)
+
 
 Distributed Ledger Technologies (DLT) characteristics can contribute to several domains, such as Multi-agent Systems (MAS), facilitating the agreement between agents, managing trust relationships, and distributed scenarios. Some contributions to this integration are in the theoretical stage, and the few existing practical contributions have limitations and low performance. This work presents a MAS approach that can use digital assets as a factor of agreement in the relationship between cognitive agents using the Belief-Desire-Intention model. To validate the proposed methodology, we present the middleware Velluscinum that offers new internal actions to agents. The middleware was tested by adapting the Building-a-House classic example to cryptocurrency and agreements mediated by a distributed ledger.
 
-## Using
-* With JaCaMo: use the [Velluscinum-JCM Package](https://github.com/chon-group/velluscinum-jcm)
+## Using Velluscinum
+ With JaCaMo: use the [Velluscinum-JCM Package](https://github.com/chon-group/velluscinum-jcm)
 
+
+
+## Importing the Velluscinum Middleware using Maven
+To use the Velluscinum Middlaware into your project build:
+
+Step 1. Add the JitPack repository to your build file 
+```
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+```
+
+Step 2. Add the dependency
+```
+<dependency>
+    <groupId>com.github.chon-group</groupId>
+    <artifactId>velluscinum</artifactId>
+    <version>0.9-rc</version>
+</dependency>
+```
+
+## Importing the Velluscinum Middleware using Gradle
+Step 1. Add the JitPack repository in your root build.gradle at the end of repositories:
+```
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+Step 2. Add the dependency
+```
+dependencies {
+        implementation 'com.github.chon-group:velluscinum:0.9-rc'
+}
+```
 
 
 ## COPYRIGHT
