@@ -21,6 +21,7 @@ gradle-app.setting
 
 # Maven 
 target/
+out/
 
 # Eclipse specific
 .classpath
