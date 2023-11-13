@@ -40,6 +40,6 @@ For more information
        java -jar velluscinum.jar transferToken "http://testchain.chon.group:9984" bob.privkey bob.publkey e5aa229ed58fb62c39908ace614be6d91b95cadeb2e66b47bc0858b06895110d alice.publkey 50
 
 * How to consult the balance of a Wallet?
-    java -jar out/velluscinum.jar walletBalance [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE]
+    java -jar velluscinum.jar walletBalance [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE]
         example:
-        java -jar out/velluscinum.jar walletBalance "http://testchain.chon.group:9984" bob.privkey bob.publkey
+        java -jar velluscinum.jar walletBalance "http://testchain.chon.group:9984" bob.privkey bob.publkey

@@ -61,11 +61,6 @@
             <version>4.10.0</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.tyrus.bundles</groupId>
-            <artifactId>tyrus-standalone-client</artifactId>
-            <version>2.1.0</version>
-        </dependency>
-        <dependency>
             <groupId>net.i2p.crypto</groupId>
             <artifactId>eddsa</artifactId>
             <version>0.3.0</version>
@@ -100,10 +95,16 @@
             <artifactId>tyrus-standalone-client</artifactId>
             <version>1.9</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.bitcoinj</groupId>-->
+<!--            <artifactId>bitcoinj-core</artifactId>-->
+<!--            <version>0.16.2</version>-->
+<!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.bitcoinj/bitcoinj-core -->
         <dependency>
             <groupId>org.bitcoinj</groupId>
             <artifactId>bitcoinj-core</artifactId>
-            <version>0.16.2</version>
+            <version>0.17-alpha2</version>
         </dependency>
     </dependencies>
 </project>

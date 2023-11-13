@@ -138,7 +138,8 @@ public class KeyManagement {
                     Base64.getEncoder().encodeToString(
                             com.google.common.primitives.Bytes.concat(
                                     bytesSpecPrivate,
-                                    org.bitcoinj.core.Base58.decode(strPrivateKey)
+                                  //  org.bitcoinj.core.Base58.decode(strPrivateKey)
+                                    org.bitcoinj.base.Base58.decode(strPrivateKey)
                             )
                     ),
                     BASE64
@@ -173,7 +174,8 @@ public class KeyManagement {
                     Base64.getEncoder().encodeToString(
                             com.google.common.primitives.Bytes.concat(
                                     bytesSpecPublic,
-                                    org.bitcoinj.core.Base58.decode(strPublicKey)
+                                    //org.bitcoinj.core.Base58.decode(strPublicKey)
+                                    org.bitcoinj.base.Base58.decode(strPublicKey)
                             )
                     ),
                     BASE64
