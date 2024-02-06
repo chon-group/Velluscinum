@@ -54,7 +54,7 @@ public class transferNFT extends DefaultInternalAction {
             ts.getAgArch().sendMsg(m);
             return true;
         }else{
-                return false;
+            return false;
         }
     }
 }

@@ -42,7 +42,7 @@ public class stampTransaction extends DefaultInternalAction {
                     return true;
                 }
             }
-            return true;
+                return false;
         }else{
             ts.getAg().getLogger().info("Input error");
             return false;
