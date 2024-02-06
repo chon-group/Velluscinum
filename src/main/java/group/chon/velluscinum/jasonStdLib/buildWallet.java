@@ -16,12 +16,14 @@ public class buildWallet extends DefaultInternalAction {
     @Override
     public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
         JasonUtil util = new JasonUtil();
-        Api api = new Api();
         if(args.length==1){
             String[] arrayArgs = util.toArray(args);
             while (util.isLocked());
             util.lock(true);
+            Api api = new Api();
+            api.setLog(ts.getAgArch().getAgName());
             String[] keyPair = api.buildWallet();
+            api = null;
             util.lock(false);
 
             Message m = new Message("tell",
@@ -32,9 +34,8 @@ public class buildWallet extends DefaultInternalAction {
             ts.getAgArch().sendMsg(m);
             return true;
         }else{
-            ts.getAg().getLogger().info("[.buildWallet] Input error");
+            ts.getAg().getLogger().info("[velluscinum.buildWallet] Input error");
             return false;
         }
         }
-
     }

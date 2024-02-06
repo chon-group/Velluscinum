@@ -16,17 +16,19 @@ public class stampTransaction extends DefaultInternalAction {
     @Override
     public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
         JasonUtil util = new JasonUtil();
-        Api api = new Api();
         if(args.length==4 || args.length ==5){
             String[] arrayArgs = util.toArray(args);
             while (util.isLocked());
+            Api api = new Api();
             util.lock(true);
+            api.setLog(ts.getAgArch().getAgName());
             String result = api.stampTransaction(
                     arrayArgs[0],
                     arrayArgs[1],
                     arrayArgs[2],
                     arrayArgs[3]
             );
+            api = null;
             util.lock(false);
             if(result!=null) {
                 if (args.length == 4) {

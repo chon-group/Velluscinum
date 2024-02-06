@@ -58,14 +58,14 @@ public class JasonUtil {
     }
 
     public boolean isLocked(){
+        Random randI = new Random();
+        try {
+            Thread.sleep(500+randI.nextInt(3000));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         File file = new File("velluscinum.lock");
         if (file.exists()) {
-            Random randI = new Random();
-            try {
-                Thread.sleep(1000+randI.nextInt(4000));
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
             return true;
         } else {
             return false;

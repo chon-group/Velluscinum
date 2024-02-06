@@ -14,7 +14,12 @@ import java.util.ArrayList;
  *
  */
 public class Api {
-    public static final String DRIVERNAME = "[Velluscinum]";
+    public static String DRIVERNAME = "[Velluscinum]";
+
+    public void setLog(String logID){
+        DRIVERNAME = "["+logID+"]";
+    }
+
 
     /**
      * Main Method is used to allow command-line interface (CLI) execution<br>

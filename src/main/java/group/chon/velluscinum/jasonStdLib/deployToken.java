@@ -16,13 +16,16 @@ public class deployToken extends DefaultInternalAction {
     @Override
     public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
         JasonUtil util = new JasonUtil();
-        Api api = new Api();
+
         if(args.length==6){
             String[] arrayArgs = util.toArray(args);
             Long amount = Long.parseLong(arrayArgs[4]);
             while (util.isLocked());
             util.lock(true);
+            Api api = new Api();
+            api.setLog(ts.getAgArch().getAgName());
             String tokenID = api.deploy(arrayArgs[0],arrayArgs[1],arrayArgs[2],arrayArgs[3],amount);
+            api = null;
             util.lock(false);
             if(tokenID!=null){
                 Message m = new Message("tell",

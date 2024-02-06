@@ -12,12 +12,13 @@ public class deployNFT extends DefaultInternalAction {
     @Override
     public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
         JasonUtil util = new JasonUtil();
-        Api api = new Api();
         String[] arrayArgs = util.toArray(args);
 
         if(args.length==6){
             while (util.isLocked());
             util.lock(true);
+            Api api = new Api();
+            api.setLog(ts.getAgArch().getAgName());
             String assetID = api.deploy(
                     arrayArgs[0].toString(),
                     arrayArgs[1].toString(),
@@ -25,6 +26,7 @@ public class deployNFT extends DefaultInternalAction {
                     arrayArgs[3].toString(),
                     arrayArgs[4].toString()
             );
+            api = null;
             util.lock(false);
             if(assetID!=null){
                 Message m = new Message("tell",

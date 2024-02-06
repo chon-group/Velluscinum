@@ -22,12 +22,13 @@ public class transferNFT extends DefaultInternalAction {
     @Override
     public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
         JasonUtil util = new JasonUtil();
-        Api api = new Api();
         String[] arrayArgs = util.toArray(args);
         String tranferID = null;
         if(args.length==6 || args.length==7) {
             while (util.isLocked());
             util.lock(true);
+            Api api = new Api();
+            api.setLog(ts.getAgArch().getAgName());
             tranferID = api.transfer(
                     arrayArgs[0],
                     arrayArgs[1],
@@ -35,6 +36,7 @@ public class transferNFT extends DefaultInternalAction {
                     arrayArgs[3],
                     arrayArgs[4],
                     arrayArgs[5]);
+            api = null;
             util.lock(false);
         }else{
             ts.getAg().getLogger().info("Input error");

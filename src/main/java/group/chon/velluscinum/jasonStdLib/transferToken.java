@@ -16,12 +16,13 @@ public class transferToken extends DefaultInternalAction {
     @Override
     public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
         JasonUtil util = new JasonUtil();
-        Api api = new Api();
         if(args.length==7||args.length==6){
             String[] arrayArgs = util.toArray(args);
             Integer amount = Integer.parseInt(arrayArgs[5]);
             while (util.isLocked());
             util.lock(true);
+            Api api = new Api();
+            api.setLog(ts.getAgArch().getAgName());
             String transferTokenID = api.transfer(
                     arrayArgs[0],
                     arrayArgs[1],
@@ -30,6 +31,7 @@ public class transferToken extends DefaultInternalAction {
                     arrayArgs[4],
                     amount
             );
+            api = null;
             util.lock(false);
             if(transferTokenID!=null){
                 if(args.length==7){

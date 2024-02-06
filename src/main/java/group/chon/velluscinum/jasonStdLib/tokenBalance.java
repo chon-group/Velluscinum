@@ -16,16 +16,18 @@ public class tokenBalance extends DefaultInternalAction {
     @Override
     public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
         JasonUtil util = new JasonUtil();
-        Api api = new Api();
         if(args.length==5){
             String[] arrayArgs = util.toArray(args);
 
             while (util.isLocked());
             util.lock(true);
+            Api api = new Api();
+            api.setLog(ts.getAgArch().getAgName());
             ArrayList<WalletContent> walletContents = api.walletBalance(
                     arrayArgs[0],
                     arrayArgs[1],
                     arrayArgs[2]);
+            api = null;
             util.lock(false);
 
             Long balance = 0L;
