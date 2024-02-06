@@ -9,9 +9,10 @@ Distributed Ledger Technologies (DLT) characteristics can contribute to several 
  With JaCaMo: use the [Velluscinum-JCM Package](https://github.com/chon-group/velluscinum-jcm)
 
 
+## Importing the Velluscinum Middleware
 
-## Importing the Velluscinum Middleware using Maven
-To use the Velluscinum Middlaware into your project build:
+<details>
+<summary> using Maven </summary>
 
 Step 1. Add the JitPack repository to your build file 
 ```
@@ -29,11 +30,14 @@ Step 2. Add the dependency
 <dependency>
     <groupId>com.github.chon-group</groupId>
     <artifactId>velluscinum</artifactId>
-    <version>0.9-rc</version>
+    <version>1.0</version>
 </dependency>
 ```
+</details>
 
-## Importing the Velluscinum Middleware using Gradle
+<details>
+<summary> using Gradle </summary>
+ 
 Step 1. Add the JitPack repository in your root build.gradle at the end of repositories:
 ```
 dependencyResolutionManagement {
@@ -47,9 +51,11 @@ dependencyResolutionManagement {
 Step 2. Add the dependency
 ```
 dependencies {
-        implementation 'com.github.chon-group:velluscinum:0.9-rc'
+        implementation 'com.github.chon-group:velluscinum:1.0'
 }
 ```
+ 
+</details>
 
 
 ## COPYRIGHT
@@ -59,6 +65,9 @@ dependencies {
 
 Mori Lazarin, N., Machado Coelho, I., Pantoja, C.E., Viterbo, J. (2023). Velluscinum: A Middleware for Using Digital Assets in Multi-agent Systems. In: Mathieu, P., Dignum, F., Novais, P., De la Prieta, F. (eds) Advances in Practical Applications of Agents, Multi-Agent Systems, and Cognitive Mimetics. The PAAMS Collection. PAAMS 2023. Lecture Notes in Computer Science(), vol 13955. Springer, Cham. DOI: [https://doi.org/10.1007/978-3-031-37616-0_17](https://www.researchgate.net/publication/372282299_Velluscinum_A_Middleware_for_Using_Digital_Assets_in_Multi-agent_Systems)
 
+
+<details>
+<summary> Cite using Bibtex </summary>
 
 ```
 @InProceedings{velluscinum,
@@ -80,3 +89,4 @@ pages="200--212",
 isbn="978-3-031-37616-0"
 }
 ```
+</details>
