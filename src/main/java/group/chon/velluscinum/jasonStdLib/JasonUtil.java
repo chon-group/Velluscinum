@@ -2,9 +2,10 @@ package group.chon.velluscinum.jasonStdLib;
 import jason.asSyntax.Term;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
-
+import java.util.regex.Matcher;
 /**
  * Jason Utilities
  */
@@ -69,6 +70,19 @@ public class JasonUtil {
             return true;
         } else {
             return false;
+        }
+    }
+    
+    public void storePrivateKey(String agName, String content) throws IOException {
+        storeKey(agName+".privateKey",content);
+    }
+    public void storePublicKey(String agName, String content) throws IOException {
+        storeKey(agName+".publicKey",content);
+    }
+
+    private void storeKey(String fileName, String content) throws IOException{
+        try(FileWriter writer = new FileWriter(fileName)){
+            writer.write(content);
         }
     }
 }
