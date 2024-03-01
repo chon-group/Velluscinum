@@ -562,6 +562,20 @@ public class BigchainDBDriver {
         }
     }
 
+    public void joinTokens(EdDSAPrivateKey bobPrivateKey,
+                           EdDSAPublicKey bobPublicKey,
+                           String strTokenID){
+
+        String join = "null";
+        try{
+             join = getLastTransaction(bobPrivateKey,bobPublicKey,strTokenID);
+        } catch (TransactionNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
     private String getLastTransaction(
             EdDSAPrivateKey bobPrivateKey,
             EdDSAPublicKey bobPublicKey,
@@ -658,6 +672,4 @@ public class BigchainDBDriver {
             return null;
         }
     }
-
-
 }

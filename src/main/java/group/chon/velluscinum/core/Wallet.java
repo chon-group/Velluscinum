@@ -72,6 +72,11 @@ public class Wallet {
                                         ).getAmount())
                         )
                 );
+            }else{
+                /*
+                    In this case is an Asset without transaction
+                    TO DO
+                 */
             }
         }
 
@@ -106,7 +111,10 @@ public class Wallet {
             }
         }
         if(listToMerge.size()>0){
-            mergeMultiplesTokens(url,bobPrivateKey,bobPublicKey,listToMerge);
+            BigchainDBDriver bigchainDBDriver = new BigchainDBDriver();
+            for (int i=0;i< listToMerge.size();i++){
+                bigchainDBDriver.joinTokens(bobPrivateKey,bobPublicKey, listToMerge.get(i));
+            }
             return true;
         }else{
             return false;
@@ -134,55 +142,4 @@ public class Wallet {
             throw new RuntimeException(e);
         }
     }
-
-    private void mergeMultiplesTokens(
-            String url,
-            EdDSAPrivateKey bobPrivateKey,
-            EdDSAPublicKey bobPublicKey,
-            ArrayList<String> listOfTokens
-    ){
-        BigchainDBDriver bigchainDBDriver = new BigchainDBDriver();
-        Outputs listOfOutputs = getOpenOutputs(url,bobPublicKey);
-        ArrayList<String> listOpenTransactionsFromTokenID = new ArrayList<String>();
-        ArrayList<Integer> listOutputIndexFromTokenID = new ArrayList<Integer>();
-        ArrayList<Long> listAmountFromTokenID = new ArrayList<Long>();
-
-        Output output = null;
-        String strTransaction = null;
-        Transaction transaction = null;
-        Integer outputINDEX = null;
-        Long longAmount = 0L;
-
-        for (int j=0; j<listOfTokens.size();j++){
-            for (int i = 0; i<listOfOutputs.getOutput().size(); i++){
-                output = listOfOutputs.getOutput().get(i);
-                strTransaction = output.getTransactionId();
-                transaction  = getTransaction(url,strTransaction);
-                if(listOfTokens.get(j).equals(transaction.getAsset().getId())){
-                    listOpenTransactionsFromTokenID.add(strTransaction);
-                    outputINDEX = output.getOutputIndex();
-                    listOutputIndexFromTokenID.add(outputINDEX);
-                    longAmount = Long.parseLong(transaction.getOutputs().get(outputINDEX).getAmount());
-                    listAmountFromTokenID.add(longAmount);
-                }
-            }
-
-            if(listOpenTransactionsFromTokenID.size()>1){
-                bigchainDBDriver.mergeFungibleToken(
-                        bobPrivateKey,
-                        bobPublicKey,
-                        transaction.getAsset().getId(),
-                        listOpenTransactionsFromTokenID,
-                        listOutputIndexFromTokenID,
-                        listAmountFromTokenID);
-            }
-
-            listOpenTransactionsFromTokenID.clear();
-            listOutputIndexFromTokenID.clear();
-            listAmountFromTokenID.clear();
-        }
-
-    }
-
-
 }
