@@ -57,40 +57,40 @@ public class Wallet {
 
         Output output = null;
         Transaction transaction = null;
+        boolean isNFT = false;
+        String assetID = "null";
+
         for (int i = 0; i<openOutputs.getOutput().size(); i++){
             output = openOutputs.getOutput().get(i);
             transaction = getTransaction(serverURL,output.getTransactionId());
+
             if(transaction.getAsset().getId()!=null){
-                tokens.add(transaction.getAsset().getId());
-                walletContents.add(
-                        new WalletContent(
-                                transaction.getAsset().getId(),
-                                transaction.getId(),
-                                Long.parseLong(
-                                        transaction.getOutputs().get(
-                                                output.getOutputIndex()
-                                        ).getAmount())
-                        )
-                );
-            }else{
-                /*
-                    In this case is an Asset without transaction
-                    TO DO
-                 */
+                assetID = transaction.getAsset().getId();
+                tokens.add(assetID);
+            }else if((transaction.getAsset().getId()==null) && transaction.getOperation().equals("\"CREATE\"") ){
+                assetID = transaction.getId();
             }
+
+            isNFT = isAnNFTAsset(serverURL,assetID);
+            walletContents.add(
+                    new WalletContent(
+                            assetID,
+                            transaction.getId(),
+                            Long.parseLong(
+                                    transaction.getOutputs().get(
+                                            output.getOutputIndex()
+                                    ).getAmount()),
+                            isNFT
+                    )
+            );
+
         }
 
-        if(isNeedMerge){
-            if(didNeedMerge(serverURL,bobPrivateKey,bobPublicKey,tokens)){
-                return getMyTokens(serverURL,bobPrivateKey,bobPublicKey,false);
-            }else{
-                return walletContents;
-            }
+        if(isNeedMerge && didNeedMerge(serverURL,bobPrivateKey,bobPublicKey,tokens)){
+            return getMyTokens(serverURL,bobPrivateKey,bobPublicKey,false);
         }else{
             return walletContents;
         }
-
-
     }
 
     private boolean didNeedMerge(
@@ -141,5 +141,12 @@ public class Wallet {
         } catch (TransactionNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private boolean isAnNFTAsset(String URL, String Asset){
+        Transaction tx = new Transaction();
+        tx = getTransaction(URL,Asset);
+        return tx.getOperation().toString().equals("\"CREATE\"")
+                && (Long.parseLong(tx.getOutputs().get(0).getAmount()) == 1L);
     }
 }

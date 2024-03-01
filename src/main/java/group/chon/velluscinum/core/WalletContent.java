@@ -9,6 +9,7 @@ public class WalletContent {
     private String token;
     private String transaction;
     private Long amount;
+    private boolean nft;
 
     /**
      * WalletContent Object
@@ -17,10 +18,11 @@ public class WalletContent {
      * @param transaction Receives the TRANSACTION-ID.
      * @param amount Receives the amount about the Transaction.
      */
-    public WalletContent(String token, String transaction, Long amount){
+    public WalletContent(String token, String transaction, Long amount, boolean isNFT){
         this.token = token;
         this.transaction = transaction;
         this.amount = amount;
+        this.nft = isNFT;
     }
 
     /**
@@ -46,7 +48,22 @@ public class WalletContent {
      *
      * @return the amount from the transaction.
      */
-    public Long getAmount() {
-        return amount;
+    public Long getAmount(){ return amount; }
+
+    public String getAmountAsString(){
+        if(isNft()){
+            return "---";
+        }
+        return amount.toString();
+    }
+
+    public boolean isNft(){ return nft; }
+
+    public String getType(){
+        if(isNft()){
+            return "NFT";
+        }else{
+            return "TOKEN";
+        }
     }
 }
