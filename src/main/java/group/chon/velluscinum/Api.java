@@ -258,7 +258,7 @@ public class Api {
                                   String senderPublicKey,
                                   String assetID,
                                   String recipientPublicKey,
-                                  Integer amount){
+                                  Long amount){
         BigchainDBDriver bigchainDBDriver = new BigchainDBDriver();
         return bigchainDBDriver.transferToken(url,senderPrivateKey,senderPublicKey,assetID,recipientPublicKey,amount);
     }
@@ -402,8 +402,8 @@ public class Api {
         if(args[1].length()!=0){
             KeyManagement keyManagement = new KeyManagement();
             String[] strKeyPair = keyManagement.newKeyPair("base58");
-            keyManagement.keyToFile(strKeyPair[0],args[1]+".privkey");
-            keyManagement.keyToFile(strKeyPair[1],args[1]+".publkey");
+            keyManagement.keyToFile(strKeyPair[0],args[1]+".privateKey");
+            keyManagement.keyToFile(strKeyPair[1],args[1]+".publicKey");
         }else{
             showManpage();
         }
@@ -496,7 +496,7 @@ public class Api {
                 keyManagement.importKeyFromFile(args[3]),
                 args[4],
                 keyManagement.importKeyFromFile(args[5]),
-                Integer.parseInt(args[6]));
+                Long.parseLong(args[6]));
     }
 
 

@@ -32,11 +32,10 @@ public class tokenBalance extends DefaultInternalAction {
 
             Long balance = 0L;
             for(int i=0; i<walletContents.size(); i++){
-                System.out.println(walletContents.get(i).getAmount()+" -> "+walletContents.get(i).getToken());
                 if(walletContents.get(i).getToken().equals(arrayArgs[3])){
                     balance=walletContents.get(i).getAmount();
+                    i=walletContents.size()+1;
                 }
-
             }
 
             Message m = new Message("tell",

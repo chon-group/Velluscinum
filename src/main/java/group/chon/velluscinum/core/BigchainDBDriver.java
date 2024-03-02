@@ -114,7 +114,7 @@ public class BigchainDBDriver {
                                 String senderPublicKey,
                                 String tokenID,
                                 String recipientPublicKey,
-                                Integer amount) {
+                                Long amount) {
         setConfig(url);
         EdDSAPrivateKey bobPrivateKey = keyManagement.stringToEdDSAPrivateKey(senderPrivateKey,"base58");
         EdDSAPublicKey bobPublicKey = keyManagement.stringToEdDSAPublicKey(senderPublicKey, "base58");
@@ -146,8 +146,8 @@ public class BigchainDBDriver {
         }
 
 
-        if(Integer.toUnsignedLong(amount)<=balance){
-            Long newBalance = balance-Integer.toUnsignedLong(amount);
+        if(amount<=balance){
+            Long newBalance = balance-amount;
             FulFill spendFrom = new FulFill();
             spendFrom.setTransactionId(strTransactionID);
             spendFrom.setOutputIndex(outputID);

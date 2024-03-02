@@ -22,24 +22,24 @@ For more information
 * How to CREATE a Non-Fungible-Token?
     java -jar velluscinum.jar deployNFT [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [NFT-FILE]
         example:
-	    java -jar velluscinum.jar deployNFT "http://testchain.chon.group:9984" bob.privkey bob.publkey pieceOfArt.asset
+	    java -jar velluscinum.jar deployNFT "http://testchain.chon.group:9984" bob.privateKey bob.publicKey pieceOfArt.asset
 
 * How to CREATE a Token?
     java -jar velluscinum.jar deployToken [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [TOKEN-FILE] [AMOUNT]
         example:
-	    java -jar velluscinum.jar deployToken "http://testchain.chon.group:9984" bob.privkey bob.publkey myCoin.asset 1000
+	    java -jar velluscinum.jar deployToken "http://testchain.chon.group:9984" bob.privateKey bob.publicKey myCoin.asset 1000
 
 * How to TRANSFER a Non-Fungible-Token?
     java -jar velluscinum.jar transferNFT [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [ASSET-ID] [TRANSFER-FILE] [DEST-PUBLIC-KEY-FILE]
         example:
-	    java -jar velluscinum.jar transferNFT "http://testchain.chon.group:9984" bob.privkey bob.publkey 76159024d31feacb0936be45a4b4100cafebbe988fbaab2bedc39d01e4d35b5f sale.transfer alice.publkey
+	    java -jar velluscinum.jar transferNFT "http://testchain.chon.group:9984" bob.privateKey bob.publicKey 76159024d31feacb0936be45a4b4100cafebbe988fbaab2bedc39d01e4d35b5f sale.transfer alice.publicKey
 
 * How to TRANSFER a Token?
     java -jar velluscinum.jar transferToken [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [ASSET-ID] [DEST-PUBLIC-KEY-FILE] [AMOUNT]
         example:
-       java -jar velluscinum.jar transferToken "http://testchain.chon.group:9984" bob.privkey bob.publkey e5aa229ed58fb62c39908ace614be6d91b95cadeb2e66b47bc0858b06895110d alice.publkey 50
+       java -jar velluscinum.jar transferToken "http://testchain.chon.group:9984" bob.privateKey bob.publicKey e5aa229ed58fb62c39908ace614be6d91b95cadeb2e66b47bc0858b06895110d alice.publicKey 50
 
 * How to consult the balance of a Wallet?
     java -jar velluscinum.jar walletBalance [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE]
         example:
-        java -jar velluscinum.jar walletBalance "http://testchain.chon.group:9984" bob.privkey bob.publkey
+        java -jar velluscinum.jar walletBalance "http://testchain.chon.group:9984" bob.privateKey bob.publicKey

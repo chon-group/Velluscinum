@@ -18,7 +18,7 @@ public class transferToken extends DefaultInternalAction {
         JasonUtil util = new JasonUtil();
         if(args.length==7||args.length==6){
             String[] arrayArgs = util.toArray(args);
-            Integer amount = Integer.parseInt(arrayArgs[5]);
+            Long amount = Long.parseLong(arrayArgs[5]);
             while (util.isLocked());
             util.lock(true);
             Api api = new Api();
