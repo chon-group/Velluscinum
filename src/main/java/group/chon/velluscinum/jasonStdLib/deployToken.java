@@ -28,12 +28,12 @@ public class deployToken extends DefaultInternalAction {
             api = null;
             util.lock(false);
             if(tokenID!=null){
-                Message m = new Message("tell",
-                        ts.getAgArch().getAgName(),
-                        ts.getAgArch().getAgName(),
-                        Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],tokenID )));
-                        //Literal.parseLiteral(arrayArgs[args.length-1]+"(\""+tokenID+"\")"));
-                ts.getAgArch().sendMsg(m);
+//                Message m = new Message("tell",
+//                        ts.getAgArch().getAgName(),
+//                        ts.getAgArch().getAgName(),
+//                        Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],tokenID )));
+//                ts.getAgArch().sendMsg(m);
+                ts.getAg().getBB().add(Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],tokenID )));
                 return true;
             }else{
                 return false;

@@ -46,12 +46,12 @@ public class transferNFT extends DefaultInternalAction {
         if(args.length==6 && tranferID!=null) {
             return true;
         }else if(args.length==7 && tranferID!=null) {
-            Message m = new Message("tell",
-                    ts.getAgArch().getAgName(),
-                    ts.getAgArch().getAgName(),
-                    Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],tranferID)));
-                    //Literal.parseLiteral(arrayArgs[args.length-1]+"(\""+tranferID+"\")"));
-            ts.getAgArch().sendMsg(m);
+//            Message m = new Message("tell",
+//                    ts.getAgArch().getAgName(),
+//                    ts.getAgArch().getAgName(),
+//                    Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],tranferID)));
+//            ts.getAgArch().sendMsg(m);
+            ts.getAg().getBB().add(Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],tranferID)));
             return true;
         }else{
             return false;

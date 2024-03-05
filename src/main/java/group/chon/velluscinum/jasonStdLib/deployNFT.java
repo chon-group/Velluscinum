@@ -29,12 +29,12 @@ public class deployNFT extends DefaultInternalAction {
             api = null;
             util.lock(false);
             if(assetID!=null){
-                Message m = new Message("tell",
-                        ts.getAgArch().getAgName(),
-                        ts.getAgArch().getAgName(),
-                        Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],assetID )));
-                        //Literal.parseLiteral(arrayArgs[args.length-1]+"(\""+assetID+"\")"));
-                ts.getAgArch().sendMsg(m);
+//                Message m = new Message("tell",
+//                        ts.getAgArch().getAgName(),
+//                        ts.getAgArch().getAgName(),
+//                        Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],assetID )));
+//                ts.getAgArch().sendMsg(m);
+                ts.getAg().getBB().add(Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],assetID )));
                 return true;
             }else{
                 return false;

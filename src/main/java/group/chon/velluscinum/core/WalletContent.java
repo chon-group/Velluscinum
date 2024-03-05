@@ -61,9 +61,9 @@ public class WalletContent {
 
     public String getType(){
         if(isNft()){
-            return "NFT";
+            return "nft";
         }else{
-            return "TOKEN";
+            return "token";
         }
     }
 }

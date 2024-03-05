@@ -26,12 +26,13 @@ public class buildWallet extends DefaultInternalAction {
             api = null;
             util.lock(false);
 
-            Message m = new Message("tell",
-                    ts.getAgArch().getAgName(),
-                    ts.getAgArch().getAgName(),
-                    Literal.parseLiteral(util.newBelief(arrayArgs[0],keyPair[0],keyPair[1])));
-                    //Literal.parseLiteral(arrayArgs[0]+"(\""+keyPair[0]+"\",\""+keyPair[1]+"\")"));
-            ts.getAgArch().sendMsg(m);
+//            Message m = new Message("tell",
+//                    ts.getAgArch().getAgName(),
+//                    ts.getAgArch().getAgName(),
+//                    Literal.parseLiteral(util.newBelief(arrayArgs[0],keyPair[0],keyPair[1])));
+//            ts.getAgArch().sendMsg(m);
+
+            ts.getAg().getBB().add(Literal.parseLiteral(util.newBelief(arrayArgs[0],keyPair[0],keyPair[1])));
             return true;
         }else{
             ts.getAg().getLogger().info("[velluscinum.buildWallet] Input error");
