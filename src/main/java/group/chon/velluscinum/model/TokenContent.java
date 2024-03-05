@@ -1,27 +1,28 @@
-package group.chon.velluscinum.core;
+package group.chon.velluscinum.model;
 
-import com.bigchaindb.model.Transaction;
+import group.chon.velluscinum.core.BigchainDBDriver;
 import org.json.JSONObject;
 
-public class NFT {
-    BigchainDBDriver driver;
+public class TokenContent {
+    JSONObject token;
 
-    public NFT(){
-        /* ???? */
+    public void loadToken(String bigChainDBServer, String assetID, String content){
+        BigchainDBDriver driver = new BigchainDBDriver(bigChainDBServer);
+        token = driver.getContentFromAsset(assetID,content);
     }
 
-    public void loadNFT(String bigChainDBServer, String assetID, String content){
-        /* É NFT? */
-        driver = new BigchainDBDriver(bigChainDBServer);
-        System.out.println(driver.getContentFromAsset(assetID,content).toString());
+    public String getTokenContent(){
+        String out = "[";
+        for (int i=0; i<token.length();i++){
+            out = out+"[\""+
+                    token.names().getString(i)+"\",\""+
+                    token.get(token.names().getString(i)).toString()+"\"]";
+            if(i<token.length()-1){
+                out = out+",";
+            }
+        }
+        out = out+"]";
+        return out;
     }
 
-
-    public String getData(){
-        return null;
-    }
-
-    public String getLastMetada(){
-        return null;
-    }
 }

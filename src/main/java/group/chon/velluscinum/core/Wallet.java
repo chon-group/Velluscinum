@@ -6,6 +6,7 @@ import com.bigchaindb.model.Output;
 import com.bigchaindb.model.Outputs;
 import com.bigchaindb.model.Transaction;
 import com.bigchaindb.util.KeyPairUtils;
+import group.chon.velluscinum.model.WalletContent;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 

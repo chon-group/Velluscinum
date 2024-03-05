@@ -1,7 +1,7 @@
 package group.chon.velluscinum.jasonStdLib;
 
 import group.chon.velluscinum.Api;
-import group.chon.velluscinum.core.WalletContent;
+import group.chon.velluscinum.model.WalletContent;
 import jason.asSemantics.DefaultInternalAction;
 import jason.asSemantics.TransitionSystem;
 import jason.asSemantics.Unifier;

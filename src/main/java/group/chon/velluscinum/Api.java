@@ -3,6 +3,9 @@ package group.chon.velluscinum;
 import com.bigchaindb.api.TransactionsApi;
 import com.bigchaindb.model.Transaction;
 import group.chon.velluscinum.core.*;
+import group.chon.velluscinum.model.Asset;
+import group.chon.velluscinum.model.TokenContent;
+import group.chon.velluscinum.model.WalletContent;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -64,6 +67,7 @@ public class Api {
             else if(op.equals("transferNFT")) transferNFT_CLI(args);
             else if(op.equals("transferToken")) transferToken_CLI(args);
             else if(op.equals("walletBalance")) walletBalance_CLI(args);
+            else if(op.equals("showToken")) tokenData_CLI(args);
             else showManpage();
         } catch (Exception ex) {
             showManpage();
@@ -71,6 +75,17 @@ public class Api {
         System.exit(0);
     }
 
+    private static void tokenData_CLI(String[] args){
+        TokenContent token = new TokenContent();
+        token.loadToken(args[1],args[2],"all");
+        System.out.println(token.getTokenContent());
+    }
+
+    public TokenContent getTokenData(String serverURL, String assetID, String content){
+        TokenContent tokenContent = new TokenContent();
+        tokenContent.loadToken(serverURL,assetID,content);
+        return tokenContent;
+    }
 
     /**
      * Deploys a Token in the BigChainDB.
@@ -318,11 +333,8 @@ public class Api {
                                                          String privateKey,
                                                          String publicKey){
         Wallet wallet = new Wallet();
-        ArrayList<WalletContent> result = wallet.getMyTokens(url,privateKey,publicKey);
-        return result;
+        return wallet.getMyTokens(url,privateKey,publicKey);
     }
-
-
 
     /**
      * Generates a file with Data and MetaData about an ASSET

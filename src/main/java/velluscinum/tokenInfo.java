@@ -1,2 +1,3 @@
-package velluscinum;public class tokenInfo {
-}
+package velluscinum;
+
+public class tokenInfo extends group.chon.velluscinum.jasonStdLib.tokenInfo{}

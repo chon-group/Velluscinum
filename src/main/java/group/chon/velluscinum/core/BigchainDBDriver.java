@@ -26,9 +26,12 @@ public class BigchainDBDriver {
     private KeyManagement keyManagement = new KeyManagement();
     private final Integer LAST = -1;
 
+    public BigchainDBDriver(){}
 
-
-    /**
+    public BigchainDBDriver(String serverURL){
+        setConfig(serverURL);
+    }
+        /**
      *  Creates a Fungible Token.
      *
      * @param url Receives a <b>URL:PORT</b> Address from a bigchainDB Server
@@ -353,29 +356,29 @@ public class BigchainDBDriver {
         }
     }
 
-    private String getFieldOfTransactionFromAssetID(String serverURL, String assetID, String fieldMetadata, Integer idOfTransaction){
-        ServerResponse.setLock(true);
-        String value = null;
-        try {
-            setConfig(serverURL);
-            String transactionID = getTransactionIDFromAsset(assetID, idOfTransaction);
-            JSONObject metadata = getMetadataFromTransactionID(transactionID);
-            value = metadata.getJSONObject("metadata").getString(fieldMetadata);
-        }catch(Exception ex) {
-
+    public JSONObject getContentFromAsset(String nftID, String content){
+        if(content.equals("data")){
+            return getTransactionFromID(nftID).getJSONObject("asset").getJSONObject("data");
+        }else if(content.equals("metadata")){
+            try {
+                return getTransactionFromID(getTransactionIDFromAsset(nftID,LAST)).getJSONObject("metadata");
+            }catch (Exception ex){
+                return null;
+            }
+        }else if(content.equals("all")){
+            JSONObject data = getContentFromAsset(nftID,"data");
+            JSONObject metadata = getContentFromAsset(nftID,"metadata");
+            if(metadata != null){
+                for (String key: metadata.keySet()){
+                    data.put(key,metadata.get(key));
+                }
+            }
+            return data;
+        }else{
+            return null;
         }
-        ServerResponse.setLock(false);
-        return value;
     }
-
-    private JSONObject getMetadataFromTransactionID(String transactionID){
-        Transaction T = new Transaction();
-        T = getTransactionFromID(transactionID);
-        JSONObject j = new JSONObject(T.toString());
-        return j;
-    }
-
-    private Transaction getTransactionFromID(String transactionID) {
+    private JSONObject getTransactionFromID(String transactionID) {
         Transaction T = new Transaction();
         try {
             T = com.bigchaindb.api.TransactionsApi.getTransactionById(transactionID);
@@ -386,7 +389,8 @@ public class BigchainDBDriver {
         } catch (TransactionNotFoundException e) {
             throw new RuntimeException(e);
         }
-        return T;
+        JSONObject j = new JSONObject(T.toString());
+        return j;
     }
 
     private String getTransactionIDFromAsset(String serverURL, String assetID, Integer numberOfTransaction){

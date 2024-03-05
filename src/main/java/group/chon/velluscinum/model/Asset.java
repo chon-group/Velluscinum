@@ -1,4 +1,4 @@
-package group.chon.velluscinum.core;
+package group.chon.velluscinum.model;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

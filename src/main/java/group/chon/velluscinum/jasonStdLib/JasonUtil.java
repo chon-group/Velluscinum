@@ -1,5 +1,6 @@
 package group.chon.velluscinum.jasonStdLib;
-import group.chon.velluscinum.core.WalletContent;
+import group.chon.velluscinum.model.TokenContent;
+import group.chon.velluscinum.model.WalletContent;
 import jason.asSyntax.Term;
 
 import java.io.File;
@@ -7,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.regex.Matcher;
+
 /**
  * Jason Utilities
  */
@@ -32,6 +33,10 @@ public class JasonUtil {
         }else{
             return strBelief+"(\""+strTransaction+"\")";
         }
+    }
+
+    public String newBelief(String strBelief, TokenContent token){
+            return strBelief+"("+token.getTokenContent()+")";
     }
 
     public String newBelief(String strBelief, String strArg1, String strArg2){

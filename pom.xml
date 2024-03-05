@@ -6,7 +6,7 @@
 
     <groupId>com.github.chon-group</groupId>
     <artifactId>velluscinum</artifactId>
-    <version>24.2.27</version>
+    <version>24.3.5</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -26,11 +26,6 @@
     </repositories>
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>com.github.jason-lang</groupId>-->
-<!--            <artifactId>jason</artifactId>-->
-<!--            <version>v3.1</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>io.github.jason-lang</groupId>
             <artifactId>jason-interpreter</artifactId>

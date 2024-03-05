@@ -1,5 +1,5 @@
 *********************************************************************************
-[Velluscinum] Using version 24.3.1
+[Velluscinum] Using version 24.3.5
 For more information
 	Look the User Manual at https://sourceforge.net/p/chonos/velluscinum/ci/master/tree/
 *********************************************************************************
@@ -43,3 +43,8 @@ For more information
     java -jar velluscinum.jar walletBalance [SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE]
         example:
         java -jar velluscinum.jar walletBalance "http://testchain.chon.group:9984" bob.privateKey bob.publicKey
+
+* How to consult an Asset ?
+    java -jar velluscinum.jar showToken [SERVER] [ASSETID]
+        example:
+        java -jar velluscinum.jar showToken "http://testchain.chon.group:9984" "a415dbc28fe18f45227e5016601e23c34d27c9951380d9fe8b8a46520441b038"
