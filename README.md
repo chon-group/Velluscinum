@@ -1,6 +1,6 @@
 # Velluscinum: A Middleware for BigchainDB
 
-[![](https://jitpack.io/v/chon-group/velluscinum.svg)](https://jitpack.io/#chon-group/velluscinum)
+[![](https://jitpack.io/v/chon-group/Velluscinum.svg)](https://jitpack.io/#chon-group/Velluscinum)
 
 
 Distributed Ledger Technologies (DLT) characteristics can contribute to several domains, such as Multi-agent Systems (MAS), facilitating the agreement between agents, managing trust relationships, and distributed scenarios. Some contributions to this integration are in the theoretical stage, and the few existing practical contributions have limitations and low performance. This work presents a MAS approach that can use digital assets as a factor of agreement in the relationship between cognitive agents using the Belief-Desire-Intention model. To validate the proposed methodology, we present the middleware Velluscinum that offers new internal actions to agents. The middleware was tested by adapting the Building-a-House classic example to cryptocurrency and agreements mediated by a distributed ledger.
@@ -29,8 +29,8 @@ Step 2. Add the dependency
 ```
 <dependency>
     <groupId>com.github.chon-group</groupId>
-    <artifactId>velluscinum</artifactId>
-    <version>24.2.9</version>
+    <artifactId>Velluscinum</artifactId>
+    <version>24.07.22</version>
 </dependency>
 ```
 </details>
@@ -51,7 +51,7 @@ dependencyResolutionManagement {
 Step 2. Add the dependency
 ```
 dependencies {
-        implementation 'com.github.chon-group:velluscinum:24.2.9'
+        implementation 'com.github.chon-group:velluscinum:24.07.22'
 }
 ```
  
