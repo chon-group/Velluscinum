@@ -1,9 +1,7 @@
 package group.chon.velluscinum.jasonStdLib;
 
 import group.chon.velluscinum.Api;
-import group.chon.velluscinum.jasonStdLib.JasonUtil;
 import jason.asSemantics.DefaultInternalAction;
-import jason.asSemantics.Message;
 import jason.asSemantics.TransitionSystem;
 import jason.asSemantics.Unifier;
 import jason.asSyntax.Literal;
@@ -25,12 +23,6 @@ public class buildWallet extends DefaultInternalAction {
             String[] keyPair = api.buildWallet();
             api = null;
             util.lock(false);
-
-//            Message m = new Message("tell",
-//                    ts.getAgArch().getAgName(),
-//                    ts.getAgArch().getAgName(),
-//                    Literal.parseLiteral(util.newBelief(arrayArgs[0],keyPair[0],keyPair[1])));
-//            ts.getAgArch().sendMsg(m);
 
             ts.getAg().getBB().add(Literal.parseLiteral(util.newBelief(arrayArgs[0],keyPair[0],keyPair[1])));
             return true;

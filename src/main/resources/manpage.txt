@@ -1,7 +1,7 @@
 *********************************************************************************
-[Velluscinum] Using version 24.3.5
+[Velluscinum] Using version 24.7.22
 For more information
-	Look the User Manual at https://sourceforge.net/p/chonos/velluscinum/ci/master/tree/
+	Look the User Manual at https://github.com/chon-group/Velluscinum/wiki
 *********************************************************************************
 
 * How to build an Asset?
