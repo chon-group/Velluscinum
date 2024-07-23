@@ -36,12 +36,12 @@ public class tokenBalance extends DefaultInternalAction {
                     i=walletContents.size()+1;
                 }
             }
-//            Message m = new Message("tell",
-//                    ts.getAgArch().getAgName(),
-//                    ts.getAgArch().getAgName(),
-//                    Literal.parseLiteral(util.newBelief(arrayArgs[4],arrayArgs[3],balance)));
-//            ts.getAgArch().sendMsg(m);
-            ts.getAg().getBB().add(Literal.parseLiteral(util.newBelief(arrayArgs[4],arrayArgs[3],balance)));
+            Message m = new Message("tell",
+                    "velluscinum",
+                    ts.getAgArch().getAgName(),
+                    Literal.parseLiteral(util.newBelief(arrayArgs[4],arrayArgs[3],balance)));
+            ts.getAgArch().sendMsg(m);
+//            ts.getAg().getBB().add(Literal.parseLiteral(util.newBelief(arrayArgs[4],arrayArgs[3],balance)));
             return true;
         }else{
             return false;

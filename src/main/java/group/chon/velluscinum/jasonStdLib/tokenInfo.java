@@ -4,6 +4,7 @@ import group.chon.velluscinum.Api;
 import group.chon.velluscinum.model.TokenContent;
 import group.chon.velluscinum.model.WalletContent;
 import jason.asSemantics.DefaultInternalAction;
+import jason.asSemantics.Message;
 import jason.asSemantics.TransitionSystem;
 import jason.asSemantics.Unifier;
 import jason.asSyntax.Literal;
@@ -31,7 +32,12 @@ public class tokenInfo extends DefaultInternalAction {
             );
             api = null;
             util.lock(false);
-            ts.getAg().getBB().add(Literal.parseLiteral(util.newBelief(arrayArgs[3],tokenContent)));
+            Message m = new Message("tell",
+                    "velluscinum",
+                    ts.getAgArch().getAgName(),
+                    Literal.parseLiteral(util.newBelief(arrayArgs[3],tokenContent)));
+            ts.getAgArch().sendMsg(m);
+//            ts.getAg().getBB().add(Literal.parseLiteral(util.newBelief(arrayArgs[3],tokenContent)));
             return true;
         }else{
             return false;

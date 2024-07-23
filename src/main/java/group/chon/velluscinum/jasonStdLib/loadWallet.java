@@ -18,20 +18,20 @@ public class loadWallet extends DefaultInternalAction {
     public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
         JasonUtil jasonUtil = new JasonUtil();
         if(existsKey(ts.getAgArch().getAgName())){
-//          Message m = new Message("tell",
-//                ts.getAgArch().getAgName(),
-//                ts.getAgArch().getAgName(),
-//                Literal.parseLiteral(
-//                        jasonUtil.newBelief(args[0].toString(),
-//                                getKey(ts.getAgArch().getAgName()+".privateKey"),
-//                                getKey(ts.getAgArch().getAgName()+".publicKey")))
-//                );
-//          ts.getAgArch().sendMsg(m);
-            ts.getAg().getBB().add(Literal.parseLiteral(
-                    jasonUtil.newBelief(args[0].toString(),
-                            getKey(ts.getAgArch().getAgName()+".privateKey"),
-                            getKey(ts.getAgArch().getAgName()+".publicKey"))));
-            System.out.println("["+ts.getAgArch().getAgName()+"] Load Wallet.... "+getKey(ts.getAgArch().getAgName()+".publicKey"));
+          Message m = new Message("tell",
+                "velluscinum",
+                ts.getAgArch().getAgName(),
+                Literal.parseLiteral(
+                        jasonUtil.newBelief(args[0].toString(),
+                                getKey(ts.getAgArch().getAgName()+".privateKey"),
+                                getKey(ts.getAgArch().getAgName()+".publicKey")))
+                );
+          ts.getAgArch().sendMsg(m);
+//            ts.getAg().getBB().add(Literal.parseLiteral(
+//                    jasonUtil.newBelief(args[0].toString(),
+//                            getKey(ts.getAgArch().getAgName()+".privateKey"),
+//                            getKey(ts.getAgArch().getAgName()+".publicKey"))));
+            ts.getLogger().info("Load Wallet.... "+getKey(ts.getAgArch().getAgName()+".publicKey"));
         }else{
             while (jasonUtil.isLocked());
             jasonUtil.lock(true);

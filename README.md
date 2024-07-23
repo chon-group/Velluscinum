@@ -30,7 +30,7 @@ Step 2. Add the dependency
 <dependency>
     <groupId>com.github.chon-group</groupId>
     <artifactId>Velluscinum</artifactId>
-    <version>24.07.22</version>
+    <version>24.07.23</version>
 </dependency>
 ```
 </details>
@@ -51,7 +51,7 @@ dependencyResolutionManagement {
 Step 2. Add the dependency
 ```
 dependencies {
-        implementation 'com.github.chon-group:velluscinum:24.07.22'
+        implementation 'com.github.chon-group:velluscinum:24.07.23'
 }
 ```
  

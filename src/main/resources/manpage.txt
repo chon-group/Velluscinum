@@ -1,5 +1,5 @@
 *********************************************************************************
-[Velluscinum] Using version 24.7.22
+[Velluscinum] Using version 24.7.23
 For more information
 	Look the User Manual at https://github.com/chon-group/Velluscinum/wiki
 *********************************************************************************

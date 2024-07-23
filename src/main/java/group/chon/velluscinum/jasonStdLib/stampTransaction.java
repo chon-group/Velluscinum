@@ -34,12 +34,12 @@ public class stampTransaction extends DefaultInternalAction {
                 if (args.length == 4) {
                     return true;
                 } else if (args.length == 5) {
-//                    Message m = new Message("tell",
-//                            ts.getAgArch().getAgName(),
-//                            ts.getAgArch().getAgName(),
-//                            Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],result )));
-//                    ts.getAgArch().sendMsg(m);
-                    ts.getAg().getBB().add(Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],result )));
+                    Message m = new Message("tell",
+                            "velluscinum",
+                            ts.getAgArch().getAgName(),
+                            Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],result )));
+                    ts.getAgArch().sendMsg(m);
+//                    ts.getAg().getBB().add(Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],result )));
                     return true;
                 }
             }

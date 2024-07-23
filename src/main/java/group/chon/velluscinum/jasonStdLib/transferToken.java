@@ -35,12 +35,12 @@ public class transferToken extends DefaultInternalAction {
             util.lock(false);
             if(transferTokenID!=null){
                 if(args.length==7){
-//                    Message m = new Message("tell",
-//                            ts.getAgArch().getAgName(),
-//                            ts.getAgArch().getAgName(),
-//                            Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],transferTokenID )));
-//                    ts.getAgArch().sendMsg(m);
-                    ts.getAg().getBB().add(Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],transferTokenID )));
+                    Message m = new Message("tell",
+                            "velluscinum",
+                            ts.getAgArch().getAgName(),
+                            Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],transferTokenID )));
+                    ts.getAgArch().sendMsg(m);
+//                   ts.getAg().getBB().add(Literal.parseLiteral(util.newBelief(arrayArgs[args.length-1],transferTokenID )));
                 }
                 return true;
             }else{

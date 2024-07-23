@@ -6,7 +6,7 @@
 
     <groupId>com.github.chon-group</groupId>
     <artifactId>velluscinum</artifactId>
-    <version>24.7.22</version>
+    <version>24.7.23</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
