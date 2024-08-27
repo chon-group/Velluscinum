@@ -60,7 +60,7 @@ public class Api {
         try {
             op = args[0];
             if(op.equals("buildAsset")) buildAsset_CLI(args);
-            else if(op.equals("buildTransfer")) buildTransfer(args);
+            else if(op.equals("buildTransfer")) buildTransfer_CLI(args);
             else if(op.equals("buildWallet")) buildWallet_CLI(args);
             else if(op.equals("deployNFT")) deployNFT_CLI(args);
             else if(op.equals("deployToken")) deployToken_CLI(args);
@@ -68,6 +68,7 @@ public class Api {
             else if(op.equals("transferToken")) transferToken_CLI(args);
             else if(op.equals("walletBalance")) walletBalance_CLI(args);
             else if(op.equals("showToken")) tokenData_CLI(args);
+            else if(op.equals("stampTransaction")) stampTransaction_CLI(args);
             else showManpage();
         } catch (Exception ex) {
             showManpage();
@@ -308,11 +309,28 @@ public class Api {
             System.out.println(ex);
             return null;
         }
-
-
-
     }
 
+    public static void stampTransaction_CLI(String[] args){
+        //[SERVER] [PRIVATEKEY-FILE] [PUBLICKEY-FILE] [TRANSFER-ID]
+        String result = null;
+        try{
+            BigchainDBDriver bigchainDBDriver = new BigchainDBDriver(args[1]);
+            KeyManagement keyManagement = new KeyManagement();
+            Transaction transaction = TransactionsApi.getTransactionById(args[4]);
+            result = bigchainDBDriver.stampTransaction(args[1],
+                    keyManagement.importKeyFromFile(args[2]),
+                    keyManagement.importKeyFromFile(args[3]),
+                    transaction);
+        }catch (Exception ex){
+            System.out.println(ex);
+        }
+        if(result != null){
+            System.exit(0);
+        }else{
+            System.exit(1);
+        }
+    }
 
 
     /**
@@ -383,9 +401,9 @@ public class Api {
      *
      * @param args [FILENAME] [Additional:Information]
      */
-    private static void buildTransfer(String[] args){
+    private static void buildTransfer_CLI(String[] args){
         Asset transferInfo = new Asset();
-        if(args[2].length()!=0){
+        if(!args[2].isEmpty()){
             String transferInfoStr = args[2];
             String[] pairKeyValueTransfer = transferInfoStr.split(";");
             for(int i=0; i< pairKeyValueTransfer.length; i++){
@@ -405,6 +423,29 @@ public class Api {
         }
         transferInfo.transferToFile(args[1]+".transfer");
     }
+//    private void buildTransfer(String[] args){
+//        Asset transferInfo = new Asset();
+//        if(args[2].length()!=0){
+//            String transferInfoStr = args[2];
+//            String[] pairKeyValueTransfer = transferInfoStr.split(";");
+//            for(int i=0; i< pairKeyValueTransfer.length; i++){
+//                String[] key_value = pairKeyValueTransfer[i].split(":");
+//                if(key_value.length==2){
+//                    if(i==0){
+//                        transferInfo.buildTransfer(key_value[0],key_value[1]);
+//                    }else{
+//                        transferInfo.addTransferInformation(key_value[0],key_value[1]);
+//                    }
+//                }else{
+//                    showManpage();
+//                }
+//            }
+//        }else{
+//            showManpage();
+//        }
+//        transferInfo.transferToFile(args[1]+".transfer");
+//    }
+
     /**
      * Creates two files with an ECDSA keyset in Base58
      *

@@ -83,7 +83,7 @@ public class Asset {
      * @return the Asset Object in JSON format.
      */
     public JSONObject importAssetFromFile(String filePath) {
-        System.out.println(" Load Asset from file... "+filePath);
+        System.out.println("[Velluscinum] Loading from file... "+filePath);
         byte[] assetReadFromFile = null;
         JSONObject assetJSON = null;
         FileInputStream is = null;
@@ -147,7 +147,7 @@ public class Asset {
      * @return the Transfer Metada Object in JSON format.
      */
     public JSONObject importTransferFromFile(String filePath) {
-        System.out.println(" Load TransfInfo from file... "+filePath);
+        System.out.println("[Velluscinum] Loading from file... "+filePath);
 
         byte[] assetReadFromFile = null;
         JSONObject assetJSON = null;
