@@ -5,57 +5,12 @@
 
 Distributed Ledger Technologies (DLT) characteristics can contribute to several domains, such as Multi-agent Systems (MAS), facilitating the agreement between agents, managing trust relationships, and distributed scenarios. Some contributions to this integration are in the theoretical stage, and the few existing practical contributions have limitations and low performance. This work presents a MAS approach that can use digital assets as a factor of agreement in the relationship between cognitive agents using the Belief-Desire-Intention model. To validate the proposed methodology, we present the middleware Velluscinum that offers new internal actions to agents. The middleware was tested by adapting the Building-a-House classic example to cryptocurrency and agreements mediated by a distributed ledger.
 
-## Using Velluscinum
- With JaCaMo: use the [Velluscinum-JCM Package](https://github.com/chon-group/velluscinum-jcm)
+## See the [Velluscinum Wiki](https://github.com/chon-group/Velluscinum/wiki/)!
 
+|[![](https://raw.githubusercontent.com/wiki/chon-group/Velluscinum/.imgs/linux.png)](https://github.com/chon-group/Velluscinum/wiki/)|[![](https://github.com/chon-group/Velluscinum/wiki/.imgs/java.png)](https://github.com/chon-group/Velluscinum/wiki/)|[![](https://github.com/chon-group/Velluscinum/wiki/.imgs/jason.png)](https://github.com/chon-group/Velluscinum/wiki/)|[![](https://github.com/chon-group/Velluscinum/wiki/.imgs/jacamo.png)](https://github.com/chon-group/Velluscinum/wiki/)|
+|:----:|:----:|:----:|:----:|
+|||||
 
-## Importing the Velluscinum Middleware
-
-<details>
-<summary> using Maven </summary>
-
-Step 1. Add the JitPack repository to your build file 
-```
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
-
-```
-
-Step 2. Add the dependency
-```
-<dependency>
-    <groupId>com.github.chon-group</groupId>
-    <artifactId>Velluscinum</artifactId>
-    <version>24.07.23</version>
-</dependency>
-```
-</details>
-
-<details>
-<summary> using Gradle </summary>
- 
-Step 1. Add the JitPack repository in your root build.gradle at the end of repositories:
-```
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
-    }
-}
-```
-Step 2. Add the dependency
-```
-dependencies {
-        implementation 'com.github.chon-group:velluscinum:24.07.23'
-}
-```
- 
-</details>
 
 
 ## COPYRIGHT
