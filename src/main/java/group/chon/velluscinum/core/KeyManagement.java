@@ -7,6 +7,7 @@ import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import net.i2p.crypto.eddsa.KeyPairGenerator;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyPair;
 import java.security.spec.InvalidKeySpecException;
@@ -201,11 +202,42 @@ public class KeyManagement {
      *
      * @return A Key (Public OR Private) in String Base format.
      */
-    public String importKeyFromFile(String filePath){
+    private String importKeyFromFile(String filePath){
         try {
-            return new String(Files.readAllBytes(Paths.get(filePath)));
+            String key = new String(Files.readAllBytes(Paths.get(filePath)));
+            if(isValidKey(key)){
+                return key;
+            }else{
+                throw new IllegalArgumentException("Invalid Key into file: " + filePath);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public String importKeyFromFileOrContent(String input) {
+        Path filePath = Paths.get(input);
+        if (Files.exists(filePath)) {
+            return importKeyFromFile(input);
+        } else if(isValidKey(input)) {
+            return input;
+        }else{
+            throw new IllegalArgumentException("Invalid argument: " + input);
+        }
+    }
+
+    private boolean isValidKey(String input) {
+        if(stringToEdDSAPrivateKey(input,BASE58)!=null){
+            return true;
+        }else if(stringToEdDSAPublicKey(input,BASE58)!=null){
+            return true;
+        }else if(stringToEdDSAPrivateKey(input,BASE64)!=null){
+            return true;
+        } else if(stringToEdDSAPublicKey(input,BASE64)!=null){
+            return true;
+        }else{
+            System.out.println("The Key "+input+" is wrong!!!!");
+            return false;
         }
     }
 

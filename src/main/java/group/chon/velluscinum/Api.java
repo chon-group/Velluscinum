@@ -319,8 +319,8 @@ public class Api {
             KeyManagement keyManagement = new KeyManagement();
             Transaction transaction = TransactionsApi.getTransactionById(args[4]);
             result = bigchainDBDriver.stampTransaction(args[1],
-                    keyManagement.importKeyFromFile(args[2]),
-                    keyManagement.importKeyFromFile(args[3]),
+                    keyManagement.importKeyFromFileOrContent(args[2]),
+                    keyManagement.importKeyFromFileOrContent(args[3]),
                     transaction);
         }catch (Exception ex){
             System.out.println(ex);
@@ -423,28 +423,7 @@ public class Api {
         }
         transferInfo.transferToFile(args[1]+".transfer");
     }
-//    private void buildTransfer(String[] args){
-//        Asset transferInfo = new Asset();
-//        if(args[2].length()!=0){
-//            String transferInfoStr = args[2];
-//            String[] pairKeyValueTransfer = transferInfoStr.split(";");
-//            for(int i=0; i< pairKeyValueTransfer.length; i++){
-//                String[] key_value = pairKeyValueTransfer[i].split(":");
-//                if(key_value.length==2){
-//                    if(i==0){
-//                        transferInfo.buildTransfer(key_value[0],key_value[1]);
-//                    }else{
-//                        transferInfo.addTransferInformation(key_value[0],key_value[1]);
-//                    }
-//                }else{
-//                    showManpage();
-//                }
-//            }
-//        }else{
-//            showManpage();
-//        }
-//        transferInfo.transferToFile(args[1]+".transfer");
-//    }
+
 
     /**
      * Creates two files with an ECDSA keyset in Base58
@@ -481,15 +460,16 @@ public class Api {
      * @param args [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [NFT-FILE]
      */
     private static void deployNFT_CLI(String[] args) {
+        //[SERVER] [PRIVATEKEY-FILE] [PUBLICKEY-FILE] [NFT-FILE]
         BigchainDBDriver bigchainDBDriver = new BigchainDBDriver();
         KeyManagement keyManagement = new KeyManagement();
         Asset asset = new Asset();
-        String strPrivateKey = keyManagement.importKeyFromFile(args[2]);
-        //[SERVER] [PRIVATEKEY-FILE] [PUBLICKEY-FILE] [NFT-FILE]
+        String strPrivateKey = keyManagement.importKeyFromFileOrContent(args[2]);
+
         bigchainDBDriver.deployNFT(
                 args[1],
-                keyManagement.importKeyFromFile(args[2]),
-                keyManagement.importKeyFromFile(args[3]),
+                keyManagement.importKeyFromFileOrContent(args[2]),
+                keyManagement.importKeyFromFileOrContent(args[3]),
                 asset.importAssetFromFile(args[4]).toString());
     }
 
@@ -502,12 +482,12 @@ public class Api {
         BigchainDBDriver bigchainDBDriver = new BigchainDBDriver();
         KeyManagement keyManagement = new KeyManagement();
         Asset asset = new Asset();
-        String strPrivateKey = keyManagement.importKeyFromFile(args[2]);
+        //String strPrivateKey = keyManagement.importKeyFromFileOrContent(args[2]);
         //[SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [TOKEN-FILE] [AMOUNT]
         String tokenId = bigchainDBDriver.deployToken(
                 args[1],
-                keyManagement.importKeyFromFile(args[2]),
-                keyManagement.importKeyFromFile(args[3]),
+                keyManagement.importKeyFromFileOrContent(args[2]),
+                keyManagement.importKeyFromFileOrContent(args[3]),
                 asset.importTransferFromFile(args[4]).toString(),
                 Long.parseLong(args[5])
         );
@@ -526,11 +506,11 @@ public class Api {
         //[SERVER] [PRIVATEKEY-FILE] [PUBLICKEY-FILE] [ASSET-ID] [METADATA] [PUBLIC_DEST_KEY-FILE]
         bigchainDBDriver.transferNFT(
                 args[1],
-                keyManagement.importKeyFromFile(args[2]),
-                keyManagement.importKeyFromFile(args[3]),
+                keyManagement.importKeyFromFileOrContent(args[2]),
+                keyManagement.importKeyFromFileOrContent(args[3]),
                 args[4],
                 transferAsset.importTransferFromFile(args[5]).toString(),
-                keyManagement.importKeyFromFile(args[6]));
+                keyManagement.importKeyFromFileOrContent(args[6]));
     }
 
     /**
@@ -540,15 +520,15 @@ public class Api {
      */
     private static void transferToken_CLI(String[] args){
         BigchainDBDriver bigchainDBDriver = new BigchainDBDriver();
-        Asset transferAsset = new Asset();
+        //Asset transferAsset = new Asset();
         KeyManagement keyManagement = new KeyManagement();
         //[SERVER] [PRIVATE-KEY-FILE] [PUBLIC-KEY-FILE] [ASSET-ID] [DEST-PUBLIC-KEY-FILE] [AMOUNT]
         bigchainDBDriver.transferToken(
                 args[1],
-                keyManagement.importKeyFromFile(args[2]),
-                keyManagement.importKeyFromFile(args[3]),
+                keyManagement.importKeyFromFileOrContent(args[2]),
+                keyManagement.importKeyFromFileOrContent(args[3]),
                 args[4],
-                keyManagement.importKeyFromFile(args[5]),
+                keyManagement.importKeyFromFileOrContent(args[5]),
                 Long.parseLong(args[6]));
     }
 
@@ -560,14 +540,12 @@ public class Api {
      */
     private static void walletBalance_CLI(String[] args){
         KeyManagement keyManagement = new KeyManagement();
-
         Wallet wallet = new Wallet();
         ArrayList<WalletContent> walletContents = wallet.getMyTokens(
                 args[1],
-                keyManagement.importKeyFromFile(args[2]),
-                keyManagement.importKeyFromFile(args[3]));
-
-        System.out.println("Wallet Balance of: "+keyManagement.importKeyFromFile(args[3]));
+                keyManagement.importKeyFromFileOrContent(args[2]),
+                keyManagement.importKeyFromFileOrContent(args[3]));
+        System.out.println("Wallet Balance of: "+keyManagement.importKeyFromFileOrContent(args[2]));
         System.out.println("T/NFT\tAsset                                                            QTD");
         for(int i=0; i<walletContents.size(); i++){
             System.out.println(walletContents.get(i).getType()+"\t"+walletContents.get(i).getToken()+" "+walletContents.get(i).getAmountAsString());
