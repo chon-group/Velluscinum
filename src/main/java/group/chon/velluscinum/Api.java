@@ -545,7 +545,7 @@ public class Api {
                 args[1],
                 keyManagement.importKeyFromFileOrContent(args[2]),
                 keyManagement.importKeyFromFileOrContent(args[3]));
-        System.out.println("Wallet Balance of: "+keyManagement.importKeyFromFileOrContent(args[2]));
+        System.out.println("Wallet Balance of: "+keyManagement.importKeyFromFileOrContent(args[3]));
         System.out.println("T/NFT\tAsset                                                            QTD");
         for(int i=0; i<walletContents.size(); i++){
             System.out.println(walletContents.get(i).getType()+"\t"+walletContents.get(i).getToken()+" "+walletContents.get(i).getAmountAsString());

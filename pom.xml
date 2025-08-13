@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.chon-group</groupId>
-    <artifactId>velluscinum</artifactId>
-    <version>24.12.16</version>
+    <artifactId>Velluscinum</artifactId>
+    <version>25.8.13</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -75,10 +75,16 @@
             <artifactId>okhttp</artifactId>
             <version>4.12.0</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>net.i2p.crypto</groupId>-->
+<!--            <artifactId>eddsa</artifactId>-->
+<!--            <version>0.3.0</version>-->
+<!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/net.i2p/i2p -->
         <dependency>
-            <groupId>net.i2p.crypto</groupId>
-            <artifactId>eddsa</artifactId>
-            <version>0.3.0</version>
+            <groupId>net.i2p</groupId>
+            <artifactId>i2p</artifactId>
+            <version>0.9.39</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
