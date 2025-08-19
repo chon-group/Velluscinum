@@ -2,6 +2,8 @@ package group.chon.velluscinum.jasonStdLib;
 import group.chon.velluscinum.model.TokenContent;
 import group.chon.velluscinum.model.WalletContent;
 import jason.asSyntax.Term;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -112,4 +114,37 @@ public class JasonUtil {
             writer.write(content);
         }
     }
+
+    public JSONObject parseVerification(String expr) {
+        System.out.println("Expressao recebida... "+expr);
+
+        JSONObject root = new JSONObject();
+
+        // Extrair operação
+        int firstParen = expr.indexOf("(");
+        String operation = expr.substring(0, firstParen).trim();
+        root.put("operation", operation);
+
+        // Conteúdo interno
+        String inner = expr.substring(firstParen + 1, expr.lastIndexOf(")"));
+        String[] parts = inner.split("\\),");
+
+        JSONObject verificationObj = new JSONObject();
+        for (String part : parts) {
+            part = part.replace(")", "");
+            int p1 = part.indexOf("(");
+            String key = part.substring(0, p1).trim();
+            String value = part.substring(p1 + 1).trim();
+            verificationObj.put(key, value);
+        }
+
+        // Coloca dentro de um array
+        JSONArray verificationArr = new JSONArray();
+        verificationArr.put(verificationObj);
+
+        root.put("fulfill", verificationArr);
+
+        return root;
+    }
+
 }

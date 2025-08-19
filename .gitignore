@@ -1,6 +1,7 @@
 # Gradle specific .gitignore, see https://github.com/github/gitignore/blob/master/Gradle.gitignore
 .gradle
-/build/
+.build
+
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -29,3 +30,6 @@ out/
 .settings/
 
 .jacamoCoin
+#test/jason/stampTransactionWithValidation/build/
+test/*/*/build/
+test/*/*/lib/

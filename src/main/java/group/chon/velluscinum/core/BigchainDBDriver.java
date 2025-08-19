@@ -299,7 +299,6 @@ public class BigchainDBDriver {
                                    String privateKey,
                                    String publicKey,
                                    Transaction transaction){
-
         Input input = transaction.getInputs().get(0);
         if(publicKey.equals(input.getOwnersBefore().get(0))){
             return null;
@@ -378,7 +377,7 @@ public class BigchainDBDriver {
             return null;
         }
     }
-    private JSONObject getTransactionFromID(String transactionID) {
+    public JSONObject getTransactionFromID(String transactionID) {
         Transaction T = new Transaction();
         try {
             T = com.bigchaindb.api.TransactionsApi.getTransactionById(transactionID);

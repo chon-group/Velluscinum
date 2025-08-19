@@ -5,6 +5,7 @@ import com.bigchaindb.model.Transaction;
 import group.chon.velluscinum.core.*;
 import group.chon.velluscinum.model.Asset;
 import group.chon.velluscinum.model.TokenContent;
+import group.chon.velluscinum.model.TransactionContent;
 import group.chon.velluscinum.model.WalletContent;
 
 import java.io.*;
@@ -68,6 +69,7 @@ public class Api {
             else if(op.equals("transferToken")) transferToken_CLI(args);
             else if(op.equals("walletBalance")) walletBalance_CLI(args);
             else if(op.equals("showToken")) tokenData_CLI(args);
+            else if(op.equals("showTransaction")) transactionData_CLI(args);
             else if(op.equals("stampTransaction")) stampTransaction_CLI(args);
             else showManpage();
         } catch (Exception ex) {
@@ -581,4 +583,16 @@ public class Api {
         System.exit(1);
     }
 
+    private static void transactionData_CLI(String[] args){
+        // [SERVER] [TRANSACTIONID]
+        TransactionContent transactionContent = new TransactionContent();
+        transactionContent.loadTransaction(args[1], args[2]);
+        System.out.println(transactionContent.transactionToString());
+        // System.out.println(transactionContent.getAssetID());
+        // System.out.println(transactionContent.getOutputs().toString());
+        // System.out.println(transactionContent.getOutputByPublicKey("B15qSZRdVRUh3qG415YDrhYd9u2qdWbSseTLa7Wc3HBE"));
+        // System.out.println(transactionContent.getOutputAmountByPublicKey("9QyyRALWGZd2QYcEp3o1JCw7hWFiQVSbeQzNqMdePcCV"));
+        //System.out.println(transactionContent.getInputs().toString());
+        //System.out.println(transactionContent.getFirstOwnerBefore());
+    }
 }
