@@ -116,8 +116,6 @@ public class JasonUtil {
     }
 
     public JSONObject parseVerification(String expr) {
-        System.out.println("Expressao recebida... "+expr);
-
         JSONObject root = new JSONObject();
 
         // Extrair operação

@@ -33,3 +33,5 @@ out/
 #test/jason/stampTransactionWithValidation/build/
 test/*/*/build/
 test/*/*/lib/
+/test/*/*/build.gradle
+/test/*/*/settings.gradle
