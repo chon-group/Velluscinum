@@ -27,11 +27,7 @@ public class loadWallet extends DefaultInternalAction {
                                 getKey(ts.getAgArch().getAgName()+".publicKey")))
                 );
           ts.getAgArch().sendMsg(m);
-//            ts.getAg().getBB().add(Literal.parseLiteral(
-//                    jasonUtil.newBelief(args[0].toString(),
-//                            getKey(ts.getAgArch().getAgName()+".privateKey"),
-//                            getKey(ts.getAgArch().getAgName()+".publicKey"))));
-            ts.getLogger().info("Load Wallet.... "+getKey(ts.getAgArch().getAgName()+".publicKey"));
+          ts.getLogger().info("Load Wallet.... "+getKey(ts.getAgArch().getAgName()+".publicKey"));
         }else{
             while (jasonUtil.isLocked());
             jasonUtil.lock(true);
@@ -49,6 +45,7 @@ public class loadWallet extends DefaultInternalAction {
                     ts.getAgArch().getAgName(),
                     Literal.parseLiteral(jasonUtil.newBelief(args[0].toString(),keyPair[0],keyPair[1])));
             ts.getAgArch().sendMsg(m);
+            ts.getLogger().info("Creating a Wallet.... "+getKey(ts.getAgArch().getAgName()+".publicKey"));
         }
         return true;
     }
