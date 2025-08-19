@@ -299,6 +299,7 @@ public class BigchainDBDriver {
                                    String privateKey,
                                    String publicKey,
                                    Transaction transaction){
+        setConfig(url);
         Input input = transaction.getInputs().get(0);
         if(publicKey.equals(input.getOwnersBefore().get(0))){
             return null;
